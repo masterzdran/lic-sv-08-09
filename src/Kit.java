@@ -4,10 +4,10 @@ import isel.leic.usbio.UsbPort;
 import isel.leic.utils.Time;
 
 public class Kit {
-	private static final int TESTOUT = 0;
 	private static final int VCCMASK=0xFF;
 	private static final int GNDMASK=0X00;
-	private static int READINPUT;
+	private static int readInput=GNDMASK;
+	private static int writeOutput=GNDMASK;
 
 	
 	public static void show(int value) {
@@ -15,7 +15,7 @@ public class Kit {
 	}
 	/* Lê o input port para posterior consulta */
 	public static void read() {
-		READINPUT = InputPort.in();
+		readInput = InputPort.in();
 	}
 
 	/*
@@ -25,7 +25,7 @@ public class Kit {
 	 * a GND
 	 */
 	public static int getBits(int mask) {
-		return (READINPUT&mask);
+		return (readInput&mask);
 	}
 
 	/*
@@ -33,7 +33,7 @@ public class Kit {
 	 * true se o bit indicado pela mascara está a Vcc
 	 */
 	public static boolean isBit(int mask) {
-		return ((READINPUT&mask)==mask);
+		return ((readInput&mask)==mask);
 	}
 
 	/* Lê e consulta o valor representado pelos bits da mascara */
@@ -51,28 +51,58 @@ public class Kit {
 	/*
 	 * Coloca a Vcc os bits indicados pela mascara e os restantes bits mantêm o
 	 * valor.
+	 * 
+	 *  R | M | M + R  
+	 * ---------------
+	 *  0 | 0 |   0    <- Mantém
+	 *  0 | 1 |   1    <- Altera
+	 *  1 | 0 |   1    <- Mantém
+	 *  1 | 1 |   1    <- Altera
+	 * 
+	 * Output=readInput+Mask
 	 */
 	public static void setBits(int mask) {
-		//OutputPort.out(VCCMASK|mask);
+		writeOutput=readInput|mask;
 		
-		write(VCCMASK, mask);
-
+		write(writeOutput, VCCMASK);
 	}
 
 	/*
 	 * Coloca a GND os bits indicados pela mascara e os restantes bits mantêm o
 	 * valor.
+	 * 
+	 *  R | ~M | M * R  
+	 * ---------------
+	 *  0 | 1  |   0    <- Altera (acaba por manter)
+	 *  0 | 0  |   0    <- Mantém
+	 *  1 | 1  |   0    <- Altera
+	 *  1 | 0  |   1    <- Mantém
+	 * 
+	 * Output=~Mask&readInput
 	 */
 	public static void resetBits(int mask) {
-		write (READINPUT,~mask);
+		writeOutput=~mask&readInput;
+		
+		write (writeOutput,VCCMASK);
 	}
 
 	/*
 	 * Inverte o valor dos bits indicados pela mascara e os restantes bits
 	 * mantêm o valor.
+	 * 
+	 *  R | M | M ^ R  
+	 * ---------------
+	 *  0 | 0 |   0    <- Mantém
+	 *  0 | 1 |   1    <- Altera
+	 *  1 | 0 |   1    <- Mantém
+	 *  1 | 1 |   0    <- Altera
+	 * 
+	 * Output=readInput^Mask
 	 */
 	public static void invertBits(int mask) {
-		write(~READINPUT,mask);
+		writeOutput=readInput^mask;
+		
+		write(writeOutput,VCCMASK);
 	}
 
 	/*
@@ -80,10 +110,7 @@ public class Kit {
 	 * correspondentes em ´value´ 1-Vcc 0-GND
 	 */
 	public static void write(int values, int mask) {
-		
 		OutputPort.out(values&mask);
-		
-
 	}
 
 	public static void main(String[] args) {
@@ -100,7 +127,7 @@ public class Kit {
 		for (int val = 1; Kit.isBit(0x80);) { // Enquanto entrada I7 a Vcc
 												// (ultima leitura)
 			Kit.write(~val, 0x0F); // Escreve o valor nos 4 bits de menor peso
-			Time.sleep(1000); // Espera 100 ms
+			Time.sleep(100); // Espera 100 ms
 			Kit.read(); // Le os bits do input port
 			if (Kit.isBit(0x02)) { // Se entrada I1 a Vcc (ultima leitura)
 				if ((val <<= 1) > 8)
