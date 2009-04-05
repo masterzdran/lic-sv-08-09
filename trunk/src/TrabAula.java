@@ -1,5 +1,5 @@
-import isel.leic.usbio.InputPort;
 import isel.leic.utils.Time;
+import isel.leic.usbio.*;
 
 public class TrabAula {
 	/**

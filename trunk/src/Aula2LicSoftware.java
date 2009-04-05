@@ -1,6 +1,5 @@
-import isel.leic.*;
-import isel.leic.usbio.UsbPort;
-import isel.leic.utils.Time;
+import isel.leic.usbio.*;
+import isel.leic.utils.*;
 
 public class Aula2LicSoftware {
 	private static final int SLEEP=1000;

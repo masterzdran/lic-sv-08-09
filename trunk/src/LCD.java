@@ -1,4 +1,3 @@
-import isel.leic.utils.*;
 
 public class LCD {
 	
