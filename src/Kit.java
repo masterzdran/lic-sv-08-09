@@ -1,21 +1,22 @@
+import isel.leic.utils.Time;
 import isel.leic.usbio.InputPort;
 import isel.leic.usbio.OutputPort;
-import isel.leic.usbio.UsbPort;
-import isel.leic.utils.Time;
 
 public class Kit {
 	private static final int VCCMASK=0xFF;
 	private static final int GNDMASK=0X00;
-	private static int readInput=GNDMASK;
-	private static int writeOutput=GNDMASK;
+	private static final int SLEEP=250;
+	private static int readInput;
+	private static int writeOutput;
 
 	
 	public static void show(int value) {
-		InputPort.out(value);
+		OutputPort.out(value);
 	}
 	/* Lê o input port para posterior consulta */
 	public static void read() {
 		readInput = InputPort.in();
+		writeOutput=readInput;
 	}
 
 	/*
@@ -62,9 +63,8 @@ public class Kit {
 	 * Output=readInput+Mask
 	 */
 	public static void setBits(int mask) {
-		writeOutput=readInput|mask;
-		
-		write(writeOutput, VCCMASK);
+		writeOutput=writeOutput|mask;
+		show(writeOutput);/*2 delete*/
 	}
 
 	/*
@@ -81,9 +81,8 @@ public class Kit {
 	 * Output=~Mask&readInput
 	 */
 	public static void resetBits(int mask) {
-		writeOutput=~mask&readInput;
-		
-		write (writeOutput,VCCMASK);
+		writeOutput=~mask & writeOutput;
+		show(writeOutput);/*2 delete*/
 	}
 
 	/*
@@ -100,9 +99,8 @@ public class Kit {
 	 * Output=readInput^Mask
 	 */
 	public static void invertBits(int mask) {
-		writeOutput=readInput^mask;
-		
-		write(writeOutput,VCCMASK);
+		writeOutput= writeOutput ^ mask;
+		show(writeOutput);/*2 delete*/
 	}
 
 	/*
@@ -114,6 +112,7 @@ public class Kit {
 	}
 
 	public static void main(String[] args) {
+		Kit.write(0x00, 0xFF);
 		Kit.setBits(0xFF); // Coloca a Vcc todos os bits do output port -> ----
 							// ----
 		while (Kit.readBit(0x1))
@@ -123,11 +122,11 @@ public class Kit {
 		while (!Kit.readBit(0x1))
 			; // Espera que o bit I0 fique a Vcc
 			Kit.invertBits(0xFF); // Inverte os valores dos bits do output port ->
-								// **** ----
+				// **** ----
 		for (int val = 1; Kit.isBit(0x80);) { // Enquanto entrada I7 a Vcc
 												// (ultima leitura)
 			Kit.write(~val, 0x0F); // Escreve o valor nos 4 bits de menor peso
-			Time.sleep(100); // Espera 100 ms
+			Time.sleep(SLEEP); // Espera 100 ms
 			Kit.read(); // Le os bits do input port
 			if (Kit.isBit(0x02)) { // Se entrada I1 a Vcc (ultima leitura)
 				if ((val <<= 1) > 8)
