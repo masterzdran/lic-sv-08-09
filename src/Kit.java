@@ -1,22 +1,21 @@
 import isel.leic.utils.Time;
 import isel.leic.usbio.InputPort;
 import isel.leic.usbio.OutputPort;
-
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
 public class Kit {
-	private static final int VCCMASK=0xFF;
-	private static final int GNDMASK=0X00;
 	private static final int SLEEP=250;
 	private static int readInput;
 	private static int writeOutput;
 
-	
-	public static void show(int value) {
-		OutputPort.out(value);
-	}
 	/* Lê o input port para posterior consulta */
 	public static void read() {
-		readInput = InputPort.in();
-		writeOutput=readInput;
+		writeOutput=readInput = InputPort.in();
 	}
 
 	/*
@@ -64,7 +63,7 @@ public class Kit {
 	 */
 	public static void setBits(int mask) {
 		writeOutput=writeOutput|mask;
-		show(writeOutput);/*2 delete*/
+		write();
 	}
 
 	/*
@@ -82,7 +81,7 @@ public class Kit {
 	 */
 	public static void resetBits(int mask) {
 		writeOutput=~mask & writeOutput;
-		show(writeOutput);/*2 delete*/
+		write();
 	}
 
 	/*
@@ -100,17 +99,33 @@ public class Kit {
 	 */
 	public static void invertBits(int mask) {
 		writeOutput= writeOutput ^ mask;
-		show(writeOutput);/*2 delete*/
+		write();
 	}
 
 	/*
 	 * Altera os valores dos bits indicados pela mascara para os bits
-	 * correspondentes em ´value´ 1-Vcc 0-GND
+	 * correspondentes em 'value' 1-Vcc 0-GND
 	 */
 	public static void write(int values, int mask) {
-		OutputPort.out(values&mask);
+		//writeOutput=
+		OutputPort.out(~(values&mask));
 	}
 
+	/*
+	 * Escreve no output o valor dos bits de 'value'  
+	 */
+	public static void write(int value) {
+		OutputPort.out(~value);
+	}	
+	
+	/*
+	 * Escreve no output o valor dos bits do 'writeOutput'  
+	 */
+	public static void write() {
+		OutputPort.out(~writeOutput);
+	}	
+	
+	
 	public static void main(String[] args) {
 		Kit.write(0x00, 0xFF);
 		Kit.setBits(0xFF); // Coloca a Vcc todos os bits do output port -> ----
