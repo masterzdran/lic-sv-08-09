@@ -28,7 +28,7 @@ public class Kit {
 		return (readInput&mask);
 	}
 
-	/*
+	/**
 	 * Consulta o bit indicado pela mascara previamente lido com read() Retorna
 	 * true se o bit indicado pela mascara está a Vcc
 	 */
@@ -48,7 +48,10 @@ public class Kit {
 		return isBit(mask);
 	}
 
-	/*
+	private static void sleep(){
+		Time.sleep(100);
+	}
+	/**
 	 * Coloca a Vcc os bits indicados pela mascara e os restantes bits mantêm o
 	 * valor.
 	 * 
@@ -66,7 +69,7 @@ public class Kit {
 		write();
 	}
 
-	/*
+	/**
 	 * Coloca a GND os bits indicados pela mascara e os restantes bits mantêm o
 	 * valor.
 	 * 
@@ -84,7 +87,7 @@ public class Kit {
 		write();
 	}
 
-	/*
+	/**
 	 * Inverte o valor dos bits indicados pela mascara e os restantes bits
 	 * mantêm o valor.
 	 * 
@@ -102,54 +105,58 @@ public class Kit {
 		write();
 	}
 
-	/*
+	/**
 	 * Altera os valores dos bits indicados pela mascara para os bits
 	 * correspondentes em 'value' 1-Vcc 0-GND
 	 */
 	public static void write(int values, int mask) {
-		//writeOutput=
-		OutputPort.out(~(values&mask));
+		writeOutput=values&mask;
+		write();
+		//OutputPort.out(~(values&mask));
 	}
 
-	/*
+	/**
 	 * Escreve no output o valor dos bits de 'value'  
 	 */
 	public static void write(int value) {
-		OutputPort.out(~value);
+		writeOutput=value;
+		write();
 	}	
 	
-	/*
+	/**
 	 * Escreve no output o valor dos bits do 'writeOutput'  
 	 */
-	public static void write() {
+	private static void write() {
 		OutputPort.out(~writeOutput);
 	}	
 	
 	
 	public static void main(String[] args) {
-		Kit.write(0x00, 0xFF);
-		Kit.setBits(0xFF); // Coloca a Vcc todos os bits do output port -> ----
-							// ----
-		while (Kit.readBit(0x1))
-			; // Espera que o bit I0 fique a GND
-			Kit.resetBits(0x0F); // Coloca a GND os 4 bits de menor peso -> ----
-								// ****
-		while (!Kit.readBit(0x1))
-			; // Espera que o bit I0 fique a Vcc
-			Kit.invertBits(0xFF); // Inverte os valores dos bits do output port ->
-				// **** ----
-		for (int val = 1; Kit.isBit(0x80);) { // Enquanto entrada I7 a Vcc
-												// (ultima leitura)
-			Kit.write(~val, 0x0F); // Escreve o valor nos 4 bits de menor peso
-			Time.sleep(SLEEP); // Espera 100 ms
-			Kit.read(); // Le os bits do input port
-			if (Kit.isBit(0x02)) { // Se entrada I1 a Vcc (ultima leitura)
-				if ((val <<= 1) > 8)
-					val = 1; // Roda bits do valor para esquerda
-			} else {
-				if ((val >>= 1) < 1)
-					val = 8; // Roda bits do valor para a direita
-			}
-		}
+		
+		
+//		Kit.write(0x00, 0xFF);
+//		Kit.setBits(0xFF); // Coloca a Vcc todos os bits do output port -> ----
+//							// ----
+//		while (Kit.readBit(0x1))
+//			; // Espera que o bit I0 fique a GND
+//			Kit.resetBits(0x0F); // Coloca a GND os 4 bits de menor peso -> ----
+//								// ****
+//		while (!Kit.readBit(0x1))
+//			; // Espera que o bit I0 fique a Vcc
+//			Kit.invertBits(0xFF); // Inverte os valores dos bits do output port ->
+//				// **** ----
+//		for (int val = 1; Kit.isBit(0x80);) { // Enquanto entrada I7 a Vcc
+//												// (ultima leitura)
+//			Kit.write(~val, 0x0F); // Escreve o valor nos 4 bits de menor peso
+//			Time.sleep(SLEEP); // Espera 100 ms
+//			Kit.read(); // Le os bits do input port
+//			if (Kit.isBit(0x02)) { // Se entrada I1 a Vcc (ultima leitura)
+//				if ((val <<= 1) > 8)
+//					val = 1; // Roda bits do valor para esquerda
+//			} else {
+//				if ((val >>= 1) < 1)
+//					val = 8; // Roda bits do valor para a direita
+//			}
+//		}
 	}
 }
