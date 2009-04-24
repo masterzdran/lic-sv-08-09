@@ -87,6 +87,9 @@ public class LCD {
 	private static final int BLINK_ON_MASK		=	0x09;	//Blink Activo
 	private static final int BLINK_OFF_MASK		=	0x08;	//Blink InActivo
 	private static final int SHIFT_MASK			=	0x04;	//Move Cursor e Shifta Conteudo (2 nibbles)
+	private static final int ADDR_COUNTER_MASK	=	0x80;	//Move Cursor para a Posição
+	private static final int DISPLAY_SIZE_MASK	=	16;		//Tamanho do Display
+	private static final int VALUE_MASK			=	0x0F;	//Mascara para os Valores a serem escritos
 	/* ****************** Tempo de Resposta ****************** */
 	private static final int MAXTIMERISE		=	350; 	// in miliseconds
 	private static final int MAXTIMEFALL		=	400; 	// in miliseconds
@@ -95,21 +98,57 @@ public class LCD {
 	private static boolean isCentered 		=	false;
 	private static boolean isVisible 		=	false;
 	private static boolean isBlinking 		= 	false;
+	private static boolean needRS			=	false;
 	private static int 	cursorPosition		=	0;
 	/* ********************************************** */
 	private static int instruction=0x00;
 	
 	/* Realiza a sequencia de inicialização para comunicação a 4 bits */
 	public static void init() {
+		int intValue3=0x03;
+		int intValue2=0x02;
+		int intValue8=0x08;
+		int intValue28=0x28;
+		int intValue1=0x01;
+		int intValue7=0x07;
+		
+		needRS=false;
+		Time.sleep(20);
+		 writeBits(intValue3);
+		Time.sleep(10);
+		 writeBits(intValue3);
+		Time.sleep(10);
+		 writeBits(intValue3);
+		 writeBits(intValue2);
+		Time.sleep(10);
+		 procValue(intValue28);
+		Time.sleep(10);
+		 procValue(intValue8);
+		Time.sleep(10);
+		 procValue(intValue1);
+		Time.sleep(10);
+		 procValue(intValue7);
+		 procValue(0x0E);
+		 procValue(0x06);
+
 	}
 
 	/* Apaga todos os acaracteres do display */
 	public static void clear() {
+		needRS=false;
+		procValue(CLEAR_MASK);
+		
 	}
-
+	public static void clearLine(int line) {
+		posCursor(line, 0);
+		writeLine(line, "                                        ");
+		posCursor(line, 0);
+	}
 	/* Posiciona o cursor na linha (0..1) e coluna (0..15) indicadas */
 	public static void posCursor(int line, int col) {
-		cursorPosition=0x40*line+col;
+		needRS=false;
+		cursorPosition=ADDR_COUNTER_MASK|(0x40*line+col);
+		procValue(cursorPosition);
 	}
 
 	/* Acerta o tipo de cursor: Visivel ou invisivel; A piscar ou constante 
@@ -132,9 +171,11 @@ public class LCD {
 	 * proxima coluna
 	 */
 	public static void write(char c) {
-		
+		needRS=true;
+		procValue(c);
 	}
 
+	
 	/*
 	 * Escreve o texto indicado no local do cursor e o cursor avança para a
 	 * coluna seguinte
@@ -144,7 +185,17 @@ public class LCD {
 			write(txt.charAt(i));
 		}
 	}
-
+	/*
+	 * Escreve o texto indicado na linha indicada (0 ou 1). O resto da linha é
+	 * 	 texto fica centrado ou alinhado à esquerda,
+	 * dependendo da última chamada a SetCenter()
+	 */
+	public static void writeLine(int line, String txt) {
+		//clear();
+		int pos=(isCentered)?(DISPLAY_SIZE_MASK-txt.length())/2:0;
+		posCursor(line, pos);
+		write(txt);
+	}
 	/*
 	 * Indica se o texto escrito com writeLine() nas chamadas seguintes deve ou
 	 * não ficar centrado na linha
@@ -153,85 +204,29 @@ public class LCD {
 		isCentered = value;
 	}
 
-	/*
-	 * Escreve o texto indicado na linha indicada (0 ou 1). O resto da linha é
-	 * 	 texto fica centrado ou alinhado à esquerda,
-	 * dependendo da última chamada a SetCenter()
-	 */
-	public static void writeLine(int line, String txt) {
-		//clear();
-		int pos=(isCentered)?(16-txt.length())/2:0;
-		posCursor(line, pos);
-		write(txt);
+	private static void procValue(int value){
+		writeBits(value>>4);
+		writeBits(value);
 	}
-	
-	private static void instrRegister(){
-//		RS=0;
-//		RW=0;
+
+	private static void writeBits(int value){
+		Kit.write(ENABLE_MASK|(needRS?RS_MASK:0)|(value&0x0F));
+		Kit.write((needRS?RS_MASK:0)|(value&0x0F));
 	}
-	private static void addrCounter(){
-//		RS=0;
-//		RW=1;
-	}
-	private static void dataRegister(){
-//		RS=1;
-//		RW=1;
-	}
-	
 	public static void main(String args[]){
-		Time.sleep(20);
-		Kit.write(0x83);
-		Kit.write(0x03);
-		Time.sleep(10);
-		Kit.write(0x83);
-		Kit.write(0x03);
-		Time.sleep(10);
-		Kit.write(0x83);
-		Kit.write(0x03);
+		init();
+		//setCenter(true);
+		//write('X');
 		
-		Kit.write(0x82);
-		Kit.write(0x02);	
-		Time.sleep(10);
-		Kit.write(0x82);
-		Kit.write(0x02);
-		Kit.write(0x88);
-		Kit.write(0x08);
-		
-		Time.sleep(10);
-		Kit.write(0x80);
-		Kit.write(0x00);
-		Kit.write(0x88);
-		Kit.write(0x08);
-		
-		Time.sleep(10);
-		Kit.write(0x80);
-		Kit.write(0x00);
-		Kit.write(0x81);
-		Kit.write(0x01);
-		
-		Time.sleep(10);
-		Kit.write(0x80);
-		Kit.write(0x00);
-		Kit.write(0x87);
-		Kit.write(0x07);
-		
-		Kit.write(ENABLE_MASK|0x00);
-		Kit.write(0x00);
-		Kit.write(ENABLE_MASK|0x0E);
-		Kit.write(0x0E);
-		Kit.write(ENABLE_MASK|0x00);
-		Kit.write(0x00);
-		Kit.write(ENABLE_MASK|0x06);
-		Kit.write(0x06);
-		
-		
-		Kit.write(ENABLE_MASK|RS_MASK|('A'>>SHIFT_MASK));
-		Kit.write(RS_MASK|('A'>>SHIFT_MASK));
-		Kit.write(ENABLE_MASK|RS_MASK|('A'&0x0F));
-		//Kit.resetBits(ENABLE_MASK);
-		Kit.write(RS_MASK|('A'&0x0F));
-		
-		
+		writeLine(0, "ISEL LIC 2008 2009 ->>>>");
+		writeLine(1, "LIC 2008 2009");
+		Time.sleep(5000);
+		clearLine(0);
+		writeLine(1, "Linha 0 Apagada");
+//		setCenter(false);
+//		writeLine(0, "LIC2008");
+		Time.sleep(5000);
+		clear();
 	}
 
 }

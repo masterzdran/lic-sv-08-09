@@ -1,3 +1,5 @@
+package notProject;
+
 import isel.leic.usbio.*;
 import isel.leic.utils.*;
 
