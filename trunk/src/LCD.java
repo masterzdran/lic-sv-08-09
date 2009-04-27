@@ -215,11 +215,11 @@ public class LCD {
 	}
 	public static void main(String args[]){
 		init();
-		//setCenter(true);
+		setCenter(true);
 		//write('X');
 		
-		writeLine(0, "ISEL LIC 2008 2009 ->>>>");
-		writeLine(1, "LIC 2008 2009");
+		writeLine(0, "Feliz");
+		writeLine(1, "Natal");
 		Time.sleep(5000);
 		clearLine(0);
 		writeLine(1, "Linha 0 Apagada");
