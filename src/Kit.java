@@ -15,10 +15,10 @@ public class Kit {
 
 	/* Lê o input port para posterior consulta */
 	public static void read() {
-		writeOutput=readInput = InputPort.in();
+		readInput =~( InputPort.in());
 	}
 
-	/*
+	/**
 	 * Consulta o valor representado pelos bits da mascara que foram previamente
 	 * lidos com read() Retorna o valor correspondente dos bits com 0 para GND e
 	 * 1 para Vcc Por exemplo retorna 0x0F se I0..I3 estão a Vcc e I4..I7 estão
