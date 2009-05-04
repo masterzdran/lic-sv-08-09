@@ -1,11 +1,11 @@
-{COMPONENT D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\DESCODIFICADOR.TECLADO.SYM
+{COMPONENT D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\TECLADO.V2.SYM
 
  {ENVIRONMENT
   {PDIFvrev 3.00}
   {Program "CUPL(WM) Version 5.0a"}
   {DBtype "Schematic"}
   {DBvrev 1.01}
-  {DBtime "Mon May 04 10:08:17 2009 "}
+  {DBtime "Mon May 04 15:36:57 2009 "}
   {DBunit "MIL"}
   {DBgrid 10}
   {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
@@ -39,14 +39,14 @@
    {P KL2 {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
    {P KL3 {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
    {P DC0 {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
-   {P K0 {Pt "I/O"}{Lq 0}{Ploc 280 20}}
-   {P K1 {Pt "I/O"}{Lq 0}{Ploc 280 40}}
-   {P K2 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
-   {P K3 {Pt "I/O"}{Lq 0}{Ploc 280 80}}
-   {P DC1 {Pt "I/O"}{Lq 0}{Ploc 280 100}}
-   {P DC2 {Pt "I/O"}{Lq 0}{Ploc 280 120}}
-   {P DC3 {Pt "I/O"}{Lq 0}{Ploc 280 140}}
-   {P KVAL {Pt "I/O"}{Lq 0}{Ploc 280 160}}
+   {P DC1 {Pt "I/O"}{Lq 0}{Ploc 280 20}}
+   {P DC2 {Pt "I/O"}{Lq 0}{Ploc 280 40}}
+   {P DC3 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
+   {P KVAL {Pt "I/O"}{Lq 0}{Ploc 280 80}}
+   {P A0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 100}}
+   {P A1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
+   {P B0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 140}}
+   {P B1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 160}}
   }
 
   {PKG
@@ -73,7 +73,7 @@
    {Pnl 260 150}
    {Pnl 260 170}
 
-   {Sd A 1 2 3 4 5 19 14 15 16 17 20 21 22 23}
+   {Sd A 1 2 3 4 5 19 20 21 22 23 14 15 16 17}
   }
 
   {PIC
@@ -104,14 +104,14 @@
    {T "KL3" 140 40}
    {T "DC0" 140 20}
    [Tj "RC"]
-   {T "K0" 240 20}
-   {T "K1" 240 40}
-   {T "K2" 240 60}
-   {T "K3" 240 80}
-   {T "DC1" 240 100}
-   {T "DC2" 240 120}
-   {T "DC3" 240 140}
-   {T "KVAL" 240 160}
+   {T "DC1" 240 20}
+   {T "DC2" 240 40}
+   {T "DC3" 240 60}
+   {T "KVAL" 240 80}
+   {T "A0" 240 100}
+   {T "A1" 240 120}
+   {T "B0" 240 140}
+   {T "B1" 240 160}
    [Ly "DEVICE"]
    [Tj "CT"]
    {T "V750C" 190 -10}
@@ -125,7 +125,7 @@
    {EX
     [Ly "ATTR2"]
     [Ts 12][Tj "CT"][Tr 0][Tm "N"]
-    {At PLD D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\DESCODIFICADOR.TECLADO 190 180}
+    {At PLD D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\TECLADO.V2 190 180}
    }
   }
  }
@@ -147,14 +147,6 @@
    }
    {N DC0
    }
-   {N K0
-   }
-   {N K1
-   }
-   {N K2
-   }
-   {N K3
-   }
    {N DC1
    }
    {N DC2
@@ -162,6 +154,14 @@
    {N DC3
    }
    {N KVAL
+   }
+   {N A0
+   }
+   {N A1
+   }
+   {N B0
+   }
+   {N B1
    }
   }
 
