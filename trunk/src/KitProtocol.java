@@ -7,30 +7,37 @@ public class KitProtocol {
 	private static final int RxC_MASK = 0x02;
 	private static final int RxD_MASK = 0x01;
 	private static final int SHIFT_BITS_MASK = 1;
-	private static final int VALUE_MASK = 0x80;
+	private static final int VALUE_MASK = 0x0F;
+	private static int	bits2Shift=5;
+	private static int count;
+	private static boolean ready=true;
 
 	/*
 	 * Inicia o protocolo
 	 */
 	private static void initProtocol() {
-		Kit.setBits(RxC_MASK | RxD_MASK);
+		System.out.print("Inicio do Protocolo\n");
+		Kit.setBits(RxC_MASK |RxD_MASK);
+		count=bits2Shift;
+		fullDelay();
+		System.out.print("--------------------------------\n");
 	}
 
 	private static void setStart() {
+		System.out.print("Inicio do Start\n");
 		Kit.setBits(RxC_MASK);
-		delay();
 		Kit.invertBits(RxD_MASK);
 		delay();
-
+		System.out.print("++++++++++++++++++++++++++++++++\n");
 	}
 
 	private static boolean isReady() {
-		return Kit.readBit(RxRDY_MASK);
-
+		//return Kit.readBit(RxRDY_MASK);
+		return ready;
 	}
 
 	private static void resetProtocol() {
-		Kit.resetBits(0x0F);
+		Kit.resetBits(RxC_MASK | RxD_MASK);
 	}
 
 	private static void delay() {
@@ -42,34 +49,37 @@ public class KitProtocol {
 	}
 
 	public static void sendBits(int rs, int value) {
-		value = (0x0f & value) | VALUE_MASK;
+		value = (VALUE_MASK & value);
 		boolean rsSent = false;
 		System.out.print("Inicio da Comunicação\n");
+		initProtocol();
 		while (isReady()) {
 			setStart();
-			while (!isReady() && (value != 0x08)) {
+			ready=false;
+			while (!isReady() && (count!= 0)) {
 				if (!rsSent) {
-					System.out.print("RS-" + (value & RxD_MASK) + "-\n");
-					sendBit(rs & RxD_MASK);
+					System.out.print("RS"+(rs&RxD_MASK)+"\n");
+					sendBit(rs);
 					rsSent = true;
+					count-=1;
 				}
-				System.out.print("Dados-" + (value & RxD_MASK) + "-\n");
-				sendBit(value & RxD_MASK);
+				System.out.print("Dados"+(value&RxD_MASK)+"\n");
+				sendBit(value);
 				value = value >> SHIFT_BITS_MASK;
+				count-=1;
 			}
+			initProtocol();
 		}
-		initProtocol();
+		ready=true;
 		System.out.print("Fim da Comunicação\n");
 	}
 
 	public static void sendBit(int value) {
-		Kit.invertBits(RxC_MASK);
-		Kit.write(value, RxD_MASK);
-		delay();
+		Kit.write(value,RxD_MASK);
 		Kit.setBits(RxC_MASK);
-		//Kit.write(value, RxD_MASK);
 		delay();
-
+		Kit.invertBits(RxC_MASK);
+		delay();
 	}
 
 	/**
@@ -77,10 +87,11 @@ public class KitProtocol {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		while(true){
-		initProtocol();			
-		fullDelay();
-		sendBits(0x01, 0x05);
+		int a=2;
+		while(a>0){
+			System.out.print("Sending Bits\n");
+			sendBits(0x01, 0x05);
+			a--;
 		}
 	}
 

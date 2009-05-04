@@ -127,7 +127,8 @@ public class Kit {
 	 * Escreve no output o valor dos bits do 'writeOutput'  
 	 */
 	private static void write() {
-		OutputPort.out(~writeOutput);
+		//OutputPort.out(~writeOutput);
+		System.out.printf("%2s|\r", Integer.toBinaryString(writeOutput));
 	}	
 	
 	
