@@ -1,0 +1,273 @@
+%SIGNAL
+PIN  26 =  C0 
+PIN   1 =  CLK 
+PIN  17 =  D0 
+PIN  16 =  D1 
+PIN  15 =  D2 
+PIN  14 =  D3 
+PIN  18 =  Dnc 
+PIN  23 =  E 
+PIN  30 =  P0 
+PIN  31 =  P1 
+PIN  32 =  Q0 
+PIN  33 =  Q1 
+PIN  27 =  R0 
+PIN  28 =  R1 
+PIN  29 =  R2 
+PIN   2 =  RxC 
+PIN   3 =  RxD 
+PIN  22 =  RxRdy 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+A0 =>
+    P0 & !P1 & R0
+
+A1 =>
+    P0 & !P1 & R1
+
+A2 =>
+    P0 & !P1 & R2
+
+B0 =>
+    1 
+
+B1 =>
+    0 
+
+B2 =>
+    0 
+
+C1 =>
+    P0 & !P1 & R0
+  # C0
+
+C2 =>
+    C0 & P0 & !P1 & R1
+  # P0 & !P1 & R0 & R1
+
+C3 =>
+    P0 & !P1 & R0 & R1 & R2
+  # C0 & P0 & !P1 & R1 & R2
+
+D0.d  =>
+    D1
+
+D0.ar  =>
+    0 
+
+D0.ck  =>
+    RxC
+
+D0.sp D1.sp D2.sp D3.sp Dnc.sp P0.sp P1.sp Q0.sp Q1.sp R0.sp R1.sp R2.sp  =>
+    0 
+
+D1.d  =>
+    D2
+
+D1.ar  =>
+    0 
+
+D1.ck  =>
+    RxC
+
+D1.sp  =>
+    
+D2.d  =>
+    D3
+
+D2.ar  =>
+    0 
+
+D2.ck  =>
+    RxC
+
+D2.sp  =>
+    
+D3.d  =>
+    RxD
+
+D3.ar  =>
+    0 
+
+D3.ck  =>
+    RxC
+
+D3.sp  =>
+    
+DSR =>
+    P0 & !P1
+
+Dnc.d  =>
+    D0
+
+Dnc.ar  =>
+    0 
+
+Dnc.ck  =>
+    RxC
+
+Dnc.sp  =>
+    
+E =>
+    P0 & P1
+
+ES =>
+    P0 & !P1
+
+P0.d  =>
+    !P0 & !P1 & Q0 & Q1
+  # P0 & !P1 & R1
+  # P0 & !P1 & R0 & !R1 & R2
+  # P0 & !P1 & !R0
+  # P0 & !P1 & !R2
+
+P0.ar  =>
+    0 
+
+P0.ck  =>
+    !CLK
+
+P0.sp  =>
+    
+P1.d  =>
+    P0 & !P1 & R0 & !R1 & R2
+
+P1.ar  =>
+    0 
+
+P1.ck  =>
+    !CLK
+
+P1.sp  =>
+    
+Q0.d  =>
+    !Q0 & !Q1 & RxC & RxD
+  # Q0 & !Q1 & RxC & !RxD
+  # Q0 & !Q1 & RxD
+
+Q0.ar  =>
+    0 
+
+Q0.ckmux  =>
+    CLK
+
+Q0.sp  =>
+    
+Q1.d  =>
+    Q0 & !Q1 & RxC & !RxD
+
+Q1.ar  =>
+    0 
+
+Q1.ckmux  =>
+    CLK
+
+Q1.sp  =>
+    
+R0.d  =>
+    !C0 & !R0
+  # !C0 & !P0
+  # !C0 & P1
+  # C0 & P0 & !P1 & R0
+
+R0.ar  =>
+    RxRdy
+
+R0.ck  =>
+    RxC
+
+R0.sp  =>
+    
+R1.d  =>
+    !C0 & P0 & !P1 & !R0 & R1
+  # P0 & !P1 & R0 & !R1
+  # C0 & !R1
+  # C0 & !P0
+  # C0 & P1
+
+R1.ar  =>
+    RxRdy
+
+R1.ck  =>
+    RxC
+
+R1.sp  =>
+    
+R2.d  =>
+    !C0 & P0 & !P1 & !R0 & R2
+  # P0 & !P1 & !R1 & R2
+  # C0 & P0 & !P1 & R1 & !R2
+  # P0 & !P1 & R0 & R1 & !R2
+
+R2.ar  =>
+    RxRdy
+
+R2.ck  =>
+    RxC
+
+R2.sp  =>
+    
+RxRdy =>
+    !P0 & !P1
+  # P0 & P1
+
+S0 =>
+    !C0 & !R0
+  # !C0 & !P0
+  # !C0 & P1
+  # C0 & P0 & !P1 & R0
+
+S1 =>
+    !C0 & P0 & !P1 & !R0 & R1
+  # P0 & !P1 & R0 & !R1
+  # C0 & !R1
+  # C0 & !P0
+  # C0 & P1
+
+S2 =>
+    !C0 & P0 & !P1 & !R0 & R2
+  # P0 & !P1 & !R1 & R2
+  # C0 & P0 & !P1 & R1 & !R2
+  # P0 & !P1 & R0 & R1 & !R2
+
+Start =>
+    Q0 & Q1
+
+Z =>
+    R0 & !R1 & R2
+
+k0 =>
+    1 
+
+k1 =>
+    0 
+
+k2 =>
+    1 
+
+D0.oe  =>
+    1 
+
+D1.oe  =>
+    1 
+
+D2.oe  =>
+    1 
+
+D3.oe  =>
+    1 
+
+Dnc.oe  =>
+    1 
+
+E.oe  =>
+    1 
+
+RxRdy.oe  =>
+    1 
+
+%END
