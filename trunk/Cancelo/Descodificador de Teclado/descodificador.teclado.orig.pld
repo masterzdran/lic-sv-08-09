@@ -1,4 +1,4 @@
-Name     teclado ;
+Name     descodificador.teclado ;
 PartNo   00 ;
 Date     16-04-2009 ;
 Revision 01 ;
@@ -6,8 +6,7 @@ Designer Engineer ;
 Company  ccisel ;
 Assembly None ;
 Location  ;
-/*Device   v750c;*/
-Device	 virtual;
+Device   v750c;
 
 /*
 // PIN - Entradas
@@ -25,7 +24,7 @@ PIN 14      = K0;
 PIN 15      = K1;
 PIN 16      = K2;
 PIN 17      = K3;
-PIN 23      = KVAL;
+PIN 18      = KVAL;
 PIN 19      = DC0;
 PIN 20      = DC1;
 PIN 21      = DC2;
@@ -35,19 +34,19 @@ PIN 22      = DC3;
 // PIN - Internos
 */
 /*PINNODE  27 = C1CE;*/
-PINNODE  28 = C1Rb0;
+PINNODE  26 = C1Rb0;
 PINNODE  30 = C1Rb1;
 /*PINNODE  43 = C1Cout;*/
 /*PINNODE  28 = C2CE;*/
 PINNODE  27 = C2Rb0;
-PINNODE  26 = C2Rb1;
+PINNODE  25 = C2Rb1;
 /*PINNODE  44 = C2Cout;*/
 
 /*
 //Constantes
 */
+Bb0         = 'b'1;
 Bb1         = 'b'0;
-UM          = 'b'1;
 C0          = 'b'0;
 ZERO        = 'b'0;
 
@@ -55,9 +54,8 @@ ZERO        = 'b'0;
 //Contador de Colunas - C1
 */
 /*Multiplexers - Promovem o reset */
-Bb0         = C1CE;
-C1Ab0       = C1Rb0;
-C1Ab1       = C1Rb1;
+C1Ab0       = !C1CE & C1Rb0;
+C1Ab1       = !C1CE & C1Rb1;
 
 /*Full Adder*/
 C1C1        =   C0&C1Ab0 #   C0&Bb0 # C1Ab0&Bb0;

@@ -115,18 +115,18 @@ public class LCD {
 		needRS=false;
 		Time.sleep(20);
 		 writeBits(intValue3);
-		Time.sleep(10);
+		Time.sleep(5);
 		 writeBits(intValue3);
-		Time.sleep(10);
+		Time.sleep(1);
 		 writeBits(intValue3);
 		 writeBits(intValue2);
-		Time.sleep(10);
+		//Time.sleep(10);
 		 procValue(intValue28);
-		Time.sleep(10);
+		//Time.sleep(10);
 		 procValue(intValue8);
-		Time.sleep(10);
+		//Time.sleep(10);
 		 procValue(intValue1);
-		Time.sleep(10);
+		//Time.sleep(10);
 		 procValue(intValue7);
 		 procValue(0x0E);
 		 procValue(0x06);
@@ -147,8 +147,7 @@ public class LCD {
 	/* Posiciona o cursor na linha (0..1) e coluna (0..15) indicadas */
 	public static void posCursor(int line, int col) {
 		needRS=false;
-		cursorPosition=ADDR_COUNTER_MASK|(0x40*line+col);
-		procValue(cursorPosition);
+		procValue(ADDR_COUNTER_MASK|(0x40*line+col));
 	}
 
 	/* Acerta o tipo de cursor: Visivel ou invisivel; A piscar ou constante 
@@ -161,9 +160,8 @@ public class LCD {
 	 * 
 	 * */
 	public static void setCursor(boolean visible, boolean blinking) {
-		isVisible=true;
-		isBlinking=true;
-		instruction=(visible?CURSOR_ON_MASK:CURSOR_OFF_MASK)|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK);
+		needRS=false;
+		write((char)(visible?CURSOR_ON_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK):(CURSOR_OFF_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK))));
 	}
 
 	/*
@@ -191,9 +189,7 @@ public class LCD {
 	 * dependendo da última chamada a SetCenter()
 	 */
 	public static void writeLine(int line, String txt) {
-		//clear();
-		int pos=(isCentered)?(DISPLAY_SIZE_MASK-txt.length())/2:0;
-		posCursor(line, pos);
+		posCursor(line, (isCentered)?(DISPLAY_SIZE_MASK-txt.length())/2:0);
 		write(txt);
 	}
 	/*
@@ -210,23 +206,35 @@ public class LCD {
 	}
 
 	private static void writeBits(int value){
-		Kit.write(ENABLE_MASK|(needRS?RS_MASK:0)|(value&0x0F));
-		Kit.write((needRS?RS_MASK:0)|(value&0x0F));
+		KitProtocol.sendBits(needRS?1:0, value);
+		//Kit.write(ENABLE_MASK|(needRS?RS_MASK:0)|(value&0x0F));
+		//Kit.write((needRS?RS_MASK:0)|(value&0x0F));
 	}
 	public static void main(String args[]){
 		init();
-		setCenter(true);
+		//setCenter(true);
 		//write('X');
+		//Time.sleep(10000);
 		
-		writeLine(0, "Feliz");
-		writeLine(1, "Natal");
-		Time.sleep(5000);
-		clearLine(0);
-		writeLine(1, "Linha 0 Apagada");
-//		setCenter(false);
-//		writeLine(0, "LIC2008");
-		Time.sleep(5000);
-		clear();
+		for (int i=0;i<10;i++){
+			writeLine(0, "Feliz"+i);
+			writeLine(1, "Natal"+i);
+			Time.sleep(100);
+			clear();
+		}
+//		
+//		
+//		
+//		writeLine(0, "Feliz");
+//		writeLine(1, "Natal");
+//		setCursor(false,false);
+//		Time.sleep(5000);
+//		clearLine(0);
+//		writeLine(1, "Linha 0 Apagada");
+////		setCenter(false);
+////		writeLine(0, "LIC2008");
+//		//Time.sleep(5000);
+//		clear();
 	}
 
 }

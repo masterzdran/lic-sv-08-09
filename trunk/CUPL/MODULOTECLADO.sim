@@ -1,0 +1,164 @@
+%SIGNAL
+PIN  15 =  A 
+PIN  16 =  B 
+PIN  17 =  C 
+PIN   1 =  CLK 
+PIN  18 =  D 
+PIN   2 =  E 
+PIN   3 =  F 
+PIN   4 =  G 
+PIN   5 =  H 
+PIN  22 =  K0 
+PIN  21 =  K1 
+PIN  20 =  K2 
+PIN  19 =  K3 
+PIN  14 =  K_VAL 
+PIN  25 =  P0 
+PIN  26 =  P1 
+PIN  32 =  Q0 
+PIN  33 =  Q1 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+A =>
+    Q0
+  # Q1
+
+B =>
+    !Q0
+  # Q1
+
+C =>
+    !Q1
+  # Q0
+
+CE1 =>
+    E & F & G & H
+
+CE2 =>
+    !K_VAL
+
+D =>
+    !Q0
+  # !Q1
+
+I =>
+    P1
+
+J =>
+    P0
+
+K =>
+    Q0
+
+K0 =>
+    Q0
+
+K1 =>
+    Q1
+
+K2 =>
+    P0
+
+K3 =>
+    P1
+
+K_VAL =>
+    F & P0 & !P1
+  # E & !P0 & !P1
+  # H & P0 & P1
+  # G & !P0 & P1
+
+L =>
+    Q1
+
+M =>
+    E & F & G & H
+
+P0.d  =>
+    !K_VAL & !P0
+  # K_VAL & P0
+
+P0.ar  =>
+    0 
+
+P0.ck  =>
+    CLK
+
+P0.sp P1.sp Q0.sp Q1.sp  =>
+    0 
+
+P1.d  =>
+    !P1
+
+P1.ar  =>
+    0 
+
+P1.ck  =>
+    !P0
+
+P1.sp  =>
+    
+Q0.d  =>
+    E & F & G & H & !Q0
+  # !E & Q0
+  # !F & Q0
+  # !G & Q0
+  # !H & Q0
+
+Q0.ar  =>
+    0 
+
+Q0.ck  =>
+    CLK
+
+Q0.sp  =>
+    
+Q1.d  =>
+    !Q1
+
+Q1.ar  =>
+    0 
+
+Q1.ck  =>
+    !Q0
+
+Q1.sp  =>
+    
+Y =>
+    F & P0 & !P1
+  # E & !P0 & !P1
+  # H & P0 & P1
+  # G & !P0 & P1
+
+A.oe  =>
+    1 
+
+B.oe  =>
+    1 
+
+C.oe  =>
+    1 
+
+D.oe  =>
+    1 
+
+K0.oe  =>
+    1 
+
+K1.oe  =>
+    1 
+
+K2.oe  =>
+    1 
+
+K3.oe  =>
+    1 
+
+K_VAL.oe  =>
+    1 
+
+%END

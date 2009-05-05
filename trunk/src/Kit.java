@@ -9,9 +9,10 @@ import isel.leic.usbio.OutputPort;
  * 
  */
 public class Kit {
-	private static final int SLEEP=250;
+	private static final int SLEEP=1;
 	private static int readInput;
 	private static int writeOutput;
+	private static int eightBits=0xFF;
 
 	/* Lê o input port para posterior consulta */
 	public static void read() {
@@ -48,8 +49,8 @@ public class Kit {
 		return isBit(mask);
 	}
 
-	private static void sleep(){
-		Time.sleep(100);
+	public static void sleep(){
+		Time.sleep(SLEEP);
 	}
 	/**
 	 * Coloca a Vcc os bits indicados pela mascara e os restantes bits mantêm o
@@ -66,7 +67,7 @@ public class Kit {
 	 */
 	public static void setBits(int mask) {
 		writeOutput=writeOutput|mask;
-		write();
+		write(writeOutput,eightBits);
 	}
 
 	/**
@@ -84,7 +85,7 @@ public class Kit {
 	 */
 	public static void resetBits(int mask) {
 		writeOutput=~mask & writeOutput;
-		write();
+		write(writeOutput,eightBits);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class Kit {
 	 */
 	public static void invertBits(int mask) {
 		writeOutput= writeOutput ^ mask;
-		write();
+		write(writeOutput,eightBits);
 	}
 
 	/**
@@ -111,27 +112,9 @@ public class Kit {
 	 */
 	public static void write(int values, int mask) {
 		writeOutput=values&mask;
-		write();
-		//OutputPort.out(~(values&mask));
+		OutputPort.out(~writeOutput);
 	}
 
-	/**
-	 * Escreve no output o valor dos bits de 'value'  
-	 */
-	public static void write(int value) {
-		writeOutput=value;
-		write();
-	}	
-	
-	/**
-	 * Escreve no output o valor dos bits do 'writeOutput'  
-	 */
-	private static void write() {
-		//OutputPort.out(~writeOutput);
-		System.out.printf("%2s|\r", Integer.toBinaryString(writeOutput));
-	}	
-	
-	
 	public static void main(String[] args) {
 		
 		

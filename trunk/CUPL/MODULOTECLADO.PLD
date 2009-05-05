@@ -1,0 +1,91 @@
+Name     ModuloTeclado ;
+PartNo   00 ;
+Date     27-04-2009 ;
+Revision 01 ;
+Designer Engineer ;
+Company  ccisel ;
+Assembly None ;
+Location  ;
+Device   v750c ;
+
+/* ************************ INPUT PINS *************************** */
+PIN 1 = CLK;
+
+PIN 2 = E;/* Entrada E do Mux */
+PIN 3 = F;/* Entrada F do Mux */
+PIN 4 = G;/* Entrada G do Mux */
+PIN 5 = H;/* Entrada H do Mux */
+
+/* ************************ OUTPUT PINS ************************** */
+PIN 14 = K_VAL; /* Saida do Mux */
+
+PIN 15 = A; /* Saida A do Decoder */
+PIN 16 = B; /* Saida B do Decoder */
+PIN 17 = C; /* Saida C do Decoder */
+PIN 18 = D; /* Saida D do Decoder */
+
+PIN 19 = K3; /* Saida do Valor K3 (Bit 4) */
+PIN 20 = K2; /* Saida do Valor K2 (Bit 3) */
+PIN 21 = K1; /* Saida do Valor K1 (Bit 2) */
+PIN 22 = K0; /* Saida do Valor K0 (Bit 1) */
+
+pinnode [32..33] = [Q0..Q1];
+pinnode [25..26] = [P0..P1];
+
+/* **************************** BODY ****************************** */
+K1 = L;
+K0 = K;
+K3 = I;
+K2 = J;
+
+/* ************************* CONTADOR 1 *************************** */
+M = E&F&G&H;
+CE1 = M;
+
+Q0.d = (CE1$Q0);
+Q0.ar = 'b'0;
+Q0.sp = 'b'0;
+Q0.ck = CLK;
+
+Q1.d = ('b'1$Q1);
+Q1.ar = 'b'0;
+Q1.sp = 'b'0;
+Q1.ck = !Q0;
+
+K = Q0;
+L = Q1;
+
+/* ************************* CONTADOR 2 ************************** */
+CE2 = !K_VAL;
+
+P0.d = (CE2$P0);
+P0.ar = 'b'0;
+P0.sp = 'b'0;
+P0.ck = CLK;
+
+P1.d = ('b'1$P1);
+P1.ar = 'b'0;
+P1.sp = 'b'0;
+P1.ck = !P0;
+
+J = P0;
+I = P1;
+
+/* ****************************  MUX ******************************/
+Y = !I&((!J&E)#(J&F))#I&((!J&G)#(J&H));
+K_VAL = !Y;
+
+/* ************************* DECODER ******************************/
+A = K # L;
+B = !K # L;
+C = !L # K;
+D = !K # !L;
+
+
+
+
+
+
+
+
+
