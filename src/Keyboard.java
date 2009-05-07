@@ -6,6 +6,7 @@ public class Keyboard  {
 	private static final int KEY_VAL_MASK = 0x40;
 	private static final int KEY_DAT_MASK = 0x0F;
 	private static final char[] KEYS ={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+	private static final long WAIT=200;
 	private static char keyPressed=0;
 
 	/**
@@ -18,6 +19,7 @@ public class Keyboard  {
 		if(Kit.readBit((KEY_VAL_MASK))){
 			return KEYS[Kit.getBits(KEY_DAT_MASK)];
 		}
+		keyPressed=0;
 		return 0;
 	}
 	/**
@@ -48,14 +50,22 @@ public class Keyboard  {
 	 */
 	public static char waitKey(long timeout) {
 		char key;
-			if((key=getKey()) != 0){
-				return key;
-			}else{
-				Time.sleep(timeout);
-				if((key=getKey()) != 0){
-					return key;
-				}
-			}
-		return 0;
+		long elapsed=0;
+		long towait=(WAIT>timeout)?timeout:WAIT;
+		
+		while (((key=getKey()) == 0 )||(elapsed >= timeout) ){
+			elapsed+=towait;
+			Time.sleep(towait);
+		}
+		
+		return key;
+	}
+	public static void main(String[] args) {
+		char key;
+		while(true){
+			key=waitKey(10000);
+			System.out.println(key+"<>"+(int)key);
+			//Time.sleep(1000);
+		}
 	}
 }
