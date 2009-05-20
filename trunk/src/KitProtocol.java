@@ -3,7 +3,7 @@ import isel.leic.utils.Time;
 public class KitProtocol {
 	private static final int CLOCK_MASK = 1;
 	private static final int HALFCLOCK_MASK = CLOCK_MASK / 2;
-	private static final int RxRDY_MASK = 0x01;					//To be read from input Port
+	private static final int RxRDY_MASK = 0x08;					//To be read from input Port
 	private static final int RxC_MASK = 0x02;					//To be written in Output Port
 	private static final int RxD_MASK = 0x01;					//To be written in Output Port
 	private static final int SHIFT_BITS_MASK = 1;
