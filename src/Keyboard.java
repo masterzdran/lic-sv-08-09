@@ -65,7 +65,7 @@ public class Keyboard  {
 		while(true){
 			key=waitKey(10000);
 			System.out.println(key+"<>"+(int)key);
-			//Time.sleep(1000);
+
 		}
 	}
 }
