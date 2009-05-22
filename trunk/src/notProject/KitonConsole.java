@@ -1,3 +1,4 @@
+package notProject;
 public class KitonConsole {
 	/**
 	 * Variáveis/Constantes de Sistema
