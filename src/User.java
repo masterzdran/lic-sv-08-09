@@ -6,10 +6,6 @@ public class User {
 	private String userMessage;
 	private boolean hasMessage;
 	
-	public User(){
-		this("", 0, 0,"");
-	}
-	
 	public User(String n, int i, int p, String m){
 		setUserId(i);
 		setUserName(n);

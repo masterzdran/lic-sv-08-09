@@ -1,6 +1,5 @@
 
 public class ControloAcessos {
-	private static final int MAXUSERS=1000;
 	private static final String ASK4USER="Insert Number";
 	private static final String ASK4PIN="Insert PIN ---";
 	private static final String ASK4NEWPIN="New PIN ---";
@@ -10,14 +9,6 @@ public class ControloAcessos {
 	private static final String MAINTENANCE_MESSAGE="Out off Service";
 	private static final int PINPOS=11;
 
-	private static int nbrUsers;
-	private static User[] users;
-
-	private static void prepareDB(){
-		users=new User[MAXUSERS];
-		nbrUsers=0;
-	}
-	
 	public static void ask4User(){
 		LCD.setCenter(true);
 		LCD.writeLine(0, ASK4USER );
