@@ -1,64 +1,74 @@
 import isel.leic.utils.Time;
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
 
-public class KitProtocol {
-	private static final int CLOCK_MASK = 1;
-	private static final int HALFCLOCK_MASK = CLOCK_MASK / 2;
-	private static final int RxRDY_MASK = 0x08;					//To be read from input Port
-	private static final int RxC_MASK = 0x02;					//To be written in Output Port
-	private static final int RxD_MASK = 0x01;					//To be written in Output Port
-	private static final int SHIFT_BITS_MASK = 1;
-	private static final int VALUE_MASK = 0x0F;
-	private static int	bits2Shift=5;
-	private static int count;
-	private static boolean rsSent;
-
-
-	/*
-	 * Inicia o protocolo
+public class KitProtocol implements KitConstants{
+	private int	bits2Shift;
+	private Kit ourKit;
+	
+	public KitProtocol(){
+		bits2Shift=4;
+		ourKit=new Kit();
+	}
+	/**
+	 * Cria a sequencia de inicio do Protocolo
 	 */
-	private static void initProtocol() {
-		//count=bits2Shift;
-		Kit.setBits(RxC_MASK |RxD_MASK);
+	private  void initProtocol() {
+		ourKit.setBits(RxC_MASK |RxD_MASK);
 		fullDelay();
 	}
 
-	private static void setStart() {
-		Kit.invertBits(RxD_MASK);
-		rsSent=false;
+	/**
+	 * Cria sequencia de Start.
+	 */
+	private  void setStart() {
+		ourKit.invertBits(RxD_MASK);
 		delay();
 	}
-
-	private static boolean isReady() {
-		return Kit.readBit(RxRDY_MASK);
+	/**
+	 * Verifica se o Kit está pronto a envia a sequencia de Dados.
+	 * @return
+	 */
+	private  boolean isReady() {
+		return ourKit.readBit(RxRDY_MASK);
 	}
 
-	private static void resetProtocol() {
-		Kit.setBits(RxD_MASK);
+	/**
+	 * Faz reset à sequencia de dados.
+	 */
+	private  void resetProtocol() {
+		ourKit.setBits(RxD_MASK);
 	}
 
-	private static void delay() {
+	/**
+	 * Temporizador que pára o acesso ao Kit.
+	 */
+	private  void delay() {
 		Time.sleep(HALFCLOCK_MASK);
 	}
-
-	private static void fullDelay() {
+	/**
+	 * Temporizador que pára o acesso ao Kit.
+	 */
+	private  void fullDelay() {
 		Time.sleep(CLOCK_MASK);
 	}
-
-	public static void sendBits(int rs, int value) {
-	//	value = (VALUE_MASK & value);
-		
+	/**
+	 * Envia a sequencia de dados para ser mostrado no LCD. 
+	 * @param rs
+	 * @param value
+	 */
+	public  void sendBits(int rs, int value) {
 		initProtocol();
 		if (isReady()) {
 			setStart();
 			sendBit(rs);
 			
-//			for (count=bits2Shift;!isReady()&&count!=0;count-=1){
-			for (count=bits2Shift-1;count!=0;count-=1){
-//				if (!rsSent) {
-//					sendBit(rs);
-//					rsSent = true;
-//					continue;
-//				}
+			for (int count=bits2Shift;count!=0;count-=1){
 				sendBit(value);
 				value = value >> SHIFT_BITS_MASK;
 			}
@@ -66,18 +76,22 @@ public class KitProtocol {
 		}
 	}
 
-	private static void sendBit(int value) {
-		Kit.invertBits(RxC_MASK);
-		Kit.write(value,RxD_MASK);
+	/**
+	 * Envia os dados, segundo o protocolo, pelo Output port.
+	 * @param value
+	 */
+	private  void sendBit(int value) {
+		ourKit.invertBits(RxC_MASK);
+		ourKit.write(value,RxD_MASK);
 		delay();
-		Kit.setBits(RxC_MASK);
+		ourKit.setBits(RxC_MASK);
 		delay();
 	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public  void main(String[] args) {
 
 	}
 
