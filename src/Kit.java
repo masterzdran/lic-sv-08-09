@@ -8,14 +8,24 @@ import isel.leic.usbio.OutputPort;
  * 33595 - Nuno Sousa
  * 
  */
-public class Kit {
-	private static final int SLEEP=1;
-	private static int readInput;
-	private static int writeOutput;
-	private static int eightBits=0xFF;
+public class Kit implements KitConstants{
+	private  int readInput;
+	private  int writeOutput;
+	
+	/**
+	 * Construtor da Class Kit. 
+	 * Inicia os valores dos portos de Input e OutPut.
+	 */
+	public Kit(){
+		readInput=0x00;
+		writeOutput=0x00;
+		write(writeOutput, EIGHTBITS);
+	}
 
-	/* Lê o input port para posterior consulta */
-	public static void read() {
+	/** 
+	 * Lê o input port para posterior consulta 
+	 * */
+	public void read() {
 		readInput =~( InputPort.in());
 	}
 
@@ -25,7 +35,7 @@ public class Kit {
 	 * 1 para Vcc Por exemplo retorna 0x0F se I0..I3 estão a Vcc e I4..I7 estão
 	 * a GND
 	 */
-	public static int getBits(int mask) {
+	public  int getBits(int mask) {
 		return (readInput&mask);
 	}
 
@@ -33,23 +43,29 @@ public class Kit {
 	 * Consulta o bit indicado pela mascara previamente lido com read() Retorna
 	 * true se o bit indicado pela mascara está a Vcc
 	 */
-	public static boolean isBit(int mask) {
+	public  boolean isBit(int mask) {
 		return ((readInput&mask)==mask);
 	}
 
-	/* Lê e consulta o valor representado pelos bits da mascara */
-	public static int readBits(int mask) {
+	/** 
+	 * Lê e consulta o valor representado pelos bits da mascara 
+	 * */
+	public  int readBits(int mask) {
 		read();
 		return getBits(mask);
 	}
 
-	/* Lê e consulta o bit indicado pela mascara */
-	public static boolean readBit(int mask) {
+	/** 
+	 * Lê e consulta o bit indicado pela mascara 
+	 * */
+	public  boolean readBit(int mask) {
 		read();
 		return isBit(mask);
 	}
-
-	public static void sleep(){
+	/**
+	 * Pára o acesso aos portos do Kit, durante alguns milisegundos.
+	 */
+	public  void sleep(){
 		Time.sleep(SLEEP);
 	}
 	/**
@@ -65,9 +81,9 @@ public class Kit {
 	 * 
 	 * Output=readInput+Mask
 	 */
-	public static void setBits(int mask) {
+	public  void setBits(int mask) {
 		writeOutput=writeOutput|mask;
-		write(writeOutput,eightBits);
+		write(writeOutput,EIGHTBITS);
 	}
 
 	/**
@@ -83,9 +99,9 @@ public class Kit {
 	 * 
 	 * Output=~Mask&readInput
 	 */
-	public static void resetBits(int mask) {
+	public  void resetBits(int mask) {
 		writeOutput=~mask & writeOutput;
-		write(writeOutput,eightBits);
+		write(writeOutput,EIGHTBITS);
 	}
 
 	/**
@@ -101,46 +117,21 @@ public class Kit {
 	 * 
 	 * Output=readInput^Mask
 	 */
-	public static void invertBits(int mask) {
+	public  void invertBits(int mask) {
 		writeOutput= writeOutput ^ mask;
-		write(writeOutput,eightBits);
+		write(writeOutput,EIGHTBITS);
 	}
 
 	/**
 	 * Altera os valores dos bits indicados pela mascara para os bits
 	 * correspondentes em 'value' 1-Vcc 0-GND
 	 */
-	public static void write(int values, int mask) {
+	public  void write(int values, int mask) {
 		writeOutput=values&mask;
 		OutputPort.out(~writeOutput);
 	}
 
-	public static void main(String[] args) {
-		
-		
-//		Kit.write(0x00, 0xFF);
-//		Kit.setBits(0xFF); // Coloca a Vcc todos os bits do output port -> ----
-//							// ----
-//		while (Kit.readBit(0x1))
-//			; // Espera que o bit I0 fique a GND
-//			Kit.resetBits(0x0F); // Coloca a GND os 4 bits de menor peso -> ----
-//								// ****
-//		while (!Kit.readBit(0x1))
-//			; // Espera que o bit I0 fique a Vcc
-//			Kit.invertBits(0xFF); // Inverte os valores dos bits do output port ->
-//				// **** ----
-//		for (int val = 1; Kit.isBit(0x80);) { // Enquanto entrada I7 a Vcc
-//												// (ultima leitura)
-//			Kit.write(~val, 0x0F); // Escreve o valor nos 4 bits de menor peso
-//			Time.sleep(SLEEP); // Espera 100 ms
-//			Kit.read(); // Le os bits do input port
-//			if (Kit.isBit(0x02)) { // Se entrada I1 a Vcc (ultima leitura)
-//				if ((val <<= 1) > 8)
-//					val = 1; // Roda bits do valor para esquerda
-//			} else {
-//				if ((val >>= 1) < 1)
-//					val = 8; // Roda bits do valor para a direita
-//			}
-//		}
+	public  void main(String[] args) {
+
 	}
 }

@@ -1,4 +1,10 @@
-
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
 public class ControloAcessos {
 	private static final String ASK4USER="Insert Number";
 	private static final String ASK4PIN="Insert PIN ---";
@@ -10,25 +16,17 @@ public class ControloAcessos {
 	private static final int PINPOS=11;
 
 	public static void ask4User(){
-		LCD.setCenter(true);
-		LCD.writeLine(0, ASK4USER );
+
 	}
 	
 	public static void ask4Pin(User u){
-		LCD.setCenter(true);
-		LCD.writeLine(0, u.getUserName());
-		LCD.setCenter(false);
-		LCD.writeLine(1, ASK4PIN);
-		LCD.posCursor(0, PINPOS);
 	}
 	private static void getUserInput(){
 	}
 	
 	public static void entryMaintenanceMode(){
-		LCD.setCenter(true);
-		LCD.write(MAINTENANCE_MESSAGE);
 	}
 	
-	
+
 	
 }

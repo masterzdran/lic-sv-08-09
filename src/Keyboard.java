@@ -1,13 +1,22 @@
 import isel.leic.utils.Time;
 
-
-public class Keyboard  {
-	// Mascaras das ligações ao input port.
-	private static final int KEY_VAL_MASK = 0x40;
-	private static final int KEY_DAT_MASK = 0x0F;
-	private static final char[] KEYS ={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-	private static final long WAIT=200;
-	private static char keyPressed=0;
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
+public class Keyboard implements KitConstants {
+	private static char keyPressed;
+	private Kit ourKit;
+	/**
+	 * Construtor que inicia a tecla de input e cria uma ligação para o Kit.
+	 */
+	public Keyboard(){
+		keyPressed=0;
+		ourKit=new Kit();
+	}
 
 	/**
 	// Se uma tecla está premida retorna a tecla: '0'..'9','A'..'F'
@@ -15,9 +24,9 @@ public class Keyboard  {
 	 * 
 	 * @return
 	 */
-	public static char pressedKey() {
-		if(Kit.readBit((KEY_VAL_MASK))){
-			return KEYS[Kit.getBits(KEY_DAT_MASK)];
+	public  char pressedKey() {
+		if(ourKit.readBit((KEY_VAL_MASK))){
+			return KEYS[ourKit.getBits(KEY_DAT_MASK)];
 		}
 		keyPressed=0;
 		return 0;
@@ -29,7 +38,7 @@ public class Keyboard  {
 	 *  
 	 * @return
 	 */
-	public static char getKey() {
+	public  char getKey() {
 		char key;
 		if((key=pressedKey())!= 0 && key != keyPressed){
 			keyPressed=key;
@@ -48,7 +57,7 @@ public class Keyboard  {
 	 * @param timeout
 	 * @return
 	 */
-	public static char waitKey(long timeout) {
+	public  char waitKey(long timeout) {
 		char key;
 		long elapsed=0;
 		long towait=(WAIT>timeout)?timeout:WAIT;
@@ -60,12 +69,7 @@ public class Keyboard  {
 		
 		return key;
 	}
-	public static void main(String[] args) {
-		char key;
-		while(true){
-			key=waitKey(10000);
-			System.out.println(key+"<>"+(int)key);
+	public  void main(String[] args) {
 
-		}
 	}
 }
