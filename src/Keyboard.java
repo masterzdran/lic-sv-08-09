@@ -69,6 +69,12 @@ public class Keyboard implements KitConstants {
 		
 		return key;
 	}
+	public void setACK(){
+		ourKit.setBits(ACK_MASK);
+	}
+	public void unsetACK(){
+		ourKit.resetBits(ACK_MASK);
+	}
 	public  void main(String[] args) {
 
 	}

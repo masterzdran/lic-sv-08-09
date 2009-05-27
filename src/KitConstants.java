@@ -53,6 +53,7 @@ public interface KitConstants {
 	 * */
 	public final int SLEEP=1;
 	public final int EIGHTBITS=0xFF;
+	public final int ACK_MASK=0x80;
 	
 
 }
