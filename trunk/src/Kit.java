@@ -131,7 +131,7 @@ public class Kit implements KitConstants{
 		OutputPort.out(~writeOutput);
 	}
 
-	public  void main(String[] args) {
+	public static void main(String[] args) {
 
 	}
 }

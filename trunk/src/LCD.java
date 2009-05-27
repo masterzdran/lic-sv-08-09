@@ -230,6 +230,25 @@ public class LCD implements KitConstants {
 
 	/**
 	 * 
+	 * @param s
+	 * @param b
+	 * @return
+	 * Recebe uma string e o numero de caracteres a recuar
+	 * e calcula onde vai escrever. Método utilizado para os pedidos do PIN.
+	 * x=Total de Caracteres do LCD (16)
+	 * y=Total de Caracteres da String
+	 * se centrado
+	 * 	pos=(x - y)/2 + (y - b) = (x - y + 2y - 2b)/2 = (x + y -2b)/2
+	 * se não centrado
+	 * 	pos= y - b
+	 */
+	public int getPos(String s, int b){
+		int x=DISPLAY_SIZE_MASK;
+		int y=s.length();
+		return (isCentered)?(x+y-2*b)/2:(y-3);
+	}
+	/**
+	 * 
 	 * @param value
 	 * Processa o valor para ser enviado.
 	 */
