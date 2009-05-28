@@ -1,0 +1,141 @@
+{COMPONENT E:\ISEL\SEMESTRE2\LIC\PROJECTO\CUPL\REGISTO_EDO.SYM
+
+ {ENVIRONMENT
+  {PDIFvrev 3.00}
+  {Program "CUPL(WM) Version 5.0a"}
+  {DBtype "Schematic"}
+  {DBvrev 1.01}
+  {DBtime "Thu May 28 18:26:56 2009 "}
+  {DBunit "MIL"}
+  {DBgrid 10}
+  {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
+          "PINNAM" 6 "PINCON" 4 "REFDES" 2 "ATTR" 6 "SDOT" 1 
+          "DEVICE" 5 "OUTLIN" 5 "ATTR2" 6 "NOTES" 6 "NETNAM" 4 
+          "CMPNAM" 5 "BORDER" 5}
+ }
+
+ {USER
+  {VIEW
+   {Mode SYMB}
+   {Nlst OPEN}
+   {Vw 0 0 2}
+   {Lv 12 2 2 2 0 0 2 2 2 2 0 0 2 1 2 0 0 0 0}
+   {Gs 10 10}
+  }
+ }
+
+ {DISPLAY
+  [Ly "PINNUM"]
+  [Ls "SOLID"][Wd 0]
+  [Ts 15][Tj "LC"][Tr 0][Tm "N"]
+ }
+
+ {SYMBOL
+  {PIN_DEF
+   [Ly "PINCON"]
+   {P RE_CLK {Pt "INPUT"}{Lq 0}{Ploc 100 120}}
+   {P IK0 {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
+   {P IK1 {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
+   {P IK2 {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
+   {P IK3 {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
+   {P OK0 {Pt "OUTPUT"}{Lq 0}{Ploc 290 20}}
+   {P OK1 {Pt "OUTPUT"}{Lq 0}{Ploc 290 40}}
+   {P OK2 {Pt "OUTPUT"}{Lq 0}{Ploc 290 60}}
+   {P OK3 {Pt "OUTPUT"}{Lq 0}{Ploc 290 80}}
+  }
+
+  {PKG
+   [Ly "REFDES"]
+   [Ts 25][Tj "CB"][Tr 0][Tm "N"]
+   {Rdl 195 150}
+
+   [Ly "PINNUM"]
+   [Ts 15][Tj "RC"]
+   {Pnl 120 130}
+   [Ts 15][Tj "RC"]
+   {Pnl 120 90}
+   {Pnl 120 70}
+   {Pnl 120 50}
+   {Pnl 120 30}
+   [Ts 15][Tj "LC"]
+   {Pnl 270 30}
+   {Pnl 270 50}
+   {Pnl 270 70}
+   {Pnl 270 90}
+
+   {Sd A 1 3 4 5 6 15 16 17 18}
+  }
+
+  {PIC
+   [Ly "GATE"]
+   [Ts 15][Tj "LC"][Tr 0][Tm "N"]
+   {R 130 140 260 0}
+   {L 130 120 100 120}
+   {L 130 130 140 120 130 110}
+   {L 130 80 100 80}
+   {L 130 60 100 60}
+   {L 130 40 100 40}
+   {L 130 20 100 20}
+   {L 260 20 290 20}
+   {L 260 40 290 40}
+   {L 260 60 290 60}
+   {L 260 80 290 80}
+   [Ly "PINNAM"]
+   [Tj "LC"]
+   {T "RE_CLK" 140 120}
+   {T "IK0" 140 80}
+   {T "IK1" 140 60}
+   {T "IK2" 140 40}
+   {T "IK3" 140 20}
+   [Tj "RC"]
+   {T "OK0" 250 20}
+   {T "OK1" 250 40}
+   {T "OK2" 250 60}
+   {T "OK3" 250 80}
+   [Ly "DEVICE"]
+   [Tj "CT"]
+   {T "V750C" 195 -10}
+  }
+
+  {ATR
+   {IN
+    {Org 100 20}
+    {Ty 255}
+   }
+   {EX
+    [Ly "ATTR2"]
+    [Ts 12][Tj "CT"][Tr 0][Tm "N"]
+    {At PLD E:\ISEL\SEMESTRE2\LIC\PROJECTO\CUPL\REGISTO_EDO 195 140}
+   }
+  }
+ }
+
+ {DETAIL
+  {ANNOTATE
+  }
+
+  {NET_DEF
+   {N RE_CLK
+   }
+   {N IK0
+   }
+   {N IK1
+   }
+   {N IK2
+   }
+   {N IK3
+   }
+   {N OK0
+   }
+   {N OK1
+   }
+   {N OK2
+   }
+   {N OK3
+   }
+  }
+
+  {SUBCOMP
+  }
+ }
+}

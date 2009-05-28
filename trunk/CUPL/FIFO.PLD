@@ -1,0 +1,157 @@
+Name     SerieFinalv1 ;
+PartNo   00 ;
+Date     16-04-2009 ;
+Revision 01 ;
+Designer Engineer ;
+Company  ccisel ;
+Assembly None ;
+Location  ;
+Device   v750c;
+
+
+/* ************************ INPUT PINS *************************** */
+PIN 1 = CLK;
+PIN 2 = RxC;/* Referente a shift Register */
+PIN 3 = RxD;/* Referente a shift Register */
+/* PIN 4 = C0; */
+
+
+/* ************************ OUTPUT PINS ************************** */
+
+PIN 14 = D3; /* Saida D3 do shift Register */
+PIN 15 = D2; /* Saida D2 do shift Register */
+PIN 16 = D1; /* Saida D1 do shift Register */
+PIN 17 = D0; /* Saida D0 do shift Register */
+PIN 18 = Dnc;/* Saida Dnc do shift Register */
+PIN 22 = RxRdy;/* Saida Ready */
+PIN 23 = E;
+
+/* INTERMEDIOS */
+pinnode [32..33] = [Q0..Q1];
+pinnode [27,28, 29]=[R0,R1,R2];
+pinnode 30 = P0;
+pinnode 31 = P1;
+pinnode 26 = C0;
+
+/* **************************** BODY ***************************** */
+/* ******************* PARTE DO SHIFT REGISTER *********************/
+D3.d = RxD;       /* Referente a shift Register */
+D3.ar = 'b'0;     /* Referente a shift Register */
+D3.sp = 'b'0;     /* Referente a shift Register */
+D3.ck = RxC;  /* Referente a shift Register + gatting */
+
+D2.d = D3;        /* Referente a shift Register */
+D2.ar = 'b'0;     /* Referente a shift Register */
+D2.sp = 'b'0;     /* Referente a shift Register */
+D2.ck = RxC;  /* Referente a shift Register + gatting */
+
+D1.d = D2;        /* Referente a shift Register */
+D1.ar = 'b'0;     /* Referente a shift Register */
+D1.sp = 'b'0;     /* Referente a shift Register */
+D1.ck = RxC;  /* Referente a shift Register + gatting */
+
+D0.d = D1;        /* Referente a shift Register */
+D0.ar = 'b'0;     /* Referente a shift Register */
+D0.sp = 'b'0;     /* Referente a shift Register */
+D0.ck = RxC;  /* Referente a shift Register + gatting */
+
+Dnc.d = D0;       /* Referente a shift Register */
+Dnc.ar = 'b'0;    /* Referente a shift Register */
+Dnc.sp = 'b'0;    /* Referente a shift Register */
+Dnc.ck = RxC; /* Referente a shift Register + gatting */
+
+/* ************************ PARTE DO MUX ***************************/
+A2 = ES&R2;
+A1 = ES&R1;
+A0 = ES&R0;
+
+/* ********************** PARTE DO SOMADOR ***************************/
+B0 = 'b'1;
+B1 = 'b'0;
+B2 = 'b'0;
+
+/* Carry Out = Funcao Maioria */
+C1 = A0&B0#A0&C0#B0&C0;
+C2 = A1&B1#A1&C1#B1&C1;
+C3 = A2&B2#A2&C2#B2&C2;
+
+/* Soma = (x$y)$Carry in */
+S0 = (A0$B0)$C0;
+S1 = (A1$B1)$C1;
+S2 = (A2$B2)$C2;
+
+k0 = 'b'1;
+k1 = 'b'0;
+k2 = 'b'1;
+
+
+/* ********************** PARTE DO REGISTO ***************************/
+R2.d = S2;       /* Referente ao Registo */
+R2.ar = RxRdy;     /* Referente ao Registo */
+R2.sp = 'b'0;     /* Referente ao Registo */
+R2.ck = RxC;      /* Referente ao Registo */
+
+R1.d = S1;        /* Referente ao Registo */
+R1.ar = RxRdy;     /* Referente ao Registo */
+R1.sp = 'b'0;     /* Referente ao Registo */
+R1.ck = RxC;      /* Referente ao Registo */
+
+R0.d = S0;        /* Referente ao Registo */
+R0.ar = RxRdy;     /* Referente ao Registo */
+R0.sp = 'b'0;     /* Referente ao Registo */
+R0.ck = RxC;      /* Referente ao Registo */
+
+
+/* ******************* PARTE DO TESTE A FLAG Z ***********************/
+Z = !(k2$R2) & !(k1$R1) & !(k0$R0);
+
+/* ***************** PARTE DA MAQUINA DE ESTADOS *********************/
+
+[Q0..1].ar='b'0;
+[Q0..1].sp='b'0;
+[Q0..1].CKMUX=CLK;
+
+SEQUENCED [Q0,Q1]{
+PRESENT 0
+	
+	if RxD&RxC next 1;
+	default next 0;
+
+
+PRESENT 1
+	if RxD next 1;
+	/*if !RxD&!RxC next 0; */
+	if !RxD&RxC next 3;
+	default next 0;
+
+PRESENT 3
+	out Start;
+	default next 0;
+
+
+}
+
+[P0..1].ar='b'0;
+[P0..1].sp='b'0;
+[P0..1].CK=!CLK;
+
+
+SEQUENCED [P0,P1]{
+PRESENT 0
+	out RxRdy;
+	if Start next 1;
+	default next 0;
+
+
+PRESENT 1
+	out DSR, ES;
+	if Z next 3;
+	default next 1;
+
+PRESENT 3
+	out E, RxRdy;
+	default next 0;
+
+
+}
+
