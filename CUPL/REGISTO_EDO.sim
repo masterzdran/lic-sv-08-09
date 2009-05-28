@@ -1,0 +1,74 @@
+%SIGNAL
+PIN   1 =  RE_CLK 
+PIN   3 =  iK0 
+PIN   4 =  iK1 
+PIN   5 =  iK2 
+PIN   6 =  iK3 
+PIN  15 =  oK0 
+PIN  16 =  oK1 
+PIN  17 =  oK2 
+PIN  18 =  oK3 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+oK0.d  =>
+    iK0
+
+oK0.ar  =>
+    0 
+
+oK0.ck  =>
+    RE_CLK
+
+oK0.sp oK1.sp oK2.sp oK3.sp  =>
+    0 
+
+oK1.d  =>
+    iK1
+
+oK1.ar  =>
+    0 
+
+oK1.ck  =>
+    RE_CLK
+
+oK1.sp  =>
+    
+oK2.d  =>
+    iK2
+
+oK2.ar  =>
+    0 
+
+oK2.ck  =>
+    RE_CLK
+
+oK2.sp  =>
+    
+oK3.d  =>
+    iK3
+
+oK3.ar  =>
+    0 
+
+oK3.ck  =>
+    RE_CLK
+
+oK3.sp  =>
+    
+oK0.oe  =>
+    1 
+
+oK1.oe  =>
+    1 
+
+oK2.oe  =>
+    1 
+
+oK3.oe  =>
+    1 
+
+%END
