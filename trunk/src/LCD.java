@@ -102,9 +102,9 @@ public class LCD implements KitConstants {
 		needRS=false;
 		procValue(DISPLAY_OFF_MASK);
 	}
-	public void cursorOff(){
+	public void blinkOff(){
 		needRS=false;
-		procValue(CURSOR_OFF_MASK);
+		procValue(DISPLAY_ON_MASK|BLINK_OFF_MASK);
 	}
 
 	/** 
@@ -267,7 +267,7 @@ public class LCD implements KitConstants {
 	
 
 	
-	public  void main(String args[]){
+	public static void main(String args[]){
 	}
 
 }
