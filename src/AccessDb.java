@@ -1,7 +1,7 @@
 import sun.security.pkcs11.Secmod.DbMode;
 
 
-public class AccessDb {
+public class AccessDb implements KitConstants{
 	private static final int DEFAULT_SIZE=1000;
 	private static int nbrUsers;
 	private static User[] users;
@@ -113,8 +113,11 @@ public class AccessDb {
 	 * 
 	 * Retorna o Nome Completo do 'User', dado o indicie passado por argumento.
 	 */
-	public String getUserFullName(int idx){
-		return users[idx].getUserName();
+	public String getUserFullName(int id){
+		int idx=verifyUser(id);
+		if (idx != -1)
+			return users[idx].getUserName();
+		return ERROR_USER_MESSAGE;
 	}
 	
 	/**

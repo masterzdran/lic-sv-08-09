@@ -33,7 +33,7 @@ public interface KitConstants {
 	public  final int ENTRY_SET_MASK		=	0x06;		//Clear do Display
 	public  final int RETURN_HOME_MASK	=	0x02;	//Set Position 0 on AC(address Counter)
 	public  final int CURSOR_ON_MASK  	=	0x0A;	//Cursor Activo
-	public  final int CURSOR_OFF_MASK	=	0x08;	//Cursor InActivo
+	public  final int CURSOR_OFF_MASK	=	0x0B;	//Cursor InActivo
 	public  final int DISPLAY_ON_MASK  	=	0x0C;	//Display Activo
 	public  final int DISPLAY_OFF_MASK	=	0x08;	//Display InActivo
 
@@ -55,5 +55,8 @@ public interface KitConstants {
 	public final int EIGHTBITS=0xFF;
 	public final int ACK_MASK=0x80;
 	
+	/*
+	 * */
+	public final String ERROR_USER_MESSAGE="Invalid User ID";
 
 }
