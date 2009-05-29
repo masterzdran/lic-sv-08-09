@@ -20,7 +20,7 @@ PIN [6..9] = [IN0..IN3];
 PIN [14..17] = [K3..K0];	 /* Saida K0 a K3 para a RAM */
 PIN [18..20] = [A0..A2]; 	 /* Saida Addresses RAM */
 PIN 21 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
-PIN 22 = REG; 		 /* Clock do registo de saída (EDO) */
+PIN 22 = REG; 		 /* Clock do registo de saida (EDO) */
 PIN 23 = K_RDY;		 /* K_RDY para o controlo central */
 
 /* INTERMEDIOS */
@@ -29,6 +29,7 @@ pinnode [27,28, 29]=[R0,R1,R2];
 pinnode 30 = P0;
 pinnode 31 = P1;
 pinnode 26 = C0;
+
 
 /* **************************** BODY ***************************** */
 
@@ -50,39 +51,39 @@ K3.oe = RNW;
 K3.clk = CLK; 
 
 /* ********************** CONTADOR WRITE ***************************/
-W0.d = ('b'1$W0);
+W0.d = 'b'1$W0;
 W0.ar = 'b'0;
 W0.sp = 'b'0;
 W0.ck = WR_CLK;
 
-W1.d = ('b'1$W1);
+W1.d = 'b'1$W1;
 W1.ar = 'b'0;
 W1.sp = 'b'0;
 W1.ck = !W0;
 
-W2.d = ('b'1$W1);
+W2.d = 'b'1$W1;
 W2.ar = 'b'0;
 W2.sp = 'b'0;
 W2.ck = !W1;
 /* ************************* CONTADOR READ ************************** */
-R0.d = ('b'1R0);
+R0.d = 'b'1$R0;
 R0.ar = 'b'0;
 R0.sp = 'b'0;
 R0.ck = RE_CLK;
 
-R1.d = ('b'1$R1);
+R1.d = 'b'1$R1;
 R1.ar = 'b'0;
 R1.sp = 'b'0;
 R1.ck = !R0;
 
-R2.d = ('b'1$R2);
+R2.d = 'b'1$R2;
 R2.ar = 'b'0;
 R2.sp = 'b'0;
 R2.ck = !R1;
-/* ********************** MUX ENDEREÇOS RAM ************************* */
-A0= R0&RADDR + W0&!RADDR
-A1= R1&RADDR + W1&!RADDR
-A2= R2&RADDR + W2&!RADDR
+/* ********************** MUX ENDERECOS RAM ************************* */
+A0 = R0 & RADDR # W0 & !RADDR;
+A1 = R1 & RADDR # W1 & !RADDR;
+A2 = R2 & RADDR # W2 & !RADDR;
 
 
 /* ***************** PARTE DA MAQUINA DE ESTADOS ******************** */
@@ -93,8 +94,7 @@ A2= R2&RADDR + W2&!RADDR
 
 SEQUENCED [Q0, Q1, Q2]{
 PRESENT 0
-	out RNW;
-	out RADDR;
+	out RNW, RADDR;
 	if K_VAL&!FULL next 1;
 	if !K_VAL&BR&!EMPTY next 2;
 	default next 0;
@@ -108,21 +108,15 @@ PRESENT 3
 	default next 7;
 
 PRESENT 7
-	out RNW;
-	out RADDR;
-	out INC;
-	out WR_CLK;
+	out RNW,RADDR,INC,WR_CLK ;
 	default next 0;
 
 PRESENT 2
-	out RNW;
-	out REG;
+	out RNW,REG;
 	default next 6;
 
 PRESENT 6
-	out RNW;
-	out RE_CLK;
-	out BG;
+	out RNW,RE_CLK,BG;
 	default next 0;
 }
 
