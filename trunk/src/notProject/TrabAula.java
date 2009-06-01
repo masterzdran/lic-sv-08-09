@@ -57,7 +57,7 @@ public class TrabAula {
 	 * Retorna um inteiro recebido pelo KIT
 	 */
 	private static int getInput() {
-		return InputPort.in();
+		return UsbPort.in();
 	}
 
 	/**
@@ -75,12 +75,12 @@ public class TrabAula {
 	 * saídas do KIT.
 	 */
 	public static void show() {
-		InputPort.out(value);
+		UsbPort.out(value);
 		sleep();
 	}
 
 	public static void show(int i) {
-		InputPort.out(i);
+		UsbPort.out(i);
 		sleep();
 	}
 

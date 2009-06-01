@@ -1,6 +1,7 @@
 import isel.leic.utils.Time;
 import isel.leic.usbio.InputPort;
 import isel.leic.usbio.OutputPort;
+import isel.leic.usbio.UsbPort;
 /*
  * 
  * 31401 - Nuno Cancelo 
@@ -128,7 +129,7 @@ public class Kit implements KitConstants{
 	 */
 	public  void write(int values, int mask) {
 		writeOutput=values&mask;
-		OutputPort.out(~writeOutput);
+		UsbPort.out(~writeOutput);
 	}
 
 	public static void main(String[] args) {

@@ -1,8 +1,4 @@
 //import java.sql.Time;
-//import java.util.Calendar;
-//import java.util.Date;
-//import java.util.GregorianCalendar;
-import isel.leic.*;
 import isel.leic.utils.Time;
 
 /*
@@ -73,7 +69,7 @@ public class AccessControl implements AccessControlConstants {
 			}
 			ourLCD.write(key);
 			System.out.println(key+"--"+id);
-			id=id*10+((int)key - 48);
+			id=id*10+(key - 48);
 		}
 		
 		return id; 
