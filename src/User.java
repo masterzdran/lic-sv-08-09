@@ -38,8 +38,17 @@ public class User {
 	public String getUserMessage(){
 		return userMessage;
 	}
+	public String exportUser(){
+		return getUserId()+";"+getUserName()+";"+getUserPin()+";"+getUserMessage();
+	}
 	@Override
 	public String toString() {
-		return getUserId()+" - "+getUserName()+" - "+getUserPin();
+		String output="+---------------------------------------------------+\n";
+		output+="+User Name - "+getUserName()+"\n";
+		output+="+User Id - "+getUserId()+"\n";
+		output+="+User PIN - "+getUserPin()+"\n";
+		output+="+User Message - "+getUserMessage()+"\n";
+		output+="+---------------------------------------------------+\n";
+		return output;
 	}
 }
