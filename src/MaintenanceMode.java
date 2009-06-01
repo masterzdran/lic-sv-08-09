@@ -3,12 +3,34 @@ import java.util.Scanner;
 
 public class MaintenanceMode {
 	private AccessDb db;
+	private final String ADMPS="1$3L";
+	private boolean au=false;
 	
 	public MaintenanceMode(){
 		db=new AccessDb();
 		
 	}
+	private boolean auth(){
+		if(!au){
+			clearScreen();
+			Scanner newpass=new Scanner(System.in);
+			System.out.println("Enter password:");
+			String p=newpass.next();
+			if (p.equals(ADMPS)){
+				System.out.println("User Authenticated.");
+				au=true;
+				return au;
+			}else{
+				au=false;
+				return au;
+			}
+		}
+		return true;
+	}
 	public  void maintenaceMainMenu(){
+		if (!au){
+			if (!auth())mainMenu() ;
+		}
 		clearScreen();
 		System.out.println("Maintenace Mode");
 		System.out.println("Main Menu:");
@@ -157,12 +179,14 @@ public class MaintenanceMode {
 
 		System.out.println("User Id: ");
 		int userId=addMsgUser.nextInt();
-		
+
+		System.out.println(db.verifyUser(userId).toString());
+
 		System.out.println("Associate User Message:");
 		String userMsg=addMsgUser.nextLine();
 		userMsg=addMsgUser.nextLine();
 		
-		System.out.println("Confirm data?");
+		System.out.println("Confirm data? (Yes,No)");
 		String option=addMsgUser.next();
 		
 		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
