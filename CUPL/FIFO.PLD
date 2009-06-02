@@ -26,10 +26,9 @@ PIN 23 = K_RDY;		 /* K_RDY para o controlo central */
 /* INTERMEDIOS */
 pinnode 26 = WR;
 pinnode [27..29] = [W0..W2];
-pinnode [30..32] = [R0..R2];
-pinnode [33..35] = [Q0..Q2];
+pinnode [30..32] = [Q0..Q2];
+pinnode [33..35] = [R0..R2];
 pinnode 36 = P0;
-
 
 
 /* **************************** BODY ***************************** */
@@ -38,8 +37,9 @@ pinnode 36 = P0;
 WR.d = WRITE;
 WR.ar = 'b'0;
 WR.sp = 'b'0;
-WR.ck = (BG # WRITE);
+WR.ck = BG # (RADDR & WRITE);
 
+EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
 /*FULL=!(W0$R0)&!(W1$R1)&!(W2$R2) & WR*/
 /*EMPTY=!(W0$R0)&!(W1$R1)&!(W2$R2) & !WR*/
 /* ************************* TRI STATES ****************************/
@@ -107,8 +107,8 @@ A2 = R2 & RADDR # W2 & !RADDR;
 SEQUENCED [Q0, Q1, Q2]{
 PRESENT 0
 	out RNW, RADDR;
-	if K_VAL&!(!(W0$R0)&!(W1$R1)&!(W2$R2) & WR) next 1;
-	if !K_VAL&BR&!(!(W0$R0)&!(W1$R1)&!(W2$R2) & !WR) next 2;
+	if K_VAL & (EQ # WR) next 1;
+	if !K_VAL & BR & (EQ # !WR) next 2;
 	default next 0;
 
 PRESENT 1
