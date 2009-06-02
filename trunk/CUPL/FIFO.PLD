@@ -24,37 +24,50 @@ PIN 22 = REG; 		 /* Clock do registo de saida (EDO) */
 PIN 23 = K_RDY;		 /* K_RDY para o controlo central */
 
 /* INTERMEDIOS */
-pinnode [32..33] = [Q0..Q1];
-pinnode [27,28, 29]=[R0,R1,R2];
-pinnode 30 = P0;
-pinnode 31 = P1;
-pinnode 26 = C0;
+pinnode 26 = WR;
+pinnode [27..29] = [W0..W2];
+pinnode [30..32] = [R0..R2];
+pinnode [33..35] = [Q0..Q2];
+pinnode 36 = P0;
+
 
 
 /* **************************** BODY ***************************** */
 
+/* ************************* FULL/EMPTY ****************************/
+WR.d = WRITE;
+WR.ar = 'b'0;
+WR.sp = 'b'0;
+WR.ck = (BG # WRITE);
+
+/*FULL=!(W0$R0)&!(W1$R1)&!(W2$R2) & WR*/
+/*EMPTY=!(W0$R0)&!(W1$R1)&!(W2$R2) & !WR*/
 /* ************************* TRI STATES ****************************/
 K0.d = IN0;
 K0.oe = RNW;
-K0.clk = CLK; 
+K0.sp = 'b'0;
+K0.ck = CLK; 
 
 K1.d = IN1;
 K1.oe = RNW;
-K1.clk = CLK; 
+K1.sp = 'b'0;
+K1.ck = CLK; 
 
 K2.d = IN2;
 K2.oe = RNW;
-K2.clk = CLK; 
+K2.sp = 'b'0;
+K2.ck = CLK; 
 
 K3.d = IN3;
 K3.oe = RNW;
-K3.clk = CLK; 
+K3.sp = 'b'0;
+K3.ck = CLK; 
 
 /* ********************** CONTADOR WRITE ***************************/
 W0.d = 'b'1$W0;
 W0.ar = 'b'0;
 W0.sp = 'b'0;
-W0.ck = WR_CLK;
+W0.ck = WRITE & RADDR;
 
 W1.d = 'b'1$W1;
 W1.ar = 'b'0;
@@ -69,7 +82,7 @@ W2.ck = !W1;
 R0.d = 'b'1$R0;
 R0.ar = 'b'0;
 R0.sp = 'b'0;
-R0.ck = RE_CLK;
+R0.ck = BG;
 
 R1.d = 'b'1$R1;
 R1.ar = 'b'0;
@@ -85,7 +98,6 @@ A0 = R0 & RADDR # W0 & !RADDR;
 A1 = R1 & RADDR # W1 & !RADDR;
 A2 = R2 & RADDR # W2 & !RADDR;
 
-
 /* ***************** PARTE DA MAQUINA DE ESTADOS ******************** */
 
 [Q0..2].ar='b'0;
@@ -95,8 +107,8 @@ A2 = R2 & RADDR # W2 & !RADDR;
 SEQUENCED [Q0, Q1, Q2]{
 PRESENT 0
 	out RNW, RADDR;
-	if K_VAL&!FULL next 1;
-	if !K_VAL&BR&!EMPTY next 2;
+	if K_VAL&!(!(W0$R0)&!(W1$R1)&!(W2$R2) & WR) next 1;
+	if !K_VAL&BR&!(!(W0$R0)&!(W1$R1)&!(W2$R2) & !WR) next 2;
 	default next 0;
 
 PRESENT 1
@@ -104,11 +116,11 @@ PRESENT 1
 	default next 3;
 
 PRESENT 3
-	out INC;
+	out WRITE;
 	default next 7;
 
 PRESENT 7
-	out RNW,RADDR,INC,WR_CLK ;
+	out RNW,RADDR,WRITE;
 	default next 0;
 
 PRESENT 2
@@ -116,7 +128,7 @@ PRESENT 2
 	default next 6;
 
 PRESENT 6
-	out RNW,RE_CLK,BG;
+	out RNW,BG;
 	default next 0;
 }
 
