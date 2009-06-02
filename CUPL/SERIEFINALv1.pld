@@ -13,7 +13,7 @@ Device   v750c;
 PIN 1 = CLK;
 PIN 2 = RxC;/* Referente a shift Register */
 PIN 3 = RxD;/* Referente a shift Register */
-/* PIN 4 = C0; */
+
 
 
 /* ************************ OUTPUT PINS ************************** */
@@ -120,7 +120,6 @@ PRESENT 0
 
 PRESENT 1
 	if RxD next 1;
-	/*if !RxD&!RxC next 0; */
 	if !RxD&RxC next 3;
 	default next 0;
 
@@ -144,7 +143,7 @@ PRESENT 0
 
 
 PRESENT 1
-	out DSR, ES;
+	out ES;
 	if Z next 3;
 	default next 1;
 
