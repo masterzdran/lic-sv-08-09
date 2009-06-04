@@ -11,16 +11,9 @@ public interface AccessControlConstants {
 	public final String ASK4NEWPIN="New PIN ---";
 	public final String OK_MESSAGE="OK";
 	public final String ERROR_PIN_MESSAGE="Invalid PIN";
-
+	public final String ERROR_USER_MESSAGE="Invalid User ID";
 	public final String MAINTENANCE_MESSAGE="Out off Service";
 	public final int PINPOS=11;
-	public final int PINNBR=3;
-	public final int IDNBR=3;
-	public final int CHECKUSER=0;
-	public final int CHECKPIN=1;
-	public final int CHECKNEWPIN=2;
-	public final String[] SALUTATION={"Good Morning","Good Afternoon","Good Evening"};
-	public final String DOOROPEN="Door is Open!";
 
 
 }

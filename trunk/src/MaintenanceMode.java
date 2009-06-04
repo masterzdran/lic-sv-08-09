@@ -145,7 +145,7 @@ public class MaintenanceMode {
 		
 		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
 			
-			if (db.removeUser(db.find(userId))){
+			if (db.removeUser(db.verifyUser(userId))){
 				System.out.println("User removed!");
 			}else{
 				System.out.println("Error Ocorred!");
@@ -190,7 +190,7 @@ public class MaintenanceMode {
 		String option=addMsgUser.next();
 		
 		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
-			db.find(userId).setUserMessage(userMsg);
+			db.verifyUser(userId).setUserMessage(userMsg);
 			System.out.println("Message added!");
 		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
 			System.out.println("Operation cancelled!");
@@ -221,7 +221,7 @@ public class MaintenanceMode {
 		System.out.println("User Id: ");
 		int userId=searchUser.nextInt();
 		User u;
-		if ((u=db.find(userId))!=null)
+		if ((u=db.verifyUser(userId))!=null)
 			System.out.println(u.toString());
 		else
 			System.out.println("User not Found!");
