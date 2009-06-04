@@ -1,18 +1,10 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
+import sun.security.pkcs11.Secmod.DbMode;
 
-public class AccessDb implements KitConstants{
+
+public class AccessDb {
 	private static final int DEFAULT_SIZE=1000;
-	private static final String filePath="users.txt";
 	private static int nbrUsers;
 	private static User[] users;
-	
 	
 	public AccessDb(){
 		this(DEFAULT_SIZE);
@@ -21,56 +13,9 @@ public class AccessDb implements KitConstants{
 	public AccessDb(int maxSize){
 		nbrUsers=0;
 		users=new User[maxSize];
-		open();
 	}
 	public int getDbSize(){
 		return nbrUsers;
-	}
-	
-	private void open(){
-		try {
-			File file=new File(filePath);
-			System.out.print(file.getAbsolutePath());
-			FileReader fr=new FileReader(file);
-			BufferedReader bf=new BufferedReader(fr);
-			String line;
-			String name;
-			int pin;
-			int nbr;
-			String msg;
-			while ((line=bf.readLine()) != null){
-				Scanner lineField=new Scanner(line).useDelimiter(";");
-				nbr=lineField.nextInt();
-				name=lineField.next();
-				pin=lineField.nextInt();
-				msg=lineField.next();
-				addUser(new User(name,nbr,pin,msg));
-			}
-			fr.close();
-			bf.close();
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("DataBase file Not Found. Iniciate new DataBase.\n");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("DataBase file with I/O Problems. Iniciate new DataBase.");
-		}finally{
-			
-		}
-	}
-
-	
-	public void close(){
-		try {
-			BufferedWriter bw=new BufferedWriter(new FileWriter(new File(filePath)));
-			for (int i=0;i<nbrUsers;i++){
-				bw.write(users[i].exportUser()+"\n");
-			}
-			bw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	/**
 	 * 
@@ -79,7 +24,7 @@ public class AccessDb implements KitConstants{
 	 * Pesquisa na DB o utilizador, retorna o indicie do array onde o utiliza se encontra,
 	 * ou -1 caso o utilizador solicitado não se encontre.
 	 */
-	private int find(User u){
+	public int find(User u){
 		for (int idx=0;idx<nbrUsers;idx++){
 			if (users[idx].getUserId() == u.getUserId())
 				return idx;
@@ -94,12 +39,12 @@ public class AccessDb implements KitConstants{
 	 * Pesquisa na DB o 'id' passado por argumento, retorna o indicie do array onde está o
 	 * utilizador com aquele 'id' ou -1 caso não exista.
 	 */
-	private User find(int id){
+	public int find(int id){
 		for (int idx=0;idx<nbrUsers;idx++){
 			if (users[idx].getUserId() == id)
-				return users[idx];
+				return idx;
 		}
-		return null;
+		return -1;
 	}
 	/**
 	 * 
@@ -128,8 +73,24 @@ public class AccessDb implements KitConstants{
 	public boolean removeUser(User u){
 		int pos;
 		if ((pos=find(u)) != -1){
-			users[pos]=users[nbrUsers-1];
+			users[pos]=users[nbrUsers];
 			users[nbrUsers--]=null;
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 
+	 * @param u
+	 * @param m
+	 * @return
+	 * 
+	 * Insere uma mensagem no determindad 'User', retorna 'false' caso o 'User' não exista. 
+	 */
+	public boolean insertMessage(User u,String m){
+		int pos;
+		if ((pos=find(u)) != -1){
+			users[pos].setUserMessage(m);
 			return true;
 		}
 		return false;
@@ -141,17 +102,53 @@ public class AccessDb implements KitConstants{
 	 * @return
 	 * Faz a validação de um 'User'. Retorna o indicie da posição onde se encontra, ou -1 caso não exista.
 	 */
-	public User verifyUser(int id){
+	public int verifyUser(int id){
 		return find(id);
 	}
+
+	/**
+	 * 
+	 * @param idx
+	 * @return
+	 * 
+	 * Retorna o Nome Completo do 'User', dado o indicie passado por argumento.
+	 */
+	public String getUserFullName(int idx){
+		return users[idx].getUserName();
+	}
 	
+	/**
+	 * 
+	 * @param idx
+	 * @param pin
+	 * @return
+	 * 
+	 * Verifica o pin do Utilizador, retorna true se o pin coincide, falso caso não verifique.
+	 */
+	public boolean verifyPin(int idx,int pin){
+			if (users[find(idx)].getUserPin() == pin)
+				return true;
+			return false;		
+	}
 	/**
 	 * 
 	 * Lista os utilizadores existentes na tabela.
 	 */
 	public void list(){
 		for (int i=0;i<nbrUsers;i++){
-			System.out.println(users[i].toString());
+			users[i].toString();
 		}
 	}
+	
+	
+	
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
