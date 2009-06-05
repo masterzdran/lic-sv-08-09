@@ -20,29 +20,29 @@ PIN [15..17] = [A0..A2];	 /* Saida Addresses RAM */
 PIN [19..22] = [K0..K3]; 	 /* Saida K0 a K3 para a RAM */
 PIN 14 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
 PIN 23 = REG; 		 /* Clock do registo de saida (EDO) */
-
+PIN 18 = WR;
 /*PIN 23 = K_RDY;		    K_RDY para o controlo central */
 
 /* INTERMEDIOS */
 pinnode [32..34] = [W0..W2];
-pinnode [29,39,35] = [Q0..Q2];
+pinnode [30,39,31] = [Q0..Q2];
 pinnode [26,27,28] = [R0..R2];
-pinnode 30 = P0;
-pinnode 31 = WR;
+pinnode 25 = P0;
+/*pinnode 31 = WR;*/
 
 /* **************************** BODY ***************************** */
 ZERO='b'0;
 UM='b'1;
 
 /* ************************* FULL/EMPTY ****************************/
-WR.d = !RADDR;
+WR.d = !RADDR;		/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
 WR.ar = ZERO;
 WR.sp = ZERO;
 WR.ckmux = WCLK;
 
 EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
-FULL = EQ & !WR;
-EMPTY = EQ & WR;
+FULL = EQ & WR;
+EMPTY = EQ & !WR;
 /* ************************* TRI STATES ****************************/
 [K0..3].d	=	[IN0..3];
 [K0..3].oe	=	RNW;
