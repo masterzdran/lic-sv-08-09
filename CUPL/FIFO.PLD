@@ -15,19 +15,20 @@ PIN [6..9] = [IN0..IN3];
 
 /* ************************ OUTPUT PINS ************************** */
 
-PIN [14..16] = [A0..A2];	 /* Saida Addresses RAM */
-PIN [17,19,20,21] = [K0..K3]; 	 /* Saida K0 a K3 para a RAM */
-PIN 22 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
+PIN [15..17] = [A0..A2];	 /* Saida Addresses RAM */
+
+PIN [19..22] = [K0..K3]; 	 /* Saida K0 a K3 para a RAM */
+PIN 14 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
 PIN 23 = REG; 		 /* Clock do registo de saida (EDO) */
 
 /*PIN 23 = K_RDY;		    K_RDY para o controlo central */
 
 /* INTERMEDIOS */
 pinnode [32..34] = [W0..W2];
-pinnode [29,39,31] = [Q0..Q2];
-pinnode [26..28] = [R0..R2];
-pinnode [25,30] = [P0,WR];
-pinnode 37 = 'b'0;
+pinnode [29,39,35] = [Q0..Q2];
+pinnode [26,27,28] = [R0..R2];
+pinnode 30 = P0;
+pinnode 31 = WR;
 
 /* **************************** BODY ***************************** */
 ZERO='b'0;
@@ -40,6 +41,8 @@ WR.sp = ZERO;
 WR.ckmux = WCLK;
 
 EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
+FULL = EQ & !WR;
+EMPTY = EQ & WR;
 /* ************************* TRI STATES ****************************/
 [K0..3].d	=	[IN0..3];
 [K0..3].oe	=	RNW;
@@ -47,20 +50,20 @@ EQ = !(W0$R0)&!(W1$R1)&!(W2$R2);
 [K0..3].ckmux	=	CLK;
 
 /* ********************** CONTADOR WRITE ***************************/
-[W0..2].d	=	![W0..2];
+[W0..2].T	=	[W0..2];
 [W0..2].ar	=	ZERO;
 [W0..2].sp	=	ZERO;
 W0.ck = !RNW;
-W1.ck = !W0;
-W2.ck = !W1;
+W1.ck = !RNW;
+W2.ck = !RNW;
 
 /* ************************* CONTADOR READ ************************** */
-[R0..2].d	=	![R0..2];
+[R0..2].T	=	[R0..2];
 [R0..2].ar	=	ZERO;
 [R0..2].sp	=	ZERO;
 R0.ck = BG;
-R1.ck = !R0;
-R2.ck = !R1;
+R1.ck = BG;
+R2.ck = BG;
 
 /* ********************** MUX ENDERECOS RAM ************************* */
 A0 = (R0 & RADDR) # (W0 & !RADDR);
@@ -77,8 +80,8 @@ WCLK=UM;
 SEQUENCED [Q0, Q1, Q2]{
 PRESENT 0
 	out RNW, RADDR;
-	if  K_VAL & (EQ & WR)  next 1;
-	if !K_VAL &  BR & (EQ & !WR) next 2;
+	if  K_VAL & (!FULL)  next 1;
+	if !K_VAL &  BR & (!EMPTY) next 2;
 	default next 0;
 
 PRESENT 1
