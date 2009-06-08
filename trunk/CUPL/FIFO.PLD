@@ -1,38 +1,47 @@
-Name     FIFO ;
-PartNo   00 ;
-Date     16-04-2009 ;
-Revision 01 ;
-Designer Engineer ;
-Company  ccisel ;
-Assembly None ;
-Location  ;
+Name     FIFO;
+PartNo   00;
+Date     16-04-2009;
+Revision 01;
+Designer Engineer;
+Company  ccisel;
+Assembly None;
+Location Lisboa;
 Device   v750c;
+
+/* ************************Constantes************************** */
+ZERO='b'0;
+UM='b'1;
+field mainMachine = [Q0..2];
+field controlMachine = P0;
+field wAddRegister = [W0..2];
+field rAddRegister = [R0..2];
+field triStateKeys = [K0..3];
+field outAddrs     =[A0..A2];
+field inKeys      =[IN0..IN3];
+
+
+
 /* ************************ INPUT PINS *************************** */
 PIN 1 = CLK;
 PIN [2,3] = [K_VAL,ACK]; 
-
-PIN [6..9] = [IN0..IN3];
+PIN [6..9] = inKeys;
 
 /* ************************ OUTPUT PINS ************************** */
 
-PIN [15..17] = [A0..A2];	 /* Saida Addresses RAM */
-
-PIN [19..22] = [K0..K3]; 	 /* Saida K0 a K3 para a RAM */
-PIN 14 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
-PIN 23 = REG; 		 /* Clock do registo de saida (EDO) */
-PIN 18 = WR;
-/*PIN 23 = K_RDY;		    K_RDY para o controlo central */
+PIN [15..17] = outAddrs;	 	/* Saida Addresses RAM */
+PIN 18 = WR;				 	/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
+PIN [19..22] = triStateKeys ; 	 /* Saida K0 a K3 para a RAM */
+PIN 14 = RNW;			 	 	/* Read & !Write - se 1 Read. se 0 Write */
+PIN 23 = REG; 		 			 /* Clock do registo de saida (EDO) */
 
 /* INTERMEDIOS */
-pinnode [32..34] = [W0..W2];
-pinnode [30,39,31] = [Q0..Q2];
-pinnode [26,27,28] = [R0..R2];
+pinnode [32..34] = wAddRegister  ;
+pinnode [30,39,31] = mainMachine  ;
+pinnode [26,27,28] = rAddRegister  ;
 pinnode 25 = P0;
-/*pinnode 31 = WR;*/
 
 /* **************************** BODY ***************************** */
-ZERO='b'0;
-UM='b'1;
+
 
 /* ************************* FULL/EMPTY ****************************/
 WR.d = !RADDR;		/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
@@ -44,40 +53,33 @@ EQ = !(W0$R0)&!(W1$R1)&!(W2$R2);
 FULL = EQ & WR;
 EMPTY = EQ & !WR;
 /* ************************* TRI STATES ****************************/
-[K0..3].d	=	[IN0..3];
-[K0..3].oe	=	RNW;
-[K0..3].sp	=	ZERO;
-[K0..3].ckmux	=	CLK;
+triStateKeys.d	=	[IN0..3];
+triStateKeys.oe	=	RNW;
+triStateKeys.sp	=	ZERO;
+triStateKeys.ckmux	=	CLK;
 
 /* ********************** CONTADOR WRITE ***************************/
-[W0..2].T	=	[W0..2];
-[W0..2].ar	=	ZERO;
-[W0..2].sp	=	ZERO;
-W0.ck = !RNW;
-W1.ck = !RNW;
-W2.ck = !RNW;
-
+wAddRegister.T	=	wAddRegister;
+wAddRegister.ar	=	ZERO;
+wAddRegister.sp	=	ZERO;
+wAddRegister.ck	= 	!RNW;
 /* ************************* CONTADOR READ ************************** */
-[R0..2].T	=	[R0..2];
-[R0..2].ar	=	ZERO;
-[R0..2].sp	=	ZERO;
-R0.ck = BG;
-R1.ck = BG;
-R2.ck = BG;
-
+rAddRegister.T	=	rAddRegister;
+rAddRegister.ar	=	ZERO;
+rAddRegister.sp	=	ZERO;
+rAddRegister.ck	=	BG;
 /* ********************** MUX ENDERECOS RAM ************************* */
 A0 = (R0 & RADDR) # (W0 & !RADDR);
 A1 = (R1 & RADDR) # (W1 & !RADDR);
 A2 = (R2 & RADDR) # (W2 & !RADDR);
 
 /* ***************** PARTE DA MAQUINA DE ESTADOS ******************** */
-WCLK=UM;
 
-[Q0..2].ar=ZERO;
-[Q0..2].sp=ZERO;
-[Q0..2].CKMUX=CLK;
+mainMachine.ar=ZERO;
+mainMachine.sp=ZERO;
+mainMachine.CKMUX=CLK;
 
-SEQUENCED [Q0, Q1, Q2]{
+SEQUENCED mainMachine{
 PRESENT 0
 	out RNW, RADDR;
 	if  K_VAL & (!FULL)  next 1;
@@ -105,12 +107,12 @@ PRESENT 6
 	default next 0;
 }
 
-[P0].ar=ZERO;
-[P0].sp=ZERO;
-[P0].CKMUX=!CLK;
+controlMachine.ar=ZERO;
+controlMachine.sp=ZERO;
+controlMachine.CKMUX=!CLK;
 
 
-SEQUENCED [P0]{
+SEQUENCED controlMachine{
 PRESENT 0
 	out BR;
 	if BG next 1;

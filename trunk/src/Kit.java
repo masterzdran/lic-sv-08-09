@@ -63,12 +63,7 @@ public class Kit implements KitConstants{
 		read();
 		return isBit(mask);
 	}
-	/**
-	 * Pára o acesso aos portos do Kit, durante alguns milisegundos.
-	 */
-	public  void sleep(){
-		Time.sleep(SLEEP);
-	}
+
 	/**
 	 * Coloca a Vcc os bits indicados pela mascara e os restantes bits mantêm o
 	 * valor.
