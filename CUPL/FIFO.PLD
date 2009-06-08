@@ -29,10 +29,10 @@ PIN [6..9] = inKeys;
 /* ************************ OUTPUT PINS ************************** */
 
 PIN [15..17] = outAddrs;	 	/* Saida Addresses RAM */
-PIN 18 = WR;				 	/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
-PIN [19..22] = triStateKeys ; 	 /* Saida K0 a K3 para a RAM */
-PIN 14 = RNW;			 	 	/* Read & !Write - se 1 Read. se 0 Write */
-PIN 23 = REG; 		 			 /* Clock do registo de saida (EDO) */
+PIN 18 = WR;				/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
+PIN [19..22] = triStateKeys ; 	/* Saida K0 a K3 para a RAM */
+PIN 14 = RNW;			 	/* Read & !Write - se 1 Read. se 0 Write */
+PIN 23 = REG; 		 	/* Clock do registo de saida (EDO) */
 
 /* INTERMEDIOS */
 pinnode [32..34] = wAddRegister  ;
@@ -47,22 +47,22 @@ pinnode 25 = P0;
 WR.d = !RADDR;		/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
 WR.ar = ZERO;
 WR.sp = ZERO;
-WR.ckmux = WCLK;
+WR.ck = REGOP;
 
 EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
 FULL = EQ & WR;
 EMPTY = EQ & !WR;
 /* ************************* TRI STATES ****************************/
 triStateKeys.d	=	[IN0..3];
-triStateKeys.oe	=	RNW;
+triStateKeys.oe	=	!RNW;
 triStateKeys.sp	=	ZERO;
-triStateKeys.ckmux	=	CLK;
+triStateKeys.ck	=	CLK;
 
 /* ********************** CONTADOR WRITE ***************************/
 wAddRegister.T	=	wAddRegister;
 wAddRegister.ar	=	ZERO;
 wAddRegister.sp	=	ZERO;
-wAddRegister.ck	= 	!RNW;
+wAddRegister.ck	= 	WRCLK;
 /* ************************* CONTADOR READ ************************** */
 rAddRegister.T	=	rAddRegister;
 rAddRegister.ar	=	ZERO;
@@ -82,8 +82,8 @@ mainMachine.CKMUX=CLK;
 SEQUENCED mainMachine{
 PRESENT 0
 	out RNW, RADDR;
-	if  K_VAL & (!FULL)  next 1;
-	if !K_VAL &  BR & (!EMPTY) next 2;
+	if  K_VAL & !FULL  next 1;
+	if !K_VAL &  BR & !EMPTY next 2;
 	default next 0;
 
 PRESENT 1
@@ -91,19 +91,18 @@ PRESENT 1
 	default next 3;
 
 PRESENT 3
-	out WCLK;
 	default next 7;
 
 PRESENT 7
-	out RNW,RADDR;
+	out RNW,WRCLK,REGOP;
 	default next 0;
 
 PRESENT 2
-	out RNW,REG,RADDR,WCLK;
+	out RNW,REG,RADDR;
 	default next 6;
 
 PRESENT 6
-	out RNW,BG,RADDR;
+	out RNW,BG,RADDR,REGOP;
 	default next 0;
 }
 
@@ -119,7 +118,6 @@ PRESENT 0
 	default next 0;
 
 PRESENT 1
-	out K_RDY;
 	if ACK next 0;
 	default next 1;
 }
