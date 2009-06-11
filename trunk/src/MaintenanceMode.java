@@ -10,23 +10,29 @@ public class MaintenanceMode {
 		db=new AccessDb();
 		
 	}
+	
+	private boolean verify (char[] pw){
+		if (ADMPS.length() != pw.length) return false;
+		for (int i=0;i<ADMPS.length();i++){
+			if (pw[i] != ADMPS.charAt(i)) return false;
+		}
+		return true;
+	}
 	private boolean auth(){
 		if(!au){
 			clearScreen();
-			Scanner newpass=new Scanner(System.in);
 			System.out.println("Enter password:");
-			String p=newpass.next();
-			if (p.equals(ADMPS)){
-				System.out.println("User Authenticated.");
-				au=true;
-				return au;
+			char[] p=System.console().readPassword();
+			System.out.println(p);
+			if (verify(p)){
+				return 	au=true;
 			}else{
-				au=false;
-				return au;
+				return au=false;
 			}
 		}
 		return true;
 	}
+	
 	public  void maintenaceMainMenu(){
 		if (!au){
 			if (!auth())mainMenu() ;
@@ -142,8 +148,8 @@ public class MaintenanceMode {
 		
 		System.out.println("Confirm data? (Yes,No)");
 		String option=removeUser.next();
-		
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			
 			if (db.removeUser(db.verifyUser(userId))){
 				System.out.println("User removed!");
@@ -151,7 +157,7 @@ public class MaintenanceMode {
 				System.out.println("Error Ocorred!");
 			}
 			
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			System.out.println("Remove Operation cancelled!");
 		}else{
 			System.out.println("Try Again!");
@@ -161,9 +167,10 @@ public class MaintenanceMode {
 		System.out.println("\n");
 		System.out.println("Remove Another User? (Yes,No)");
 		option=removeUser.next();
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			removeUserMenu();
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			maintenaceMainMenu();
 		}else{
 			System.out.println("Try Again!");

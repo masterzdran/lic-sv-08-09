@@ -28,7 +28,7 @@ public class AccessControl implements AccessControlConstants {
 		int idx=(hour >= 20 || hour < 7) ? 2 : ((hour >= 7 || hour < 12) ? 0 : 1);
 		return SALUTATION[idx];
 	}
-	private void errorFound(String txt){
+	private void writeMessage(String txt){
 		ourLCD.clear();
 		ourLCD.writeLine(0, txt);
 	}
@@ -48,15 +48,15 @@ public class AccessControl implements AccessControlConstants {
 			nbrEntered++;
 		}
 		if (key==0){
-			errorFound("Timeout!");
+			writeMessage(TIMEOUT);
 			return -1;
 		}
 		if (((i == CHECKUSER)|| (i==CHECKNEWPIN))&& key !='E'){
-			errorFound("Invalid Key!");		
+			writeMessage(INVALID_KEY);		
 			return -1;
 		}
-		if ((i == CHECKPIN)&& (key !='A' || key !='E')){
-			errorFound("Invalid Key!");		
+		if ((i == CHECKPIN)&& (key !='A' &&  key !='E')){
+			writeMessage(INVALID_KEY);		
 			return -1;
 		}
 		controlChar=key;
@@ -64,12 +64,23 @@ public class AccessControl implements AccessControlConstants {
 	}
 
 	private boolean verifyPin(User user,int pin){
-		return (user.getUserPin() == pin); 
+		if (user.getUserPin() == pin){
+			writeMessage(OK_MESSAGE);
+		}else{
+			writeMessage(ERROR_PIN_MESSAGE);
+			return false;
+		}
+		return true;
 	}
 	private void openDoor(){
 		ourLCD.clear();
 		ourLCD.writeLine(0, DOOROPEN);
 	}
+	private void closeDoor(){
+		ourLCD.clear();
+		ourLCD.writeLine(0, CLOSEDOOR);
+	}
+	
 	public int ask4User(){
 		ourLCD.clear();
 		ourLCD.setCenter(true);
@@ -98,24 +109,33 @@ public class AccessControl implements AccessControlConstants {
 		ourLCD.displayControlOff();
 	}
 	
-	public void access(){
+	public boolean operationAccess(){
 		int nbr=ask4User();
 		if (nbr == -1)
-			access();
+			 return false;
 		
 		User user=ourDB.verifyUser(nbr);
+		
 		if (user == null){
-			errorFound("Invalid User!");
-			access();
+			writeMessage(INVALIDUSER);
+			return false;
 		}
 			
 		int pin=ask4Pin(user.getUserName());
 		if (pin == -1)
-			access();
-		if (controlChar == 'A' && verifyPin(user, pin))
-			user.setUserPin(ask4NewPin());
+			return false;
 		
-		if (verifyPin(user, pin))openDoor();
+		if (verifyPin(user, pin)){
+			if (controlChar == 'A')
+				user.setUserPin(ask4NewPin());
+			openDoor();
+		}else{
+			return false;
+		}
+		
+		return true;
+		
+	
 	}
 
 }
