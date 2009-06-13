@@ -15,12 +15,15 @@ public class AccessControl implements AccessControlConstants {
 	private LcdAccess ourLCD;
 	private AccessDb ourDB;
 	private char controlChar;
+	private MaintenanceMode ourMaintenace;
 	
 	public AccessControl(){
 		ourKb=new Keyboard();
 		ourLCD=new LcdAccess();
 		ourDB= new AccessDb();
+		ourMaintenace=new MaintenanceMode(ourDB);
 		controlChar=0;
+		
 	}
 	private String greetings(){
 		Calendar cal = new GregorianCalendar();

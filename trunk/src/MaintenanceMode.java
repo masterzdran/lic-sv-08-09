@@ -1,20 +1,93 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 
 public class MaintenanceMode {
+	private final int KEY_LOCK_MASK = 0x10;
+	private final String configFile="user.netrc";
 	private AccessDb db;
-	private final String ADMPS="1$3L";
+	private String adminPassword;
 	private boolean au=false;
+	private Kit ourKit;
 	
-	public MaintenanceMode(){
-		db=new AccessDb();
+	public MaintenanceMode(AccessDb ourDB){
+		db=ourDB;
+		ourKit= new  Kit();
+		getPassword();
+	}
+	private void setPassword(String pw){
+		adminPassword=pw;
+		try {
+			BufferedWriter bw=new BufferedWriter(new FileWriter(new File(configFile)));
+			bw.write(adminPassword+";");
+			bw.close();
+		} catch (IOException e) {
+			System.out.println(configFile+" file with I/O problems.");
+		}
+	}
+	
+	private void getPassword(){
+		try {
+			BufferedReader bR=new BufferedReader(new FileReader(new File(configFile)));
+			String line;
+			String pw;
+			if ((line=bR.readLine()) != null){
+				Scanner lineField=new Scanner(line).useDelimiter(";");
+				pw=lineField.next();
+				adminPassword=pw;
+			}
+			bR.close();
+		} catch (FileNotFoundException e) {
+			System.out.println(configFile+" not found.");
+		} catch (IOException e) {
+			System.out.println(configFile+" file with I/O problems.");
+		}
 		
 	}
 	
+	private void changePwd(){
+		clearScreen();
+
+		System.out.println("Maintenace Mode");
+		System.out.println("Main Menu");
+		System.out.println("Change Password");
+		
+		System.out.println("Insert New Password: ");
+		char[] newPwd=System.console().readPassword();
+		System.out.println("Confirm New Password: ");
+		char[] confirmNewPwd=System.console().readPassword();
+		if (verify(newPwd, confirmNewPwd)){
+			String pw="";
+			for (int i=0;i<newPwd.length;i++){
+				pw+=newPwd[i];
+			}
+			setPassword(pw);
+			System.out.println("Password changed successfully");
+			return;
+		}
+		System.out.println("Password missmatch!");
+	}
+	public  boolean isLocked() {
+		 return ourKit.readBit(KEY_LOCK_MASK);
+	}
+	
 	private boolean verify (char[] pw){
-		if (ADMPS.length() != pw.length) return false;
-		for (int i=0;i<ADMPS.length();i++){
-			if (pw[i] != ADMPS.charAt(i)) return false;
+		if (adminPassword.length() != pw.length) return false;
+		for (int i=0;i<adminPassword.length();i++){
+			if (pw[i] != adminPassword.charAt(i)) return false;
+		}
+		return true;
+	}
+	private boolean verify (char[] pw1,char[] pw2){
+		if (pw1.length != pw2.length) return false;
+		for (int i=0;i<pw1.length;i++){
+			if (pw1[i] != pw2[i]) return false;
 		}
 		return true;
 	}
@@ -33,10 +106,8 @@ public class MaintenanceMode {
 		return true;
 	}
 	
-	public  void maintenaceMainMenu(){
-		if (!au){
-			if (!auth())mainMenu() ;
-		}
+	private  void maintenaceMainMenu(){
+
 		clearScreen();
 		System.out.println("Maintenace Mode");
 		System.out.println("Main Menu:");
@@ -107,15 +178,15 @@ public class MaintenanceMode {
 		System.out.println("Confirm data? (Yes,No)");
 		
 		String option=newUser.next();
-		
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			User user=new User(userName,userId,userPin,userMsg);
 			if(db.addUser(user))
 				System.out.println("User added successfully!");
 			else
-				System.out.println("UserId, already exists or DataBase is full!");
+				System.out.println("UserId already exists or DataBase is full!");
 			
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no") ||option.equals("n")){
 			System.out.println("Insertion not Confirmed!");
 		}else{
 			System.out.println("Try Again!");
@@ -125,9 +196,10 @@ public class MaintenanceMode {
 		System.out.println("\n");
 		System.out.println("Add Another User? (Yes,No)");
 		option=newUser.next();
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			addUserMenu();
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			maintenaceMainMenu();
 		}else{
 			System.out.println("Try Again!");
@@ -195,11 +267,11 @@ public class MaintenanceMode {
 		
 		System.out.println("Confirm data? (Yes,No)");
 		String option=addMsgUser.next();
-		
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			db.verifyUser(userId).setUserMessage(userMsg);
 			System.out.println("Message added!");
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			System.out.println("Operation cancelled!");
 		}else{
 			System.out.println("Try Again!");
@@ -209,9 +281,10 @@ public class MaintenanceMode {
 		System.out.println("\n");
 		System.out.println("Add Message to Another User? (Yes,No)");
 		option=addMsgUser.next();
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			addMessageUser();
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			maintenaceMainMenu();
 		}else{
 			System.out.println("Try Again!");
@@ -237,9 +310,10 @@ public class MaintenanceMode {
 		System.out.println("Search Another User? (Yes,No)");
 		String option=searchUser.next();		
 		System.out.println("\n");
-		if (option.equals("YES") || option.equals("yes")|| option.equals("Yes")){
+		option=option.toLowerCase();
+		if (option.equals("yes")|| option.equals("y")){
 			searchUserMenu();
-		}else if (option.equals("NO") || option.equals("no")|| option.equals("No")){
+		}else if (option.equals("no")|| option.equals("n")){
 			maintenaceMainMenu();
 		}else{
 			System.out.println("Try Again!");
@@ -268,13 +342,15 @@ public class MaintenanceMode {
 		clearScreen();
 		System.out.println("Exit!");
 		db.close();
-		System.exit(0);
 	}
 	public  void mainMenu(){
 		clearScreen();
+		if (!au){
+			if (!auth())mainMenu() ;
+		}
 		Scanner newOption=new Scanner(System.in);
 		System.out.println("Main Menu");
-		System.out.println("[1] - Operation Mode");
+		System.out.println("[1] - Change Password");
 		System.out.println("[2] - Maintenace Mode");
 		System.out.println("[3] - Exit");
 		System.out.println("Option: ");
@@ -282,6 +358,7 @@ public class MaintenanceMode {
  
 		switch (option){
 			case 1:
+				changePwd();
 				break;
 			case 2:
 				maintenaceMainMenu();
@@ -297,10 +374,9 @@ public class MaintenanceMode {
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		MaintenanceMode m=new MaintenanceMode();
+		AccessDb a=new AccessDb();
+		MaintenanceMode m=new MaintenanceMode(a);
 		m.mainMenu();
-	
 	}
 
 }
