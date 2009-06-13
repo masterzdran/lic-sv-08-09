@@ -59,15 +59,20 @@ triStateKeys.sp	=	ZERO;
 triStateKeys.ck	=	CLK;
 
 /* ********************** CONTADOR WRITE ***************************/
-wAddRegister.T	=	wAddRegister;
 wAddRegister.ar	=	ZERO;
 wAddRegister.sp	=	ZERO;
 wAddRegister.ck	= 	WRCLK;
+W0.T=UM;
+W1.T=UM&W0;
+W2.T=UM&W0&W1;
+
 /* ************************* CONTADOR READ ************************** */
-rAddRegister.T	=	rAddRegister;
 rAddRegister.ar	=	ZERO;
 rAddRegister.sp	=	ZERO;
 rAddRegister.ck	=	BG;
+R0.T=UM;
+R1.T=UM&R0;
+R2.T=UM&R1&R0;
 /* ********************** MUX ENDERECOS RAM ************************* */
 A0 = (R0 & RADDR) # (W0 & !RADDR);
 A1 = (R1 & RADDR) # (W1 & !RADDR);
