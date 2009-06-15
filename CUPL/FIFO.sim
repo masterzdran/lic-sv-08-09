@@ -15,7 +15,7 @@ PIN  22 =  K3
 PIN   2 =  K_VAL 
 PIN  25 =  P0 
 PIN  30 =  Q0 
-PIN  39 =  Q1 
+PIN  29 =  Q1 
 PIN  31 =  Q2 
 PIN  26 =  R0 
 PIN  27 =  R1 
@@ -40,38 +40,38 @@ FIELD wAddRegister = W0,W1,W2
 
 %EQUATION
 A0 =>
-    !Q0 & !Q2 & R0
-  # !Q0 & Q1 & Q2 & R0
-  # !Q1 & Q2 & W0
+    !Q0 & !Q1 & R0
+  # !Q0 & Q1 & !Q2 & R0
+  # Q1 & Q2 & W0
   # Q0 & W0
 
 A1 =>
-    !Q0 & !Q2 & R1
-  # !Q0 & Q1 & Q2 & R1
-  # !Q1 & Q2 & W1
+    !Q0 & !Q1 & R1
+  # !Q0 & Q1 & !Q2 & R1
+  # Q1 & Q2 & W1
   # Q0 & W1
 
 A2 =>
-    !Q0 & !Q2 & R2
-  # !Q0 & Q1 & Q2 & R2
-  # !Q1 & Q2 & W2
+    !Q0 & !Q1 & R2
+  # !Q0 & Q1 & !Q2 & R2
+  # Q1 & Q2 & W2
   # Q0 & W2
 
 BG =>
-    !Q0 & Q1 & Q2
+    !Q0 & !Q1 & Q2
 
 BR =>
     !P0
 
 EMPTY =>
-    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & !WR
-  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & !WR
-  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & !WR
-  # R0 & R1 & !R2 & W0 & W1 & !W2 & !WR
-  # !R0 & R1 & R2 & !W0 & W1 & W2 & !WR
-  # R0 & R1 & R2 & W0 & W1 & W2 & !WR
-  # R0 & !R1 & R2 & W0 & !W1 & W2 & !WR
-  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & !WR
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & WR
 
 EQ =>
     !R0 & !R1 & !R2 & !W0 & !W1 & !W2
@@ -84,14 +84,14 @@ EQ =>
   # R0 & !R1 & R2 & W0 & !W1 & W2
 
 FULL =>
-    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & WR
-  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & WR
-  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & WR
-  # R0 & R1 & !R2 & W0 & W1 & !W2 & WR
-  # !R0 & R1 & R2 & !W0 & W1 & W2 & WR
-  # R0 & R1 & R2 & W0 & W1 & W2 & WR
-  # R0 & !R1 & R2 & W0 & !W1 & W2 & WR
-  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & WR
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & !WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & !WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & !WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & !WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & !WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & !WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & !WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & !WR
 
 K0.d  =>
     IN0
@@ -139,7 +139,7 @@ K3.oe  =>
 K3.sp  =>
     
 P0.d  =>
-    !P0 & !Q0 & Q1 & Q2
+    !P0 & !Q0 & !Q1 & Q2
   # !ACK & P0
 
 P0.ar  =>
@@ -151,7 +151,7 @@ P0.ckmux  =>
 P0.sp  =>
     
 Q0.d  =>
-    K_VAL & !Q0 & !Q1 & !Q2 & !WR
+    K_VAL & !Q0 & !Q1 & !Q2 & WR
   # K_VAL & !Q0 & !Q1 & !Q2 & R2 & !W2
   # K_VAL & !Q0 & !Q1 & !Q2 & !R2 & W2
   # K_VAL & !Q0 & !Q1 & !Q2 & R1 & !W1
@@ -169,17 +169,16 @@ Q0.ckmux  =>
 Q0.sp  =>
     
 Q1.d  =>
-    !Q0 & Q1 & !Q2
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & WR
+    Q0 & !Q1 & !Q2
+  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !WR
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R2 & !W2
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R2 & W2
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R1 & !W1
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R1 & W1
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R0 & W0
   # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R0 & !W0
-  # Q0 & !Q2
 
-Q1.ar WR.ar  =>
+Q1.ar  =>
     0 
 
 Q1.ckmux  =>
@@ -205,7 +204,7 @@ R0.ar  =>
     0 
 
 R0.ck  =>
-    !Q0 & Q1 & Q2
+    !Q0 & !Q1 & Q2
 
 R0.sp  =>
     
@@ -216,7 +215,7 @@ R1.ar  =>
     0 
 
 R1.ck  =>
-    !Q0 & Q1 & Q2
+    !Q0 & !Q1 & Q2
 
 R1.sp  =>
     
@@ -227,24 +226,23 @@ R2.ar  =>
     0 
 
 R2.ck  =>
-    !Q0 & Q1 & Q2
+    !Q0 & !Q1 & Q2
 
 R2.sp  =>
     
 RADDR =>
     !Q0 & !Q2
-  # !Q0 & Q1 & Q2
+  # !Q0 & !Q1 & Q2
 
 REG =>
     !Q0 & Q1 & !Q2
 
 REGOP =>
-    Q1 & Q2
+    !Q1 & Q2
 
 RNW =>
-    !Q1 & !Q2
-  # Q1 & Q2
-  # !Q0 & Q1 & !Q2
+    !Q0 & Q1 & !Q2
+  # !Q1
 
 UM =>
     1 
@@ -256,7 +254,7 @@ W0.ar  =>
     0 
 
 W0.ck  =>
-    Q0 & Q1 & Q2
+    Q0 & !Q1 & Q2
 
 W0.sp  =>
     
@@ -267,7 +265,7 @@ W1.ar  =>
     0 
 
 W1.ck  =>
-    Q0 & Q1 & Q2
+    Q0 & !Q1 & Q2
 
 W1.sp  =>
     
@@ -278,23 +276,24 @@ W2.ar  =>
     0 
 
 W2.ck  =>
-    Q0 & Q1 & Q2
+    Q0 & !Q1 & Q2
 
 W2.sp  =>
     
 WR.d  =>
     !Q0 & !Q2
-  # !Q0 & Q1 & Q2
+  # !Q0 & !Q1 & Q2
 
 WR.ar  =>
-    
+    0 
+
 WR.ck  =>
-    Q1 & Q2
+    !Q1 & Q2
 
 WR.sp  =>
     
 WRCLK =>
-    Q0 & Q1 & Q2
+    Q0 & !Q1 & Q2
 
 ZERO =>
     0 
