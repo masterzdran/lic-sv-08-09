@@ -29,7 +29,7 @@ PIN [6..9] = inKeys;
 /* ************************ OUTPUT PINS ************************** */
 
 PIN [15..17] = outAddrs;	 	/* Saida Addresses RAM */
-PIN 18 = WR;				/* WR=1 se ultima oper escrita e WR=0 se ultima oper leitura */
+PIN 18 = controlMachine;		/* Ultima operacao efectuada */
 PIN [19..22] = triStateKeys ; 	/* Saida K0 a K3 para a RAM */
 PIN 14 = RNW;			 	/* Read & !Write - se 1 Read. se 0 Write */
 PIN 23 = REG; 		 	/* Clock do registo de saida (EDO) */
@@ -38,20 +38,20 @@ PIN 23 = REG; 		 	/* Clock do registo de saida (EDO) */
 pinnode [32..34] = wAddRegister  ;
 pinnode [30,29,31] = mainMachine  ;
 pinnode [26,27,28] = rAddRegister  ;
-pinnode 25 = P0;
+pinnode 25 = WR;
 
 /* **************************** BODY ***************************** */
 
 
 /* ************************* FULL/EMPTY ****************************/
-WR.d = RADDR;		/*WR=0 se ultima oper escrita e WR=1 se ultima oper leitura*/
+WR.d =  !RADDR;		/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
 WR.ar = ZERO;
 WR.sp = ZERO;
 WR.ck = REGOP;
 
 EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
-FULL = EQ & !WR;
-EMPTY = EQ & WR;
+FULL = EQ & WR;
+EMPTY = EQ & !WR;
 /* ************************* TRI STATES ****************************/
 triStateKeys.d	=	[IN0..3];
 triStateKeys.oe	=	!RNW;
@@ -90,7 +90,7 @@ PRESENT 0
 	if  K_VAL & !FULL  next 1;
 	if !K_VAL &  BR & !EMPTY next 2;
 	default next 0;
-
+/* Escrita*/
 PRESENT 1
 	out RNW;
 	default next 3;
@@ -101,25 +101,25 @@ PRESENT 3
 PRESENT 5
 	out RNW,WRCLK,REGOP;
 	default next 0;
-
+/* Leitura*/
 PRESENT 2
-	out RNW,REG,RADDR;
+	out RNW,RADDR,REG;
 	default next 4;
 
 PRESENT 4
-	out RNW,BG,RADDR,REGOP;
+	out RNW,RADDR,BG,REGOP;
 	default next 0;
 }
 
 controlMachine.ar=ZERO;
 controlMachine.sp=ZERO;
-controlMachine.CKMUX=!CLK;
+controlMachine.CKMUX=CLK;
 
 
 SEQUENCED controlMachine{
 PRESENT 0
 	out BR;
-	if BG next 1;
+	if BG # REG next 1;
 	default next 0;
 
 PRESENT 1
