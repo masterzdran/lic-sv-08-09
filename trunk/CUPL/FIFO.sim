@@ -13,7 +13,7 @@ PIN  20 =  K1
 PIN  21 =  K2 
 PIN  22 =  K3 
 PIN   2 =  K_VAL 
-PIN  25 =  P0 
+PIN  18 =  P0 
 PIN  30 =  Q0 
 PIN  29 =  Q1 
 PIN  31 =  Q2 
@@ -25,7 +25,7 @@ PIN  14 =  RNW
 PIN  32 =  W0 
 PIN  33 =  W1 
 PIN  34 =  W2 
-PIN  18 =  WR 
+PIN  25 =  WR 
 %END
 
 %FIELD
@@ -40,22 +40,22 @@ FIELD wAddRegister = W0,W1,W2
 
 %EQUATION
 A0 =>
-    !Q0 & !Q1 & R0
-  # !Q0 & Q1 & !Q2 & R0
+    Q0 & W0
+  # !Q0 & !Q1 & R0
+  # !Q0 & !Q2 & R0
   # Q1 & Q2 & W0
-  # Q0 & W0
 
 A1 =>
-    !Q0 & !Q1 & R1
-  # !Q0 & Q1 & !Q2 & R1
+    Q0 & W1
+  # !Q0 & !Q1 & R1
+  # !Q0 & !Q2 & R1
   # Q1 & Q2 & W1
-  # Q0 & W1
 
 A2 =>
-    !Q0 & !Q1 & R2
-  # !Q0 & Q1 & !Q2 & R2
+    Q0 & W2
+  # !Q0 & !Q1 & R2
+  # !Q0 & !Q2 & R2
   # Q1 & Q2 & W2
-  # Q0 & W2
 
 BG =>
     !Q0 & !Q1 & Q2
@@ -64,14 +64,14 @@ BR =>
     !P0
 
 EMPTY =>
-    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & WR
-  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & WR
-  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & WR
-  # R0 & R1 & !R2 & W0 & W1 & !W2 & WR
-  # !R0 & R1 & R2 & !W0 & W1 & W2 & WR
-  # R0 & R1 & R2 & W0 & W1 & W2 & WR
-  # R0 & !R1 & R2 & W0 & !W1 & W2 & WR
-  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & WR
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & !WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & !WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & !WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & !WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & !WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & !WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & !WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & !WR
 
 EQ =>
     !R0 & !R1 & !R2 & !W0 & !W1 & !W2
@@ -84,14 +84,14 @@ EQ =>
   # R0 & !R1 & R2 & W0 & !W1 & W2
 
 FULL =>
-    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & !WR
-  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & !WR
-  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & !WR
-  # R0 & R1 & !R2 & W0 & W1 & !W2 & !WR
-  # !R0 & R1 & R2 & !W0 & W1 & W2 & !WR
-  # R0 & R1 & R2 & W0 & W1 & W2 & !WR
-  # R0 & !R1 & R2 & W0 & !W1 & W2 & !WR
-  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & !WR
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & WR
 
 K0.d  =>
     IN0
@@ -139,26 +139,27 @@ K3.oe  =>
 K3.sp  =>
     
 P0.d  =>
-    !P0 & !Q0 & !Q1 & Q2
-  # !ACK & P0
+    !ACK & P0
+  # !P0 & REG
+  # !P0 & !Q0 & !Q1 & Q2
 
 P0.ar  =>
     0 
 
 P0.ckmux  =>
-    !CLK
+    CLK
 
 P0.sp  =>
     
 Q0.d  =>
-    K_VAL & !Q0 & !Q1 & !Q2 & WR
-  # K_VAL & !Q0 & !Q1 & !Q2 & R2 & !W2
-  # K_VAL & !Q0 & !Q1 & !Q2 & !R2 & W2
-  # K_VAL & !Q0 & !Q1 & !Q2 & R1 & !W1
-  # K_VAL & !Q0 & !Q1 & !Q2 & !R1 & W1
-  # K_VAL & !Q0 & !Q1 & !Q2 & R0 & !W0
-  # K_VAL & !Q0 & !Q1 & !Q2 & !R0 & W0
-  # Q0 & !Q2
+    Q0 & !Q2
+  # K_VAL & !Q1 & !Q2 & !WR
+  # K_VAL & !Q1 & !Q2 & !R0 & W0
+  # K_VAL & !Q1 & !Q2 & R0 & !W0
+  # K_VAL & !Q1 & !Q2 & !R1 & W1
+  # K_VAL & !Q1 & !Q2 & R1 & !W1
+  # K_VAL & !Q1 & !Q2 & !R2 & W2
+  # K_VAL & !Q1 & !Q2 & R2 & !W2
 
 Q0.ar  =>
     0 
@@ -170,13 +171,13 @@ Q0.sp  =>
     
 Q1.d  =>
     Q0 & !Q1 & !Q2
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !WR
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R2 & !W2
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R2 & W2
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R1 & !W1
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R1 & W1
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R0 & W0
-  # !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R0 & !W0
+  # !K_VAL & !P0 & !Q1 & !Q2 & WR
+  # !K_VAL & !P0 & !Q1 & !Q2 & !R0 & W0
+  # !K_VAL & !P0 & !Q1 & !Q2 & R0 & !W0
+  # !K_VAL & !P0 & !Q1 & !Q2 & !R1 & W1
+  # !K_VAL & !P0 & !Q1 & !Q2 & R1 & !W1
+  # !K_VAL & !P0 & !Q1 & !Q2 & !R2 & W2
+  # !K_VAL & !P0 & !Q1 & !Q2 & R2 & !W2
 
 Q1.ar  =>
     0 
@@ -241,8 +242,8 @@ REGOP =>
     !Q1 & Q2
 
 RNW =>
-    !Q0 & Q1 & !Q2
-  # !Q1
+    !Q1
+  # !Q0 & !Q2
 
 UM =>
     1 
@@ -281,8 +282,8 @@ W2.ck  =>
 W2.sp  =>
     
 WR.d  =>
-    !Q0 & !Q2
-  # !Q0 & !Q1 & Q2
+    Q0
+  # Q1 & Q2
 
 WR.ar  =>
     0 
@@ -307,13 +308,13 @@ A1.oe  =>
 A2.oe  =>
     1 
 
+P0.oe  =>
+    1 
+
 REG.oe  =>
     1 
 
 RNW.oe  =>
-    1 
-
-WR.oe  =>
     1 
 
 %END

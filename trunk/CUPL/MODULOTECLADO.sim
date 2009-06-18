@@ -8,10 +8,10 @@ PIN   2 =  E
 PIN   3 =  F 
 PIN   4 =  G 
 PIN   5 =  H 
-PIN  22 =  K0 
-PIN  21 =  K1 
-PIN  20 =  K2 
-PIN  19 =  K3 
+PIN  19 =  K0 
+PIN  20 =  K1 
+PIN  21 =  K2 
+PIN  22 =  K3 
 PIN  14 =  K_VAL 
 PIN  25 =  P0 
 PIN  26 =  P1 
@@ -32,8 +32,8 @@ B =>
   # Q1
 
 C =>
-    !Q1
-  # Q0
+    Q0
+  # !Q1
 
 CE1 =>
     E & F & G & H
@@ -67,10 +67,10 @@ K3 =>
     P1
 
 K_VAL =>
-    F & P0 & !P1
-  # E & !P0 & !P1
-  # H & P0 & P1
+    H & P0 & P1
   # G & !P0 & P1
+  # F & P0 & !P1
+  # E & !P0 & !P1
 
 L =>
     Q1
@@ -79,8 +79,8 @@ M =>
     E & F & G & H
 
 P0.d  =>
-    !K_VAL & !P0
-  # K_VAL & P0
+    K_VAL & P0
+  # !K_VAL & !P0
 
 P0.ar  =>
     0 
@@ -103,11 +103,11 @@ P1.ck  =>
 P1.sp  =>
     
 Q0.d  =>
-    E & F & G & H & !Q0
-  # !E & Q0
+    !E & Q0
   # !F & Q0
   # !G & Q0
   # !H & Q0
+  # E & F & G & H & !Q0
 
 Q0.ar  =>
     0 
