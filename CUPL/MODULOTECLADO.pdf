@@ -5,7 +5,7 @@
   {Program "CUPL(WM) Version 5.0a"}
   {DBtype "Schematic"}
   {DBvrev 1.01}
-  {DBtime "Thu Jun 18 20:55:57 2009 "}
+  {DBtime "Sun Jun 21 00:01:49 2009 "}
   {DBunit "MIL"}
   {DBgrid 10}
   {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
@@ -73,7 +73,7 @@
    {Pnl 260 170}
    {Pnl 260 190}
 
-   {Sd A 1 2 3 4 5 14 15 16 17 18 19 20 21 22}
+   {Sd A 1 2 3 4 5 14 15 16 17 18 20 21 22 23}
   }
 
   {PIC
