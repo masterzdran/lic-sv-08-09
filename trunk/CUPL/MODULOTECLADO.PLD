@@ -24,10 +24,10 @@ PIN 16 = B; /* Saida B do Decoder */
 PIN 17 = C; /* Saida C do Decoder */
 PIN 18 = D; /* Saida D do Decoder */
 
-PIN 22 = K3; /* Saida do Valor K3 (Bit 4) */
-PIN 21 = K2; /* Saida do Valor K2 (Bit 3) */
-PIN 20 = K1; /* Saida do Valor K1 (Bit 2) */
-PIN 19 = K0; /* Saida do Valor K0 (Bit 1) */
+PIN 23 = K3; /* Saida do Valor K3 (Bit 4) */
+PIN 22 = K2; /* Saida do Valor K2 (Bit 3) */
+PIN 21 = K1; /* Saida do Valor K1 (Bit 2) */
+PIN 20 = K0; /* Saida do Valor K0 (Bit 1) */
 
 pinnode [32..33] = [Q0..Q1];
 pinnode [25..26] = [P0..P1];
