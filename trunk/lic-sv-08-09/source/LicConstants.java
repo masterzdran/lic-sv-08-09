@@ -14,13 +14,13 @@ public final class LicConstants {
 	public static final int KEY_DAT_MASK 		= 0x0F;
 	
 	/*OutPut Port*/
-	public static final int ACK_MASK			= 0x80;
-	public static final int DOOR_MASK			= 0x10;
+	public static final int ACK_MASK			= 0x10;
+	public static final int DOOR_MASK			= 0x20;
 	public static final int RxC_MASK 			= 0x02;
 	public static final int RxD_MASK 			= 0x01;
 
 	/*AccessControl*/
-	public static final String ASK4USER			="Insert Number    ";
+	public static final String ASK4USER			="Insert Number   ";
 	public static final String ASK4PIN			="Insert PIN ---";
 	public static final String ASK4NEWPIN		="New PIN ---";
 	public static final String CONFIRMNEWPIN	="Confirm PIN ---";
@@ -28,7 +28,7 @@ public final class LicConstants {
 	public static final String ERROR_PIN_MESSAGE	="Invalid PIN";
 	public static final String[] SALUTATION		={"Good Morning","Good Afternoon","Good Evening"};
 	public static final String DOOROPEN			="Door is Open!";
-	public static final String CLOSEDOOR		="Unlock System!";
+	public static final String CLOSEDOOR		="System Locked!";
 	public static final String INVALIDUSER		="Invalid User!";
 	public static final String TIMEOUT			="Timeout!";
 	public static final String INVALID_KEY		="Invalid Key!";
