@@ -1,4 +1,6 @@
+package Lic0809SV;
 import isel.leic.utils.Time;
+import Lic0809SV.LicConstants;
 
 /*
  * 
@@ -7,8 +9,7 @@ import isel.leic.utils.Time;
  * 33595 - Nuno Sousa
  * 
  */
-
-public class LCD {
+public class LCD{
 	/*
 	 * Os pinos do LCD devem ficar ligados da seguinte forma:
 	 * Pinos 1, 3 e 5 – GND (alimentação, R/W e controlo de brilho)
@@ -71,41 +72,47 @@ public class LCD {
 	 */
 	
 	
-	/* ****************** Mascaras ****************** */
-	private static final int RS_MASK			=	0x40;	//PIN 4
-	private static final int ENABLE_MASK		=	0x80;	//PIN 6
-	private static final int DATA_MASK			=	0x0F;	//PIN 11-14, DB4-7
-	private static final int NIBBLE_SHIFT_MASK	=	4;		//N. Bits a serem deslocados
-	/* ****************** Mascaras Controlo****************** */
-	private static  final int CLEAR_MASK			=	0x01;		//Clear do Display
-	private static  final int ENTRY_SET_MASK		=	0x06;		//Clear do Display
-	private static  final int RETURN_HOME_MASK	=	0x02;	//Set Position 0 on AC(address Counter)
-	private static  final int CURSOR_ON_MASK  	=	0x0A;	//Cursor Activo
-	private static  final int CURSOR_OFF_MASK	=	0x08;	//Cursor InActivo
-	private static  final int DISPLAY_ON_MASK  	=	0x0C;	//Display Activo
-	private static  final int DISPLAY_OFF_MASK	=	0x08;	//Display InActivo
-
-	private static final int BLINK_ON_MASK		=	0x09;	//Blink Activo
-	private static final int BLINK_OFF_MASK		=	0x08;	//Blink InActivo
-	private static final int SHIFT_MASK			=	0x04;	//Move Cursor e Shifta Conteudo (2 nibbles)
-	private static final int ADDR_COUNTER_MASK	=	0x80;	//Move Cursor para a Posição
-	private static final int DISPLAY_SIZE_MASK	=	16;		//Tamanho do Display
-	private static final int VALUE_MASK			=	0x0F;	//Mascara para os Valores a serem escritos
-	/* ****************** Tempo de Resposta ****************** */
-	private static final int MAXTIMERISE		=	350; 	// in miliseconds
-	private static final int MAXTIMEFALL		=	400; 	// in miliseconds
-	
 	/* ****************** Controlo ****************** */
-	private static boolean isCentered 		=	false;
-	private static boolean isVisible 		=	false;
-	private static boolean isBlinking 		= 	false;
-	private static boolean needRS			=	false;
-	private static int 	cursorPosition		=	0;
+	private  boolean isCentered;
+	private  boolean isVisible;
+	private  boolean isBlinking;
+	private  boolean needRS;
+	private  int cursorPosition;
+	private KitProtocol ourProtocol;
 	/* ********************************************** */
-	private static int instruction=0x00;
+	public LCD(){
+		cursorPosition=0;
+		isBlinking=false;
+		isCentered=false;
+		isVisible=false;
+		needRS=false;
+		ourProtocol=new KitProtocol();
+		init();
+	}
 	
-	/* Realiza a sequencia de inicialização para comunicação a 4 bits */
-	public static void init() {
+	
+	public void entryModeSet(){
+		needRS=false;
+		procValue(LicConstants.ENTRY_SET_MASK);
+	}
+	
+	public void displayControlOn(){
+		needRS=false;
+		procValue(LicConstants.DISPLAY_ON_MASK|LicConstants.CURSOR_ON_MASK);
+	}
+	public void displayControlOff(){
+		needRS=false;
+		procValue(LicConstants.DISPLAY_OFF_MASK);
+	}
+	public void blinkOff(){
+		needRS=false;
+		procValue(LicConstants.DISPLAY_ON_MASK|LicConstants.BLINK_OFF_MASK);
+	}
+
+	/** 
+	 * Realiza a sequencia de inicialização para comunicação a 4 bits 
+	 * */
+	public  void init() {
 		int intValue3=0x03;
 		int intValue2=0x02;
 		int intValue8=0x08;
@@ -114,6 +121,7 @@ public class LCD {
 		int intValue7=0x07;
 		
 		needRS=false;
+		
 		Time.sleep(20);
 		 writeBits(intValue3);
 		Time.sleep(5);
@@ -121,146 +129,147 @@ public class LCD {
 		Time.sleep(1);
 		 writeBits(intValue3);
 		 writeBits(intValue2);
-		//Time.sleep(10);
 		 procValue(intValue28);
-		//Time.sleep(10);
 		 procValue(intValue8);
-		//Time.sleep(10);
 		 procValue(intValue1);
-		//Time.sleep(10);
 		 procValue(intValue7);
-		 procValue(0x0E);
-		 procValue(0x06);
 
+		 entryModeSet();
+		 displayControlOn();
 	}
-	public static void entryModeSet(){
-		needRS=false;
-		procValue(ENTRY_SET_MASK);
-	}
+
 	
-	public static void displayControlOn(){
+	/** 
+	 * Apaga todos os acaracteres do display 
+	 * */
+	public  void clear() {
 		needRS=false;
-		procValue(DISPLAY_ON_MASK|CURSOR_ON_MASK);
-	}
-	public static void displayControlOff(){
-		needRS=false;
-		procValue(DISPLAY_OFF_MASK);
-	}
-	public static void cursorOff(){
-		needRS=false;
-		procValue(CURSOR_OFF_MASK);
-	}
-	/* Apaga todos os acaracteres do display */
-	public static void clear() {
-		needRS=false;
-		procValue(CLEAR_MASK);
+		procValue(LicConstants.CLEAR_MASK);
 		
 	}
-	public static void clearLine(int line) {
+	/**
+	 * 
+	 * @param line
+	 */
+	public  void clearLine(int line) {
 		posCursor(line, 0);
-		writeLine(line, "                                        ");
+		for (int i=0;i<40;i++)
+			write(' ');
 		posCursor(line, 0);
 	}
-	/* Posiciona o cursor na linha (0..1) e coluna (0..15) indicadas */
-	public static void posCursor(int line, int col) {
+	/**
+	 * 
+	 * @param line
+	 * @param col
+	 * Posiciona o cursor na linha (0..1) e coluna (0..15) indicadas 
+	 */
+	public  void posCursor(int line, int col) {
 		needRS=false;
-		procValue(ADDR_COUNTER_MASK|(0x40*line+col));
+		procValue(LicConstants.ADDR_COUNTER_MASK|(0x40*line+col));
 	}
-
-	/* Acerta o tipo de cursor: Visivel ou invisivel; A piscar ou constante 
+	/**
+	 * 
+	 * @param visible
+	 * @param blinking
+	 * Acerta o tipo de cursor: Visivel ou invisivel; A piscar ou constante 
 	 * 
 	 * Cursor/Blink Control Circuit
 	 * The cursor/blink control circuit generates the cursor or character blinking.
 	 * The cursor or the blinking will
 	 * appear with the digit located at the display data RAM (DDRAM) address set in the
 	 * address counter (AC).
-	 * 
-	 * */
-	public static void setCursor(boolean visible, boolean blinking) {
+	 */
+	public  void setCursor(boolean visible, boolean blinking) {
 		needRS=false;
-		write((char)(visible?CURSOR_ON_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK):(CURSOR_OFF_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK))));
+		write((char)(visible?LicConstants.CURSOR_ON_MASK|(blinking?LicConstants.BLINK_ON_MASK:LicConstants.BLINK_OFF_MASK):(LicConstants.CURSOR_OFF_MASK|(blinking?LicConstants.BLINK_ON_MASK:LicConstants.BLINK_OFF_MASK))));
 	}
 
-	/*
+	/**
+	 * 
+	 * @param c
 	 * Escreve o caracter indicado no local do cursor e o cursor avança para a
 	 * proxima coluna
 	 */
-	public static void write(char c) {
+	public  void write(char c) {
 		needRS=true;
 		procValue(c);
 	}
 
 	
-	/*
+	/**
+	 * 
+	 * @param txt
 	 * Escreve o texto indicado no local do cursor e o cursor avança para a
 	 * coluna seguinte
 	 */
-	public static void write(String txt) {
+
+	public  void write(String txt) {
 		for (int i=0;i<txt.length();i++){
 			write(txt.charAt(i));
 		}
 	}
-	/*
+
+	/**
+	 * 
+	 * @param line
+	 * @param txt
 	 * Escreve o texto indicado na linha indicada (0 ou 1). O resto da linha é
-	 * 	 texto fica centrado ou alinhado à esquerda,
-	 * dependendo da última chamada a SetCenter()
+	 * texto fica centrado ou alinhado à esquerda,dependendo da última chamada a SetCenter()
 	 */
-	public static void writeLine(int line, String txt) {
-		posCursor(line, (isCentered)?(DISPLAY_SIZE_MASK-txt.length())/2:0);
+	public  void writeLine(int line, String txt) {
+		posCursor(line, (isCentered)?(LicConstants.DISPLAY_SIZE_MASK-txt.length())/2:0);
 		write(txt);
 	}
-	/*
+	/**
+	 * 
+	 * @param value
 	 * Indica se o texto escrito com writeLine() nas chamadas seguintes deve ou
 	 * não ficar centrado na linha
 	 */
-	public static void setCenter(boolean value) {
+	public  void setCenter(boolean value) {
 		isCentered = value;
 	}
 
-	private static void procValue(int value){
-		writeBits(value>>4);
+	/**
+	 * 
+	 * @param s
+	 * @param b
+	 * @return
+	 * Recebe uma string e o numero de caracteres a recuar
+	 * e calcula onde vai escrever. Método utilizado para os pedidos do PIN.
+	 * x=Total de Caracteres do LCD (16)
+	 * y=Total de Caracteres da String
+	 * se centrado
+	 * 	pos=(x - y)/2 + (y - b) = (x - y + 2y - 2b)/2 = (x + y -2b)/2
+	 * se não centrado
+	 * 	pos= y - b
+	 */
+	public int getPos(String s, int b){
+		int x=LicConstants.DISPLAY_SIZE_MASK;
+		int y=s.length();
+		return (isCentered)?(x+y-2*b)/2:(y-3);
+	}
+	/**
+	 * 
+	 * @param value
+	 * Processa o valor para ser enviado.
+	 */
+	private  void procValue(int value){
+		writeBits(value>>LicConstants.NIBBLE_SHIFT_MASK);
 		writeBits(value);
 	}
-
-	private static void writeBits(int value){
-		KitProtocol.sendBits(needRS?1:0, value);
-		//Kit.write(ENABLE_MASK|(needRS?RS_MASK:0)|(value&0x0F));
-		//Kit.write((needRS?RS_MASK:0)|(value&0x0F));
+	/**
+	 * 
+	 * @param value
+	 * Escreve o valor passado, seguindo o protocolo.
+	 */
+	private  void writeBits(int value){
+		ourProtocol.sendBits(needRS?1:0, value);
 	}
+	
+
+	
 	public static void main(String args[]){
-		init();
-		//setCenter(true);
-		//write('X');
-		//Time.sleep(10000);
-		
-		setCenter(true);
-		writeLine(0, "Boa Tarde");
-		//setCenter(false);
-		writeLine(1,"Nuno Cancelo");
-//		posCursor(0,39);
-//		for (int i=0;i<6;i++){
-//			write('x');
-//		}
-		
-//		for (int i=0;i<10;i++){
-//			writeLine(0, "Feliz"+i);
-//			writeLine(1, "Natal"+i);
-//			Time.sleep(100);
-//			clear();
-//		}
-//		
-//		
-//		
-//		writeLine(0, "Feliz");
-//		writeLine(1, "Natal");
-//		setCursor(false,false);
-//		Time.sleep(5000);
-//		clearLine(0);
-//		writeLine(1, "Linha 0 Apagada");
-////		setCenter(false);
-////		writeLine(0, "LIC2008");
-//		//Time.sleep(5000);
-//		clear();
 	}
 
 }

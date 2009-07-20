@@ -1,8 +1,8 @@
 package Lic0809SV;
-import isel.leic.utils.Time;
 import isel.leic.usbio.InputPort;
-import isel.leic.usbio.OutputPort;
 import isel.leic.usbio.UsbPort;
+import Lic0809SV.LicConstants;
+
 /*
  * 
  * 31401 - Nuno Cancelo 
@@ -10,24 +10,24 @@ import isel.leic.usbio.UsbPort;
  * 33595 - Nuno Sousa
  * 
  */
-public class Kit implements KitConstants{
-	private static  int readInput;
-	private static int writeOutput;
+public class Kit{
+	private  int readInput;
+	private  int writeOutput;
 	
 	/**
 	 * Construtor da Class Kit. 
 	 * Inicia os valores dos portos de Input e OutPut.
 	 */
 	public Kit(){
-		//readInput=0x00;
-		//writeOutput=0x00;
-		//write(writeOutput, EIGHTBITS);
+		readInput=0x00;
+		writeOutput=0x00;
+		write(writeOutput, LicConstants.STARTMASK);
 	}
 
 	/** 
 	 * Lê o input port para posterior consulta 
 	 * */
-	public static void read() {
+	public void read() {
 		readInput =~( InputPort.in());
 	}
 
@@ -37,7 +37,7 @@ public class Kit implements KitConstants{
 	 * 1 para Vcc Por exemplo retorna 0x0F se I0..I3 estão a Vcc e I4..I7 estão
 	 * a GND
 	 */
-	public  static int getBits(int mask) {
+	public  int getBits(int mask) {
 		return (readInput&mask);
 	}
 
@@ -45,14 +45,14 @@ public class Kit implements KitConstants{
 	 * Consulta o bit indicado pela mascara previamente lido com read() Retorna
 	 * true se o bit indicado pela mascara está a Vcc
 	 */
-	public  static boolean isBit(int mask) {
+	public  boolean isBit(int mask) {
 		return ((readInput&mask)==mask);
 	}
 
 	/** 
 	 * Lê e consulta o valor representado pelos bits da mascara 
 	 * */
-	public  static int readBits(int mask) {
+	public  int readBits(int mask) {
 		read();
 		return getBits(mask);
 	}
@@ -60,7 +60,7 @@ public class Kit implements KitConstants{
 	/** 
 	 * Lê e consulta o bit indicado pela mascara 
 	 * */
-	public static  boolean readBit(int mask) {
+	public  boolean readBit(int mask) {
 		read();
 		return isBit(mask);
 	}
@@ -78,9 +78,9 @@ public class Kit implements KitConstants{
 	 * 
 	 * Output=readInput+Mask
 	 */
-	public static void setBits(int mask) {
+	public  void setBits(int mask) {
 		writeOutput=writeOutput|mask;
-		write(writeOutput,EIGHTBITS);
+		write(writeOutput,LicConstants.STARTMASK);
 	}
 
 	/**
@@ -96,9 +96,9 @@ public class Kit implements KitConstants{
 	 * 
 	 * Output=~Mask&readInput
 	 */
-	public static  void resetBits(int mask) {
+	public  void resetBits(int mask) {
 		writeOutput=~mask & writeOutput;
-		write(writeOutput,EIGHTBITS);
+		write(writeOutput,LicConstants.STARTMASK);
 	}
 
 	/**
@@ -114,16 +114,16 @@ public class Kit implements KitConstants{
 	 * 
 	 * Output=readInput^Mask
 	 */
-	public static void invertBits(int mask) {
+	public  void invertBits(int mask) {
 		writeOutput= writeOutput ^ mask;
-		write(writeOutput,EIGHTBITS);
+		write(writeOutput,LicConstants.STARTMASK);
 	}
 
 	/**
 	 * Altera os valores dos bits indicados pela mascara para os bits
 	 * correspondentes em 'value' 1-Vcc 0-GND
 	 */
-	public static void write(int values, int mask) {
+	public  void write(int values, int mask) {
 		writeOutput=values&mask;
 		UsbPort.out(~writeOutput);
 	}

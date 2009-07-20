@@ -1,5 +1,6 @@
 package Lic0809SV;
 import isel.leic.utils.Time;
+import Lic0809SV.LicConstants;
 
 /*
  * 
@@ -8,7 +9,7 @@ import isel.leic.utils.Time;
  * 33595 - Nuno Sousa
  * 
  */
-public class LcdAccess implements KitConstants {
+public class LcdAccess{
 	/*
 	 * Os pinos do LCD devem ficar ligados da seguinte forma:
 	 * Pinos 1, 3 e 5 – GND (alimentação, R/W e controlo de brilho)
@@ -92,20 +93,20 @@ public class LcdAccess implements KitConstants {
 	
 	public void entryModeSet(){
 		needRS=false;
-		procValue(ENTRY_SET_MASK);
+		procValue(LicConstants.ENTRY_SET_MASK);
 	}
 	
 	public void displayControlOn(){
 		needRS=false;
-		procValue(DISPLAY_ON_MASK|CURSOR_ON_MASK);
+		procValue(LicConstants.DISPLAY_ON_MASK|LicConstants.CURSOR_ON_MASK);
 	}
 	public void displayControlOff(){
 		needRS=false;
-		procValue(DISPLAY_OFF_MASK);
+		procValue(LicConstants.DISPLAY_OFF_MASK);
 	}
 	public void blinkOff(){
 		needRS=false;
-		procValue(DISPLAY_ON_MASK|BLINK_OFF_MASK);
+		procValue(LicConstants.DISPLAY_ON_MASK|LicConstants.BLINK_OFF_MASK);
 	}
 
 	/** 
@@ -143,7 +144,7 @@ public class LcdAccess implements KitConstants {
 	 * */
 	public  void clear() {
 		needRS=false;
-		procValue(CLEAR_MASK);
+		procValue(LicConstants.CLEAR_MASK);
 		
 	}
 	/**
@@ -164,7 +165,7 @@ public class LcdAccess implements KitConstants {
 	 */
 	public  void posCursor(int line, int col) {
 		needRS=false;
-		procValue(ADDR_COUNTER_MASK|(0x40*line+col));
+		procValue(LicConstants.ADDR_COUNTER_MASK|(0x40*line+col));
 	}
 	/**
 	 * 
@@ -180,7 +181,7 @@ public class LcdAccess implements KitConstants {
 	 */
 	public  void setCursor(boolean visible, boolean blinking) {
 		needRS=false;
-		write((char)(visible?CURSOR_ON_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK):(CURSOR_OFF_MASK|(blinking?BLINK_ON_MASK:BLINK_OFF_MASK))));
+		write((char)(visible?LicConstants.CURSOR_ON_MASK|(blinking?LicConstants.BLINK_ON_MASK:LicConstants.BLINK_OFF_MASK):(LicConstants.CURSOR_OFF_MASK|(blinking?LicConstants.BLINK_ON_MASK:LicConstants.BLINK_OFF_MASK))));
 	}
 
 	/**
@@ -216,7 +217,7 @@ public class LcdAccess implements KitConstants {
 	 * texto fica centrado ou alinhado à esquerda,dependendo da última chamada a SetCenter()
 	 */
 	public  void writeLine(int line, String txt) {
-		posCursor(line, (isCentered)?(DISPLAY_SIZE_MASK-txt.length())/2:0);
+		posCursor(line, (isCentered)?(LicConstants.DISPLAY_SIZE_MASK-txt.length())/2:0);
 		write(txt);
 	}
 	/**
@@ -244,7 +245,7 @@ public class LcdAccess implements KitConstants {
 	 * 	pos= y - b
 	 */
 	public int getPos(String s, int b){
-		int x=DISPLAY_SIZE_MASK;
+		int x=LicConstants.DISPLAY_SIZE_MASK;
 		int y=s.length();
 		return (isCentered)?(x+y-2*b)/2:(y-3);
 	}
@@ -254,7 +255,7 @@ public class LcdAccess implements KitConstants {
 	 * Processa o valor para ser enviado.
 	 */
 	private  void procValue(int value){
-		writeBits(value>>NIBBLE_SHIFT_MASK);
+		writeBits(value>>LicConstants.NIBBLE_SHIFT_MASK);
 		writeBits(value);
 	}
 	/**

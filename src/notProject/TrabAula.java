@@ -1,7 +1,8 @@
 package notProject;
 
+import isel.leic.usbio.UsbPort;
 import isel.leic.utils.Time;
-import isel.leic.usbio.*;
+
 
 public class TrabAula {
 	/**

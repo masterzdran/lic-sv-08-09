@@ -7,35 +7,31 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-
+import Lic0809SV.LicConstants;
 
 public class MaintenanceMode {
-	private final int KEY_LOCK_MASK = 0x10;
-	private final String configFile="user.netrc";
 	private AccessDb db;
 	private String adminPassword;
 	private boolean au=false;
-	private Kit ourKit;
-	
-	public MaintenanceMode(AccessDb ourDB){
-		db=ourDB;
-		ourKit= new  Kit();
+
+	public MaintenanceMode(){
+		db=new AccessDb();
 		getPassword();
 	}
 	private void setPassword(String pw){
 		adminPassword=pw;
 		try {
-			BufferedWriter bw=new BufferedWriter(new FileWriter(new File(configFile)));
+			BufferedWriter bw=new BufferedWriter(new FileWriter(new File(LicConstants.configFile)));
 			bw.write(adminPassword+";");
 			bw.close();
 		} catch (IOException e) {
-			System.out.println(configFile+" file with I/O problems.");
+			System.out.println(LicConstants.configFile+" file with I/O problems.");
 		}
 	}
 	
 	private void getPassword(){
 		try {
-			BufferedReader bR=new BufferedReader(new FileReader(new File(configFile)));
+			BufferedReader bR=new BufferedReader(new FileReader(new File(LicConstants.configFile)));
 			String line;
 			String pw;
 			if ((line=bR.readLine()) != null){
@@ -45,9 +41,9 @@ public class MaintenanceMode {
 			}
 			bR.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(configFile+" not found.");
+			System.out.println(LicConstants.configFile+" not found.");
 		} catch (IOException e) {
-			System.out.println(configFile+" file with I/O problems.");
+			System.out.println(LicConstants.configFile+" file with I/O problems.");
 		}
 		
 	}
@@ -73,9 +69,6 @@ public class MaintenanceMode {
 			return;
 		}
 		System.out.println("Password missmatch!");
-	}
-	public  boolean isLocked() {
-		 return ourKit.readBit(KEY_LOCK_MASK);
 	}
 	
 	private boolean verify (char[] pw){
@@ -342,7 +335,7 @@ public class MaintenanceMode {
 	public  void exit(){
 		clearScreen();
 		System.out.println("Exit!");
-
+		db.save();
 	}
 	public  void mainMenu(){
 		clearScreen();
@@ -375,9 +368,6 @@ public class MaintenanceMode {
 	}
 	
 	public static void main(String[] args) {
-		AccessDb a=new AccessDb();
-		MaintenanceMode m=new MaintenanceMode(a);
-		m.mainMenu();
 	}
 
 }
