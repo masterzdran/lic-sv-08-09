@@ -19,8 +19,6 @@ field triStateKeys = [K0..3];
 field outAddrs     =[A0..A2];
 field inKeys      =[IN3..IN0];
 
-
-
 /* ************************ INPUT PINS *************************** */
 PIN 1 = CLK;
 PIN [2,3] = [K_VAL,ACK]; 
