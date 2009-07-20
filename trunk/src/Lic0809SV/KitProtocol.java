@@ -2,11 +2,11 @@ package Lic0809SV;
 import isel.leic.utils.Time;
 import Lic0809SV.LicConstants;
 
-public class LcdProtocol{
+public class KitProtocol{
 	private int	bits2Shift;
 	private Kit ourKit;
 	
-	public LcdProtocol(){
+	public KitProtocol(){
 		bits2Shift=4;
 		ourKit=new Kit();
 	}

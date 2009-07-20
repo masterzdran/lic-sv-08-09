@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Scanner;
+import Lic0809SV.LicConstants;
 
-
-public class AccessDb implements KitConstants{
+public class AccessDb{
 	private static final int DEFAULT_SIZE = 1000;
 	private static int maxsize;
 
@@ -40,7 +40,7 @@ public class AccessDb implements KitConstants{
 	}
 	private void open() {
 		try {
-			File file = new File(filePath);
+			File file = new File(LicConstants.filePath);
 			//System.out.print(file.getAbsolutePath());
 			FileReader fr = new FileReader(file);
 			BufferedReader bf = new BufferedReader(fr);
@@ -74,7 +74,7 @@ public class AccessDb implements KitConstants{
 
 	public void save() {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(filePath)));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(LicConstants.filePath)));
 			ListIterator<User> l = users.listIterator();
 			while (l.hasNext()) {
 				bw.write(l.next().exportUser());

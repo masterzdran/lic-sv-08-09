@@ -1,7 +1,6 @@
 package notProject;
 
-import isel.leic.utils.*;
-
+import isel.leic.utils.Time;
 public class LCD2  {
 	//Data - pin 0 -3
 	//CS -pin 6

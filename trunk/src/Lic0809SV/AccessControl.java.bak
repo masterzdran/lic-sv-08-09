@@ -50,7 +50,6 @@ public class AccessControl{
 			
 			nbr=nbr*10+(key - 48);
 			nbrEntered++;
-			key="";
 		}
 		if (key==0){
 			writeMessage(LicConstants.TIMEOUT);
