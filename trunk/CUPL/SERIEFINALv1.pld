@@ -14,8 +14,6 @@ PIN 1 = CLK;
 PIN 2 = RxC;/* Referente a shift Register */
 PIN 3 = RxD;/* Referente a shift Register */
 
-
-
 /* ************************ OUTPUT PINS ************************** */
 
 PIN 14 = D3; /* Saida D3 do shift Register */
