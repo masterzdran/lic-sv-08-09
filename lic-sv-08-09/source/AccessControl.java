@@ -37,28 +37,34 @@ public class AccessControl {
 		LcdAccess.write(c);
 	}
 
-	private void clearNbr(String s, int max) {
+	private void clearNbr(String s, int max, int i) {
 		posCursor(1, s, max);
-		for (int j = 0; j < max; j++)
-			write(' ');
+		if (i == LicConstants.CHECKUSER){
+			for (int j = 0; j < max; j++)
+				write(' ');
+		}else{
+			for (int j = 0; j < max; j++)
+				write('-');
+			
+		}
 		posCursor(1, s, max);
 	}
 
 	private void cancel(int s) {
 		switch (s) {
 		case LicConstants.CHECKUSER:
-			clearNbr(LicConstants.ASK4USER, LicConstants.MAXDIGIT);
+			clearNbr(LicConstants.ASK4USER, LicConstants.MAXDIGIT,s);
 			break;
 		case LicConstants.CHECKPIN:
-			clearNbr(LicConstants.ASK4PIN, LicConstants.MAXDIGIT);
+			clearNbr(LicConstants.ASK4PIN, LicConstants.MAXDIGIT,s);
 			break;
 
 		case LicConstants.CHECKNEWPIN:
-			clearNbr(LicConstants.ASK4NEWPIN, LicConstants.MAXDIGIT);
+			clearNbr(LicConstants.ASK4NEWPIN, LicConstants.MAXDIGIT,s);
 			break;
 
 		case LicConstants.CONFIRMPIN:
-			clearNbr(LicConstants.CONFIRMNEWPIN, LicConstants.MAXDIGIT);
+			clearNbr(LicConstants.CONFIRMNEWPIN, LicConstants.MAXDIGIT,s);
 			break;
 		}
 	}
@@ -84,9 +90,7 @@ public class AccessControl {
 		char key = 0;
 		int nbrEntered = 0;
 		// Colocar Limite de Caracteres Inseridos
-		while (((key = Keyboard.waitKey(5000)) != 0)
-				&& !(key >= 'A' && key <= 'F')
-				&& (nbrEntered < LicConstants.MAXDIGIT)) {
+		while (((key = Keyboard.waitKey(5000)) != 0)&& !(key >= 'A' && key <= 'F') && (nbrEntered<3)) {
 			if (i == LicConstants.CHECKUSER) {
 				write(key);
 			} else {
@@ -96,7 +100,7 @@ public class AccessControl {
 			nbr = nbr * 10 + (key - 48);
 			nbrEntered++;
 		}
-		key = Keyboard.waitKey(5000);
+		//key = Keyboard.waitKey(5000);
 		switch (key) {
 		case 'A':
 			if (i == LicConstants.CHECKPIN)
@@ -104,7 +108,9 @@ public class AccessControl {
 			return nbr;
 		case 'C':
 			cancel(i);
-			getNbr(i);
+			nbr=0;
+			return getNbr(i);
+			
 		case 'E':
 
 			return nbr;
@@ -180,7 +186,7 @@ public class AccessControl {
 	private int confirm4NewPin() {
 		writeLine(1, LicConstants.CONFIRMNEWPIN);
 		posCursor(1, LicConstants.CONFIRMNEWPIN, LicConstants.MAXDIGIT);
-		return getNbr(LicConstants.CHECKNEWPIN);
+		return getNbr(LicConstants.CONFIRMPIN);
 	}
 
 	private void changePIN(User u) {
@@ -243,7 +249,7 @@ public class AccessControl {
 	}
 
 	public int ask4User() {
-		if (!aShow) {
+		//if (!aShow) {
 			clear();
 			setCenter(true);
 			writeLine(0, greetings());
@@ -251,7 +257,7 @@ public class AccessControl {
 			writeLine(1, LicConstants.ASK4USER);
 			posCursor(1, LicConstants.ASK4USER, LicConstants.MAXDIGIT);
 			aShow = true;
-		}
+		//}
 		return getNbr(LicConstants.CHECKUSER);
 	}
 

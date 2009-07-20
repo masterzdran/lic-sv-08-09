@@ -22,11 +22,10 @@ public class Keyboard {
 	 * @return
 	 */
 	public static char pressedKey() {
-		// setACK();
+		setACK();
 		if (Kit.readBit((LicConstants.KEY_VAL_MASK))) {
 			char key = LicConstants.KEYS[Kit.getBits(LicConstants.KEY_DAT_MASK)];
-			unsetACK();
-			// ACK();
+			ACK();
 			return key;
 		}
 
@@ -45,7 +44,6 @@ public class Keyboard {
 		char key;
 		if ((key = pressedKey()) != 0 && key != keyPressed) {
 			keyPressed = key;
-			setACK();
 			return key;
 		}
 		return 0;
@@ -87,8 +85,10 @@ public class Keyboard {
 	}
 
 	public static void main(String[] args) {
+		resetFifo();
+		//setACK();
 		while (true) {
-			System.out.print(waitKey(2500) + " ");
+			System.out.println(waitKey(2500));
 			Kit.sleep(100);
 		}
 	}
