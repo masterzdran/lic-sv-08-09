@@ -17,7 +17,7 @@ field wAddRegister = [W0..2];
 field rAddRegister = [R0..2];
 field triStateKeys = [K0..3];
 field outAddrs     =[A0..A2];
-field inKeys      =[IN0..IN3];
+field inKeys      =[IN3..IN0];
 
 
 
@@ -28,9 +28,9 @@ PIN [6..9] = inKeys;
 
 /* ************************ OUTPUT PINS ************************** */
 
-PIN [17,16,15] = outAddrs;	 	/* Saida Addresses RAM */
+PIN [15..17] = outAddrs;	 	/* Saida Addresses RAM */
 PIN 18 = controlMachine;		/* Ultima operacao efectuada */
-PIN [22,21,20,19] = triStateKeys ; 	/* Saida K0 a K3 para a RAM */
+PIN [19..22] = triStateKeys ; 	/* Saida K0 a K3 para a RAM */
 PIN 14 = RNW;			 	/* Read & !Write - se 1 Read. se 0 Write */
 PIN 23 = REG; 		 	/* Clock do registo de saida (EDO) */
 
@@ -88,7 +88,7 @@ SEQUENCED mainMachine{
 PRESENT 0
 	out RNW, RADDR;
 	if  K_VAL & !FULL  next 1;
-	if !K_VAL &  BR & !EMPTY next 2;
+	if !K_VAL &  BR & !EMPTY & ACK next 2;
 	default next 0;
 /* Escrita*/
 PRESENT 1
@@ -123,6 +123,6 @@ PRESENT 0
 	default next 0;
 
 PRESENT 1
-	if ACK next 0;
+	if !ACK next 0;
 	default next 1;
 }
