@@ -1,0 +1,189 @@
+{COMPONENT D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CUPL\PALFIFO.SYM
+
+ {ENVIRONMENT
+  {PDIFvrev 3.00}
+  {Program "CUPL(WM) Version 5.0a"}
+  {DBtype "Schematic"}
+  {DBvrev 1.01}
+  {DBtime "Tue Jul 21 11:06:00 2009 "}
+  {DBunit "MIL"}
+  {DBgrid 10}
+  {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
+          "PINNAM" 6 "PINCON" 4 "REFDES" 2 "ATTR" 6 "SDOT" 1 
+          "DEVICE" 5 "OUTLIN" 5 "ATTR2" 6 "NOTES" 6 "NETNAM" 4 
+          "CMPNAM" 5 "BORDER" 5}
+ }
+
+ {USER
+  {VIEW
+   {Mode SYMB}
+   {Nlst OPEN}
+   {Vw 0 0 2}
+   {Lv 12 2 2 2 0 0 2 2 2 2 0 0 2 1 2 0 0 0 0}
+   {Gs 10 10}
+  }
+ }
+
+ {DISPLAY
+  [Ly "PINNUM"]
+  [Ls "SOLID"][Wd 0]
+  [Ts 15][Tj "LC"][Tr 0][Tm "N"]
+ }
+
+ {SYMBOL
+  {PIN_DEF
+   [Ly "PINCON"]
+   {P CLK {Pt "INPUT"}{Lq 0}{Ploc 100 160}}
+   {P K_VAL {Pt "INPUT"}{Lq 0}{Ploc 100 120}}
+   {P ACK {Pt "INPUT"}{Lq 0}{Ploc 100 100}}
+   {P IN3 {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
+   {P IN2 {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
+   {P IN1 {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
+   {P IN0 {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
+   {P RNW {Pt "I/O"}{Lq 0}{Ploc 280 20}}
+   {P A0 {Pt "I/O"}{Lq 0}{Ploc 280 40}}
+   {P A1 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
+   {P A2 {Pt "I/O"}{Lq 0}{Ploc 280 80}}
+   {P REG {Pt "I/O"}{Lq 0}{Ploc 280 100}}
+   {P P0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
+   {P K0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 140}}
+   {P K1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 160}}
+   {P K2 {Pt "OUTPUT"}{Lq 0}{Ploc 280 180}}
+   {P K3 {Pt "OUTPUT"}{Lq 0}{Ploc 280 200}}
+  }
+
+  {PKG
+   [Ly "REFDES"]
+   [Ts 25][Tj "CB"][Tr 0][Tm "N"]
+   {Rdl 190 230}
+
+   [Ly "PINNUM"]
+   [Ts 15][Tj "RC"]
+   {Pnl 120 170}
+   [Ts 15][Tj "RC"]
+   {Pnl 120 130}
+   {Pnl 120 110}
+   {Pnl 120 90}
+   {Pnl 120 70}
+   {Pnl 120 50}
+   {Pnl 120 30}
+   [Ts 15][Tj "LC"]
+   {Pnl 260 30}
+   {Pnl 260 50}
+   {Pnl 260 70}
+   {Pnl 260 90}
+   {Pnl 260 110}
+   {Pnl 260 130}
+   {Pnl 260 150}
+   {Pnl 260 170}
+   {Pnl 260 190}
+   {Pnl 260 210}
+
+   {Sd A 1 2 3 6 7 8 9 14 15 16 17 23 18 19 20 21 22}
+  }
+
+  {PIC
+   [Ly "GATE"]
+   [Ts 15][Tj "LC"][Tr 0][Tm "N"]
+   {R 130 220 250 0}
+   {L 130 160 100 160}
+   {L 130 170 140 160 130 150}
+   {L 130 120 100 120}
+   {L 130 100 100 100}
+   {L 130 80 100 80}
+   {L 130 60 100 60}
+   {L 130 40 100 40}
+   {L 130 20 100 20}
+   {L 250 20 280 20}
+   {L 250 40 280 40}
+   {L 250 60 280 60}
+   {L 250 80 280 80}
+   {L 250 100 280 100}
+   {L 250 120 280 120}
+   {L 250 140 280 140}
+   {L 250 160 280 160}
+   {L 250 180 280 180}
+   {L 250 200 280 200}
+   [Ly "PINNAM"]
+   [Tj "LC"]
+   {T "CLK" 140 160}
+   {T "K_VAL" 140 120}
+   {T "ACK" 140 100}
+   {T "IN3" 140 80}
+   {T "IN2" 140 60}
+   {T "IN1" 140 40}
+   {T "IN0" 140 20}
+   [Tj "RC"]
+   {T "RNW" 240 20}
+   {T "A0" 240 40}
+   {T "A1" 240 60}
+   {T "A2" 240 80}
+   {T "REG" 240 100}
+   {T "P0" 240 120}
+   {T "K0" 240 140}
+   {T "K1" 240 160}
+   {T "K2" 240 180}
+   {T "K3" 240 200}
+   [Ly "DEVICE"]
+   [Tj "CT"]
+   {T "V750C" 190 -10}
+  }
+
+  {ATR
+   {IN
+    {Org 100 20}
+    {Ty 255}
+   }
+   {EX
+    [Ly "ATTR2"]
+    [Ts 12][Tj "CT"][Tr 0][Tm "N"]
+    {At PLD D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CUPL\PALFIFO 190 220}
+   }
+  }
+ }
+
+ {DETAIL
+  {ANNOTATE
+  }
+
+  {NET_DEF
+   {N CLK
+   }
+   {N K_VAL
+   }
+   {N ACK
+   }
+   {N IN3
+   }
+   {N IN2
+   }
+   {N IN1
+   }
+   {N IN0
+   }
+   {N RNW
+   }
+   {N A0
+   }
+   {N A1
+   }
+   {N A2
+   }
+   {N REG
+   }
+   {N P0
+   }
+   {N K0
+   }
+   {N K1
+   }
+   {N K2
+   }
+   {N K3
+   }
+  }
+
+  {SUBCOMP
+  }
+ }
+}

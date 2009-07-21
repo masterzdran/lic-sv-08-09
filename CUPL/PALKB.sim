@@ -1,0 +1,148 @@
+%SIGNAL
+PIN   1 =  CLK 
+PIN  20 =  K0 
+PIN  21 =  K1 
+PIN  22 =  K2 
+PIN  23 =  K3 
+PIN  15 =  KC0 
+PIN  16 =  KC1 
+PIN  17 =  KC2 
+PIN  18 =  KC3 
+PIN   2 =  KL0 
+PIN   3 =  KL1 
+PIN   4 =  KL2 
+PIN   5 =  KL3 
+PIN  14 =  K_VAL 
+PIN  25 =  P0 
+PIN  26 =  P1 
+PIN  32 =  Q0 
+PIN  33 =  Q1 
+%END
+
+%FIELD
+FIELD ColumCounter = Q0,Q1
+FIELD Key = K0,K1,K2,K3
+FIELD KeyColums = KC0,KC1,KC2,KC3
+FIELD KeyLines = KL0,KL1,KL2,KL3
+FIELD LineCounter = P0,P1
+%END
+
+%EQUATION
+CE1 =>
+    KL0 & KL1 & KL2 & KL3
+
+CE2 =>
+    !K_VAL
+
+K0 =>
+    Q0
+
+K1 =>
+    Q1
+
+K2 =>
+    P0
+
+K3 =>
+    P1
+
+KC0 =>
+    K0
+  # K1
+
+KC1 =>
+    !K0
+  # K1
+
+KC2 =>
+    K0
+  # !K1
+
+KC3 =>
+    !K0
+  # !K1
+
+K_VAL =>
+    K2 & !K3 & KL1
+  # !K2 & !K3 & KL0
+  # K2 & K3 & KL3
+  # !K2 & K3 & KL2
+
+P0.d  =>
+    !K_VAL & !P0
+  # K_VAL & P0
+
+P0.ar  =>
+    0 
+
+P0.ck  =>
+    CLK
+
+P0.sp P1.sp Q0.sp Q1.sp  =>
+    0 
+
+P1.d  =>
+    !P1
+
+P1.ar  =>
+    0 
+
+P1.ck  =>
+    !P0
+
+P1.sp  =>
+    
+Q0.d  =>
+    KL0 & KL1 & KL2 & KL3 & !Q0
+  # !KL0 & Q0
+  # !KL1 & Q0
+  # !KL2 & Q0
+  # !KL3 & Q0
+
+Q0.ar  =>
+    0 
+
+Q0.ck  =>
+    CLK
+
+Q0.sp  =>
+    
+Q1.d  =>
+    !Q1
+
+Q1.ar  =>
+    0 
+
+Q1.ck  =>
+    !Q0
+
+Q1.sp  =>
+    
+K0.oe  =>
+    1 
+
+K1.oe  =>
+    1 
+
+K2.oe  =>
+    1 
+
+K3.oe  =>
+    1 
+
+KC0.oe  =>
+    1 
+
+KC1.oe  =>
+    1 
+
+KC2.oe  =>
+    1 
+
+KC3.oe  =>
+    1 
+
+K_VAL.oe  =>
+    1 
+
+%END

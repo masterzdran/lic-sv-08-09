@@ -1,0 +1,117 @@
+Name     PALLCD;
+PartNo   00 ;
+Date     16-04-2009 ;
+Revision 01 ;
+Designer Engineer ;
+Company  ccisel ;
+Assembly None ;
+Location  ;
+Device   v750c;
+/* ************************************************************************** */
+field Data              = [D0..3];
+field Counter           = [R0..2];
+field StartDetect       = [P0..1];
+field Send              = [Q0..1];  
+field SData		   = [RS,Data];
+ZERO                    = 'b'0;
+/* ************************ INPUT PINS *************************** */
+PIN [1..3]	=	[CLK,RxC,RxD];
+
+/* ************************ OUTPUT PINS ************************** */
+PIN [18..14]    =   SData;
+PIN [22,23]  =   [RxRdy,E]; 
+
+
+/* INTERMEDIOS */
+pinnode [32..33]    = Send;
+pinnode [27..29]    = Counter;
+pinnode [30..31]    = StartDetect;
+
+/* **************************** BODY ***************************** */
+/* ******************* PARTE DO SHIFT REGISTER *********************/
+SData.sp =   ZERO;
+SData.ar =   ZERO;
+SData.ck =   RxC;
+[D0,D1,D2,D3,RS].d = [D1,D2,D3,RxD,D0];
+
+/* ************************ PARTE DO MUX ***************************/
+/* Parcela a Entrar no Mux*/
+A2 = ES&R2;
+A1 = ES&R1;
+A0 = ES&R0;
+/* ********************** PARTE DO SOMADOR ***************************/
+[B2..0] =   'b'001;
+
+/* Carry Out = Funcao Maioria */
+C0 = ZERO;
+C1 = A0 & B0  #  A0 & C0  #  B0 & C0;
+C2 = A1 & B1  #  A1 & C1  #  B1 & C1;
+C3 = A2 & B2  #  A2 & C2  #  B2 & C2;
+
+/* Soma = (x$y)$Carry in */
+S0 = (A0$B0)$C0;
+S1 = (A1$B1)$C1;
+S2 = (A2$B2)$C2;
+
+/*maximo de bits a serem carregados*/
+[k0..2] =   'b'101;
+
+/* ********************** PARTE DO REGISTO ***************************/
+
+Counter.ar  =   RxRdy;
+Counter.sp  =   ZERO;
+Counter.ck  =   RxC;
+Counter.d	= [S0,S1,S2];      
+
+/* ******************* PARTE DO TESTE A FLAG Z ***********************/
+Z = !(k2$R2) & !(k1$R1) & !(k0$R0);
+
+/* ***************** PARTE DA MAQUINA DE ESTADOS *********************/
+
+Send.ar=ZERO;
+Send.sp=ZERO;
+Send.CKMUX=CLK;
+
+SEQUENCED Send{
+PRESENT 0
+	
+	if RxD&RxC next 1;
+	default next 0;
+
+
+PRESENT 1
+	if RxD next 1;
+	if !RxD&RxC next 3;
+	default next 0;
+
+PRESENT 3
+	out Start;
+	default next 0;
+
+
+}
+
+StartDetect.ar=ZERO;
+StartDetect.sp=ZERO;
+StartDetect.CK=!CLK;
+
+
+SEQUENCED StartDetect{
+PRESENT 0
+	out RxRdy;
+	if Start next 1;
+	default next 0;
+
+
+PRESENT 1
+	out ES;
+	if Z next 3;
+	default next 1;
+
+PRESENT 3
+	out E, RxRdy;
+	default next 0;
+
+
+}
+

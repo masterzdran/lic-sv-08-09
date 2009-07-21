@@ -1,0 +1,320 @@
+%SIGNAL
+PIN  15 =  A0 
+PIN  16 =  A1 
+PIN  17 =  A2 
+PIN   3 =  ACK 
+PIN   1 =  CLK 
+PIN   9 =  IN0 
+PIN   8 =  IN1 
+PIN   7 =  IN2 
+PIN   6 =  IN3 
+PIN  19 =  K0 
+PIN  20 =  K1 
+PIN  21 =  K2 
+PIN  22 =  K3 
+PIN   2 =  K_VAL 
+PIN  18 =  P0 
+PIN  30 =  Q0 
+PIN  29 =  Q1 
+PIN  31 =  Q2 
+PIN  26 =  R0 
+PIN  27 =  R1 
+PIN  28 =  R2 
+PIN  23 =  REG 
+PIN  14 =  RNW 
+PIN  32 =  W0 
+PIN  33 =  W1 
+PIN  34 =  W2 
+PIN  25 =  WR 
+%END
+
+%FIELD
+FIELD controlMachine = P0
+FIELD inKeys = IN3,IN2,IN1,IN0
+FIELD mainMachine = Q0,Q1,Q2
+FIELD outAddrs = A0,A1,A2
+FIELD rAddRegister = R0,R1,R2
+FIELD triStateKeys = K0,K1,K2,K3
+FIELD wAddRegister = W0,W1,W2
+%END
+
+%EQUATION
+A0 =>
+    !Q0 & !Q1 & R0
+  # !Q0 & Q1 & !Q2 & R0
+  # Q1 & Q2 & W0
+  # Q0 & W0
+
+A1 =>
+    !Q0 & !Q1 & R1
+  # !Q0 & Q1 & !Q2 & R1
+  # Q1 & Q2 & W1
+  # Q0 & W1
+
+A2 =>
+    !Q0 & !Q1 & R2
+  # !Q0 & Q1 & !Q2 & R2
+  # Q1 & Q2 & W2
+  # Q0 & W2
+
+BG =>
+    !Q0 & !Q1 & Q2
+
+BR =>
+    !P0
+
+EMPTY =>
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & !WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & !WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & !WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & !WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & !WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & !WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & !WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & !WR
+
+EQ =>
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2
+  # R0 & R1 & !R2 & W0 & W1 & !W2
+  # !R0 & R1 & R2 & !W0 & W1 & W2
+  # R0 & R1 & R2 & W0 & W1 & W2
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2
+  # R0 & !R1 & R2 & W0 & !W1 & W2
+
+FULL =>
+    !R0 & !R1 & !R2 & !W0 & !W1 & !W2 & WR
+  # R0 & !R1 & !R2 & W0 & !W1 & !W2 & WR
+  # !R0 & R1 & !R2 & !W0 & W1 & !W2 & WR
+  # R0 & R1 & !R2 & W0 & W1 & !W2 & WR
+  # !R0 & R1 & R2 & !W0 & W1 & W2 & WR
+  # R0 & R1 & R2 & W0 & W1 & W2 & WR
+  # R0 & !R1 & R2 & W0 & !W1 & W2 & WR
+  # !R0 & !R1 & R2 & !W0 & !W1 & W2 & WR
+
+K0.d  =>
+    IN0
+
+K0.ck  =>
+    CLK
+
+K0.oe  =>
+    !RNW
+
+K0.sp K1.sp K2.sp K3.sp P0.sp Q0.sp Q1.sp Q2.sp R0.sp R1.sp R2.sp W0.sp W1.sp W2.sp WR.sp  =>
+    0 
+
+K1.d  =>
+    IN1
+
+K1.ck  =>
+    CLK
+
+K1.oe  =>
+    !RNW
+
+K1.sp  =>
+    
+K2.d  =>
+    IN2
+
+K2.ck  =>
+    CLK
+
+K2.oe  =>
+    !RNW
+
+K2.sp  =>
+    
+K3.d  =>
+    IN3
+
+K3.ck  =>
+    CLK
+
+K3.oe  =>
+    !RNW
+
+K3.sp  =>
+    
+P0.d  =>
+    !P0 & REG
+  # !P0 & !Q0 & !Q1 & Q2
+  # ACK & P0
+
+P0.ar  =>
+    0 
+
+P0.ckmux  =>
+    CLK
+
+P0.sp  =>
+    
+Q0.d  =>
+    K_VAL & !Q0 & !Q1 & !Q2 & !WR
+  # K_VAL & !Q0 & !Q1 & !Q2 & R2 & !W2
+  # K_VAL & !Q0 & !Q1 & !Q2 & !R2 & W2
+  # K_VAL & !Q0 & !Q1 & !Q2 & R1 & !W1
+  # K_VAL & !Q0 & !Q1 & !Q2 & !R1 & W1
+  # K_VAL & !Q0 & !Q1 & !Q2 & R0 & !W0
+  # K_VAL & !Q0 & !Q1 & !Q2 & !R0 & W0
+  # Q0 & !Q2
+
+Q0.ar  =>
+    0 
+
+Q0.ckmux  =>
+    CLK
+
+Q0.sp  =>
+    
+Q1.d  =>
+    Q0 & !Q1 & !Q2
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & WR
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R2 & !W2
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R2 & W2
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R1 & !W1
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R1 & W1
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & R0 & !W0
+  # ACK & !K_VAL & !P0 & !Q0 & !Q1 & !Q2 & !R0 & W0
+
+Q1.ar  =>
+    0 
+
+Q1.ckmux  =>
+    CLK
+
+Q1.sp  =>
+    
+Q2.d  =>
+    Q1 & !Q2
+
+Q2.ar  =>
+    0 
+
+Q2.ckmux  =>
+    CLK
+
+Q2.sp  =>
+    
+R0.t  =>
+    1 
+
+R0.ar  =>
+    0 
+
+R0.ck  =>
+    !Q0 & !Q1 & Q2
+
+R0.sp  =>
+    
+R1.t  =>
+    R0
+
+R1.ar  =>
+    0 
+
+R1.ck  =>
+    !Q0 & !Q1 & Q2
+
+R1.sp  =>
+    
+R2.t  =>
+    R0 & R1
+
+R2.ar  =>
+    0 
+
+R2.ck  =>
+    !Q0 & !Q1 & Q2
+
+R2.sp  =>
+    
+RADDR =>
+    !Q0 & !Q2
+  # !Q0 & !Q1 & Q2
+
+REG =>
+    !Q0 & Q1 & !Q2
+
+REGOP =>
+    !Q1 & Q2
+
+RNW =>
+    !Q0 & Q1 & !Q2
+  # !Q1
+
+UM =>
+    1 
+
+W0.t  =>
+    1 
+
+W0.ar  =>
+    0 
+
+W0.ck  =>
+    Q0 & !Q1 & Q2
+
+W0.sp  =>
+    
+W1.t  =>
+    W0
+
+W1.ar  =>
+    0 
+
+W1.ck  =>
+    Q0 & !Q1 & Q2
+
+W1.sp  =>
+    
+W2.t  =>
+    W0 & W1
+
+W2.ar  =>
+    0 
+
+W2.ck  =>
+    Q0 & !Q1 & Q2
+
+W2.sp  =>
+    
+WR.d  =>
+    Q0
+  # Q1 & Q2
+
+WR.ar  =>
+    0 
+
+WR.ck  =>
+    !Q1 & Q2
+
+WR.sp  =>
+    
+WRCLK =>
+    Q0 & !Q1 & Q2
+
+ZERO =>
+    0 
+
+A0.oe  =>
+    1 
+
+A1.oe  =>
+    1 
+
+A2.oe  =>
+    1 
+
+P0.oe  =>
+    1 
+
+REG.oe  =>
+    1 
+
+RNW.oe  =>
+    1 
+
+%END
