@@ -1,0 +1,126 @@
+Name     FIFO;
+PartNo   00;
+Date     16-04-2009;
+Revision 01;
+Designer Engineer;
+Company  ccisel;
+Assembly None;
+Location Lisboa;
+Device   v750c;
+
+/* ************************Constantes************************** */
+ZERO='b'0;
+UM='b'1;
+field mainMachine = [Q0..2];
+field controlMachine = P0;
+field wAddRegister = [W0..2];
+field rAddRegister = [R0..2];
+field triStateKeys = [K0..3];
+field outAddrs     =[A0..A2];
+field inKeys      =[IN3..IN0];
+
+/* ************************ INPUT PINS *************************** */
+PIN 1 = CLK;
+PIN [2,3] = [K_VAL,ACK]; 
+PIN [6..9] = inKeys;
+
+/* ************************ OUTPUT PINS ************************** */
+
+PIN [15..17] = outAddrs;	 	/* Saida Addresses RAM */
+PIN 18 = controlMachine;		/* Ultima operacao efectuada */
+PIN [19..22] = triStateKeys ; 	/* Saida K0 a K3 para a RAM */
+PIN 14 = RNW;			 	/* Read & !Write - se 1 Read. se 0 Write */
+PIN 23 = REG; 		 	/* Clock do registo de saida (EDO) */
+
+/* INTERMEDIOS */
+pinnode [32..34] = wAddRegister  ;
+pinnode [30,29,31] = mainMachine  ;
+pinnode [26,27,28] = rAddRegister  ;
+pinnode 25 = WR;
+
+/* **************************** BODY ***************************** */
+
+
+/* ************************* FULL/EMPTY ****************************/
+WR.d =  !RADDR;		/*WR=1 se ultima oper escrita e WR=0 se ultima oper leitura*/
+WR.ar = ZERO;
+WR.sp = ZERO;
+WR.ck = REGOP;
+
+EQ = !(W0$R0)&!(W1$R1)&!(W2$R2); 
+FULL = EQ & WR;
+EMPTY = EQ & !WR;
+/* ************************* TRI STATES ****************************/
+triStateKeys.d	=	[IN0..3];
+triStateKeys.oe	=	!RNW;
+triStateKeys.sp	=	ZERO;
+triStateKeys.ck	=	CLK;
+
+/* ********************** CONTADOR WRITE ***************************/
+wAddRegister.ar	=	ZERO;
+wAddRegister.sp	=	ZERO;
+wAddRegister.ck	= 	WRCLK;
+W0.T=UM;
+W1.T=UM&W0;
+W2.T=UM&W0&W1;
+
+/* ************************* CONTADOR READ ************************** */
+rAddRegister.ar	=	ZERO;
+rAddRegister.sp	=	ZERO;
+rAddRegister.ck	=	BG;
+R0.T=UM;
+R1.T=UM&R0;
+R2.T=UM&R1&R0;
+/* ********************** MUX ENDERECOS RAM ************************* */
+A0 = (R0 & RADDR) # (W0 & !RADDR);
+A1 = (R1 & RADDR) # (W1 & !RADDR);
+A2 = (R2 & RADDR) # (W2 & !RADDR);
+
+/* ***************** PARTE DA MAQUINA DE ESTADOS ******************** */
+
+mainMachine.ar=ZERO;
+mainMachine.sp=ZERO;
+mainMachine.CKMUX=CLK;
+
+SEQUENCED mainMachine{
+PRESENT 0
+	out RNW, RADDR;
+	if  K_VAL & !FULL  next 1;
+	if !K_VAL &  BR & !EMPTY & ACK next 2;
+	default next 0;
+/* Escrita*/
+PRESENT 1
+	out RNW;
+	default next 3;
+
+PRESENT 3
+	default next 5;
+
+PRESENT 5
+	out RNW,WRCLK,REGOP;
+	default next 0;
+/* Leitura*/
+PRESENT 2
+	out RNW,RADDR,REG;
+	default next 4;
+
+PRESENT 4
+	out RNW,RADDR,BG,REGOP;
+	default next 0;
+}
+
+controlMachine.ar=ZERO;
+controlMachine.sp=ZERO;
+controlMachine.CKMUX=CLK;
+
+
+SEQUENCED controlMachine{
+PRESENT 0
+	out BR;
+	if BG # REG next 1;
+	default next 0;
+
+PRESENT 1
+	if !ACK next 0;
+	default next 1;
+}
