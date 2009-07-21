@@ -1,0 +1,119 @@
+Name     FIFO ;
+PartNo   00 ;
+Date     16-04-2009 ;
+Revision 01 ;
+Designer Engineer ;
+Company  ccisel ;
+Assembly None ;
+Location  ;
+Device   v750c;
+/* ************************ INPUT PINS *************************** */
+PIN 1 = CLK;
+PIN [2,3] = [K_VAL,ACK]; 
+
+PIN [6..9] = [IN0..IN3];
+
+/* ************************ OUTPUT PINS ************************** */
+
+PIN [14..16] = [A0..A2];	 /* Saida Addresses RAM */
+PIN [17,19,20,21] = [K0..K3]; 	 /* Saida K0 a K3 para a RAM */
+PIN 22 = RNW;			 /* Read & !Write - se 1 Read. se 0 Write */
+PIN 23 = REG; 		 /* Clock do registo de saida (EDO) */
+
+/*PIN 23 = K_RDY;		    K_RDY para o controlo central */
+
+/* INTERMEDIOS */
+pinnode [32..34] = [W0..W2];
+pinnode [39,29,30] = [Q0..Q2];
+pinnode [26..28] = [R0..R2];
+pinnode [25,31] = [P0,WR];
+
+
+/* **************************** BODY ***************************** */
+ZERO='b'0;
+UM='b'1;
+
+/* ************************* FULL/EMPTY ****************************/
+WR.d = !RADDR;
+WR.ar = ZERO;
+WR.sp = ZERO;
+WR.ckmux = WCLK;
+
+EQ = !(W0$R0 # W1$R1 # W2$R2); 
+/* ************************* TRI STATES ****************************/
+[K0..3].d	=	[IN0..3];
+[K0..3].oe	=	RNW;
+[K0..3].sp	=	ZERO;
+[K0..3].ckmux	=	CLK;
+
+/* ********************** CONTADOR WRITE ***************************/
+[W0..2].d	=	![W0..2];
+[W0..2].ar	=	ZERO;
+[W0..2].sp	=	ZERO;
+W0.ck = !RNW;
+W1.ck = !W0;
+W2.ck = !W1;
+
+/* ************************* CONTADOR READ ************************** */
+[R0..2].d	=	![R0..2];
+[R0..2].ar	=	ZERO;
+[R0..2].sp	=	ZERO;
+R0.ck = BG;
+R1.ck = !R0;
+R2.ck = !R1;
+
+/* ********************** MUX ENDERECOS RAM ************************* */
+A0 = (R0 & RADDR) # (W0 & !RADDR);
+A1 = (R1 & RADDR) # (W1 & !RADDR);
+A2 = (R2 & RADDR) # (W2 & !RADDR);
+
+/* ***************** PARTE DA MAQUINA DE ESTADOS ******************** */
+WCLK=UM;
+
+[Q0..2].ar=ZERO;
+[Q0..2].sp=ZERO;
+[Q0..2].CKMUX=CLK;
+
+SEQUENCED [Q0, Q1, Q2]{
+PRESENT 3
+	out RNW, RADDR;
+	if  K_VAL & (EQ & WR)  next 0;
+	if !K_VAL &  BR & (EQ & !WR) next 1;
+	default next 3;
+
+PRESENT 0
+	out RNW;
+	default next 4;
+
+PRESENT 4
+	out WCLK;
+	default next 7;
+
+PRESENT 7
+	out RNW,RADDR;
+	default next 3;
+
+PRESENT 1
+	out RNW,REG,RADDR,WCLK;
+	default next 5;
+
+PRESENT 5
+	out RNW,BG,RADDR;
+	default next 3;
+}
+[P0].ar=ZERO;
+[P0].sp=ZERO;
+[P0].CKMUX=!CLK;
+
+
+SEQUENCED [P0]{
+PRESENT 0
+	out BR;
+	if BG next 1;
+	default next 0;
+
+PRESENT 1
+	out K_RDY;
+	if ACK next 0;
+	default next 1;
+}
