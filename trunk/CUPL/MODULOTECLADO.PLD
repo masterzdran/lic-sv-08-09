@@ -8,6 +8,9 @@ Assembly None ;
 Location  ;
 Device   v750c ;
 
+field registo = [K0..3];
+field controlMachine= [a0..1];
+ZERO = 'b'0;
 /* ************************ INPUT PINS *************************** */
 PIN 1 = CLK;
 
@@ -28,15 +31,15 @@ PIN 23 = K3; /* Saida do Valor K3 (Bit 4) */
 PIN 22 = K2; /* Saida do Valor K2 (Bit 3) */
 PIN 21 = K1; /* Saida do Valor K1 (Bit 2) */
 PIN 20 = K0; /* Saida do Valor K0 (Bit 1) */
+PIN 19 = a1;
 
 pinnode [32..33] = [Q0..Q1];
-pinnode [25..26] = [P0..P1];
+pinnode [26..25] = [P0..P1];
+pinnode [27..30] = [x0..x3];
+pinnode [34]  = [a0];
 
 /* **************************** BODY ****************************** */
-K1 = L;
-K0 = K;
-K3 = I;
-K2 = J;
+
 
 /* ************************* CONTADOR 1 *************************** */
 M = E&F&G&H;
@@ -56,7 +59,7 @@ K = Q0;
 L = Q1;
 
 /* ************************* CONTADOR 2 ************************** */
-CE2 = !K_VAL;
+CE2 = Y;
 
 P0.d = (CE2$P0);
 P0.ar = 'b'0;
@@ -71,9 +74,12 @@ P1.ck = !P0;
 J = P0;
 I = P1;
 
+
+
+
 /* ****************************  MUX ******************************/
 Y = !I&((!J&E)#(J&F))#I&((!J&G)#(J&H));
-K_VAL = !Y;
+
 
 /* ************************* DECODER ******************************/
 A = K # L;
@@ -81,7 +87,26 @@ B = !K # L;
 C = !L # K;
 D = !K # !L;
 
+registo.d=[Q0,Q1,P0,P1];
+registo.ar='b'0;
+registo.sp='b'0;
+registo.ck=REG;
 
+controlMachine.ar=ZERO;
+controlMachine.sp=ZERO;
+controlMachine.CKMUX=CLK;
+
+SEQUENCED controlMachine{
+PRESENT 0
+    if Y next 1;
+    default next 0;
+PRESENT 1
+	if !Y next 2;
+	default next 1;
+PRESENT 2
+	out K_VAL, REG;
+	default next 0;
+}
 
 
 
