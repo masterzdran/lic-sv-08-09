@@ -83,10 +83,11 @@ mainMachine.sp=ZERO;
 mainMachine.CKMUX=CLK;
 
 SEQUENCED mainMachine{
+
 PRESENT 0
 	out RNW, RADDR;
 	if  K_VAL & !FULL  next 1;
-	if !K_VAL &  BR & !EMPTY & ACK next 2;
+	if  BR & !EMPTY & ACK next 2;
 	default next 0;
 /* Escrita*/
 PRESENT 1
