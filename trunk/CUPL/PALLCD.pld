@@ -58,7 +58,7 @@ S2 = (A2$B2)$C2;
 
 /* ********************** PARTE DO REGISTO ***************************/
 
-Counter.ar  =   RxRdy;
+Counter.ar  =   Start;
 Counter.sp  =   ZERO;
 Counter.ck  =   RxC;
 Counter.d	= [S0,S1,S2];      
@@ -68,11 +68,11 @@ Z = !(k2$R2) & !(k1$R1) & !(k0$R0);
 
 /* ***************** PARTE DA MAQUINA DE ESTADOS *********************/
 
-Send.ar=ZERO;
-Send.sp=ZERO;
-Send.CKMUX=CLK;
+StartDetect.ar=ZERO;
+StartDetect.sp=ZERO;
+StartDetect.CKMUX=CLK;
 
-SEQUENCED Send{
+SEQUENCED StartDetect{
 PRESENT 0
 	
 	if RxD&RxC next 1;
@@ -91,18 +91,16 @@ PRESENT 3
 
 }
 
-StartDetect.ar=ZERO;
-StartDetect.sp=ZERO;
-StartDetect.CK=!CLK;
+Send.ar=ZERO;
+Send.sp=ZERO;
+Send.CK=!CLK;
 
 
-SEQUENCED StartDetect{
+SEQUENCED Send{
 PRESENT 0
 	out RxRdy;
 	if Start next 1;
 	default next 0;
-
-
 PRESENT 1
 	out ES;
 	if Z next 3;
@@ -111,7 +109,5 @@ PRESENT 1
 PRESENT 3
 	out E, RxRdy;
 	default next 0;
-
-
 }
 
