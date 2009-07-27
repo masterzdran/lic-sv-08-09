@@ -1,3 +1,11 @@
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,33 +16,40 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class MaintenanceMode {
-	private final int KEY_LOCK_MASK = 0x10;
-	private final String configFile = "user.netrc";
 	private AccessDb db;
 	private String adminPassword;
 	private boolean au = false;
-	
+
+	/**
+	 * Construtor
+	 * @param ourDB
+	 */
 	public MaintenanceMode(AccessDb ourDB) {
 		db = ourDB;
 		getPassword();
 	}
-
+	/**
+	 * Atribui Password
+	 * @param pw
+	 */
 	private void setPassword(String pw) {
 		adminPassword = pw;
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(
-					configFile)));
+					LicConstants.configFile)));
 			bw.write(adminPassword + ";");
 			bw.close();
 		} catch (IOException e) {
-			System.out.println(configFile + " file with I/O problems.");
+			showMessage(LicConstants.configFile + " file with I/O problems.");
 		}
 	}
-
+	/**
+	 * Retorna Password
+	 */
 	private void getPassword() {
 		try {
 			BufferedReader bR = new BufferedReader(new FileReader(new File(
-					configFile)));
+					LicConstants.configFile)));
 			String line;
 			String pw;
 			if ((line = bR.readLine()) != null) {
@@ -44,23 +59,25 @@ public class MaintenanceMode {
 			}
 			bR.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(configFile + " not found.");
+			showMessage(LicConstants.configFile + " not found.");
 		} catch (IOException e) {
-			System.out.println(configFile + " file with I/O problems.");
+			showMessage(LicConstants.configFile + " file with I/O problems.");
 		}
 
 	}
-
+	/**
+	 * Altera Password
+	 */
 	private void changePwd() {
 		clearScreen();
 
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("Change Password");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("Change Password");
 
-		System.out.println("Insert New Password: ");
+		showMessage("Insert New Password: ");
 		char[] newPwd = System.console().readPassword();
-		System.out.println("Confirm New Password: ");
+		showMessage("Confirm New Password: ");
 		char[] confirmNewPwd = System.console().readPassword();
 		if (verify(newPwd, confirmNewPwd)) {
 			String pw = "";
@@ -68,16 +85,23 @@ public class MaintenanceMode {
 				pw += newPwd[i];
 			}
 			setPassword(pw);
-			System.out.println("Password changed successfully");
+			showMessage("Password changed successfully");
 			return;
 		}
-		System.out.println("Password missmatch!");
+		showMessage("Password missmatch!");
 	}
-
+	/**
+	 * Verifica se está bloqueado
+	 * @return
+	 */
 	public boolean isLocked() {
-		return Kit.readBit(KEY_LOCK_MASK);
+		return Kit.readBit(LicConstants.KEY_LOCK_MASK);
 	}
-
+	/**
+	 * Verifica Password
+	 * @param pw
+	 * @return
+	 */
 	private boolean verify(char[] pw) {
 		if (adminPassword.length() != pw.length)
 			return false;
@@ -87,7 +111,12 @@ public class MaintenanceMode {
 		}
 		return true;
 	}
-
+	/**
+	 * Compara Passwords
+	 * @param pw1
+	 * @param pw2
+	 * @return
+	 */
 	private boolean verify(char[] pw1, char[] pw2) {
 		if (pw1.length != pw2.length)
 			return false;
@@ -97,13 +126,15 @@ public class MaintenanceMode {
 		}
 		return true;
 	}
-
+	/**
+	 * Verifica se está autorizado
+	 * @return
+	 */
 	private boolean auth() {
 		if (!au) {
 			clearScreen();
-			System.out.println("Enter password:");
+			showMessage("Enter password:");
 			char[] p = System.console().readPassword();
-			//System.out.println(p);
 			if (verify(p)) {
 				return au = true;
 			} else {
@@ -112,19 +143,21 @@ public class MaintenanceMode {
 		}
 		return true;
 	}
-
+	/**
+	 * Mode de Manutenção
+	 */
 	private void maintenaceMainMenu() {
 
 		clearScreen();
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu:");
-		System.out.println("[1] - Add New User");
-		System.out.println("[2] - Remove User");
-		System.out.println("[3] - Associate Message to User");
-		System.out.println("[4] - Search User");
-		System.out.println("[5] - List Users");
-		System.out.println("[6] - Exit");
-		System.out.println("Enter your option (1-6):");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu:");
+		showMessage("[1] - Add New User");
+		showMessage("[2] - Remove User");
+		showMessage("[3] - Associate Message to User");
+		showMessage("[4] - Search User");
+		showMessage("[5] - List Users");
+		showMessage("[6] - Exit");
+		showMessage("Enter your option (1-6):");
 
 		Scanner option = new Scanner(System.in);
 
@@ -158,204 +191,222 @@ public class MaintenanceMode {
 
 	}
 
+	/**
+	 * Pede userId
+	 * @param m
+	 * @return
+	 */
+	private int askUserId(String m){
+		showMessage(m);
+		return new Scanner(System.in).nextInt();
+	}
+	/**
+	 * Pede username
+	 * @param m
+	 * @return
+	 */
+	private String askUserName(String m){
+		showMessage(m);
+		return new Scanner(System.in).nextLine();
+	}
+	/**
+	 * Mostra Mensagem
+	 * @param m
+	 */
+	private void showMessage(String m){
+		System.out.println(m);
+	}
+	/**
+	 * Pede Pin
+	 * @param m
+	 * @return
+	 */
+	private int askUserPin(String m){
+		showMessage(m);
+		return new Scanner(System.in).nextInt();
+	}
+	/**
+	 * Pede Mensagem
+	 * @param m
+	 * @return
+	 */
+	private String askUserMessage(String m ){
+		showMessage(m);
+		return new Scanner(System.in).nextLine();
+	}
+	/**
+	 * Pede Confirmação
+	 * @param s
+	 * @return
+	 */
+	private String confirmation(String s){
+		showMessage(s);
+		String option;
+		do{
+			option=new Scanner(System.in).next();
+			
+		}while (!(option.equalsIgnoreCase("yes") || option.equalsIgnoreCase("y")||option.equalsIgnoreCase("no") || option.equalsIgnoreCase("n"))); 
+		return option;
+	}
+	/**
+	 * Verifica opção
+	 * @param o
+	 * @return
+	 */
+	private boolean option(String o){
+		return (o.equals("yes") || o.equals("y"));
+	}
+	/**
+	 * Adiciona user
+	 */
 	public void addUserMenu() {
 		clearScreen();
-		Scanner newUser = new Scanner(System.in);
 
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("[1] - Add New User");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("[1] - Add New User");
 
-		System.out.println("User Id: ");
-		int userId = newUser.nextInt();
+		int userId = askUserId("User Id: ");
+		String userName = askUserName("User Name: ");
+		int userPin = askUserPin("User Pin: ");
+		String userMsg = askUserMessage("Associate User Message:");
+		User user = new User(userName, userId, userPin, userMsg);
+		user.toString();
+		String option = confirmation("Confirm data? (Yes,No)");
 
-		System.out.println("User Name: ");
-		String userName = newUser.nextLine();
-		userName = newUser.nextLine();
-
-		System.out.println("User Pin: ");
-		int userPin = newUser.nextInt();
-
-		System.out.println("Associate User Message:");
-		String userMsg = newUser.nextLine();
-		userMsg = newUser.nextLine();
-
-		System.out.println("\n");
-		System.out.println("User Id: " + userId + "\nUser Name: " + userName
-				+ "\nUser Pin: " + userPin + "\nUser Message: " + userMsg);
-		System.out.println("Confirm data? (Yes,No)");
-
-		String option = newUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
-			User user = new User(userName, userId, userPin, userMsg);
-			if (db.addUser(user))
-				System.out.println("User added successfully!");
-			else
-				System.out
-						.println("UserId already exists or DataBase is full!");
-
-		} else if (option.equals("no") || option.equals("n")) {
-			System.out.println("Insertion not Confirmed!");
-		} else {
-			System.out.println("Try Again!");
-			addUserMenu();
+		if (option(option)){
+				if (db.addUser(user))
+					showMessage("User added successfully!");
+				else
+					showMessage("UserId already exists or DataBase is full!");
+		}else{				
+			showMessage("Insertion not Confirmed!");
+				
 		}
-
-		System.out.println("\n");
-		System.out.println("Add Another User? (Yes,No)");
-		option = newUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		option = confirmation("Add Another User? (Yes,No)");
+		if(option(option)){
 			addUserMenu();
-		} else if (option.equals("no") || option.equals("n")) {
+		}else{
 			maintenaceMainMenu();
-		} else {
-			System.out.println("Try Again!");
-			addUserMenu();
 		}
 	}
-
+	/**
+	 * remove utilizador
+	 */
 	public void removeUserMenu() {
 		clearScreen();
-		Scanner removeUser = new Scanner(System.in);
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("[2] - Remove User");
-		System.out.println("User Id: ");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("[2] - Remove User");
 
-		int userId = removeUser.nextInt();
-		System.out.println(db.verifyUser(userId).toString());
+		int userId = askUserId("User Id: ");
 
-		System.out.println("Confirm data? (Yes,No)");
-		String option = removeUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		showMessage(db.verifyUser(userId).toString());
+		String option = confirmation("Confirm data? (Yes,No)");
 
+		if (option(option)){
 			if (db.removeUser(db.verifyUser(userId))) {
-				System.out.println("User removed!");
+				showMessage("User removed!");
 			} else {
-				System.out.println("Error Ocorred!");
+				showMessage("Error Ocorred!");
 			}
-
-		} else if (option.equals("no") || option.equals("n")) {
-			System.out.println("Remove Operation cancelled!");
 		} else {
-			System.out.println("Try Again!");
-			removeUserMenu();
+			showMessage("Remove Operation cancelled!");
 		}
 
-		System.out.println("\n");
-		System.out.println("Remove Another User? (Yes,No)");
-		option = removeUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		option = confirmation("Remove Another User? (Yes,No)");
+
+		if (option(option))
 			removeUserMenu();
-		} else if (option.equals("no") || option.equals("n")) {
+		 else 
 			maintenaceMainMenu();
-		} else {
-			System.out.println("Try Again!");
-			removeUserMenu();
-		}
+		
 	}
-
+	/**
+	 * Adiciona mensagem
+	 */
 	public void addMessageUser() {
 		clearScreen();
-		Scanner addMsgUser = new Scanner(System.in);
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("[3] - Associate Message to User");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("[3] - Associate Message to User");
+		int userId = askUserId("User Id: ");
 
-		System.out.println("User Id: ");
-		int userId = addMsgUser.nextInt();
+		showMessage(db.verifyUser(userId).toString());
+		String userMsg = askUserMessage("Associate User Message:");
 
-		System.out.println(db.verifyUser(userId).toString());
+		String option = confirmation("Confirm data? (Yes,No)");
 
-		System.out.println("Associate User Message:");
-		String userMsg = addMsgUser.nextLine();
-		userMsg = addMsgUser.nextLine();
-
-		System.out.println("Confirm data? (Yes,No)");
-		String option = addMsgUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		if (option(option)){
 			db.verifyUser(userId).setUserMessage(userMsg);
-			System.out.println("Message added!");
-		} else if (option.equals("no") || option.equals("n")) {
-			System.out.println("Operation cancelled!");
-		} else {
-			System.out.println("Try Again!");
-			addMessageUser();
+			showMessage("Message added!");
+		} else{
+			showMessage("Operation cancelled!");
 		}
 
-		System.out.println("\n");
-		System.out.println("Add Message to Another User? (Yes,No)");
-		option = addMsgUser.next();
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		option = confirmation("Add Message to Another User? (Yes,No)");
+
+		if (option(option))
 			addMessageUser();
-		} else if (option.equals("no") || option.equals("n")) {
+		else
 			maintenaceMainMenu();
-		} else {
-			System.out.println("Try Again!");
-			addMessageUser();
-		}
 
 	}
-
+	/**
+	 * Procura utilizador
+	 */
 	public void searchUserMenu() {
 		clearScreen();
-		Scanner searchUser = new Scanner(System.in);
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("[4] - Search User");
-		System.out.println("User Id: ");
-		int userId = searchUser.nextInt();
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("[4] - Search User");
+		int userId = askUserId("User Id: ");
 		User u;
 		if ((u = db.verifyUser(userId)) != null)
-			System.out.println(u.toString());
+			showMessage(u.toString());
 		else
-			System.out.println("User not Found!");
+			showMessage("User not Found!");
 
-		System.out.println("Search Another User? (Yes,No)");
-		String option = searchUser.next();
-		System.out.println("\n");
-		option = option.toLowerCase();
-		if (option.equals("yes") || option.equals("y")) {
+		String option = confirmation("Search Another User? (Yes,No)");
+		if (option(option))
 			searchUserMenu();
-		} else if (option.equals("no") || option.equals("n")) {
+		else
 			maintenaceMainMenu();
-		} else {
-			System.out.println("Try Again!");
-			searchUserMenu();
-		}
-
 	}
-
+	/**
+	 * Lista Utilizadores
+	 */
 	public void listUsersMenu() {
 		clearScreen();
-		System.out.println("Maintenace Mode");
-		System.out.println("Main Menu");
-		System.out.println("[5] - List Users");
+		showMessage("Maintenace Mode");
+		showMessage("Main Menu");
+		showMessage("[5] - List Users");
 		db.list();
-		System.out.println("Enter 'C' to continue...");
+		showMessage("Enter 'C' to continue...");
 		Scanner listUser = new Scanner(System.in);
 		listUser.next();
 		maintenaceMainMenu();
 	}
-
+	/**
+	 * Limpa o ecrâ
+	 */
 	public void clearScreen() {
 		for (int i = 0; i < 50; i++) {
-			System.out.println("");
+			showMessage("");
 		}
 	}
-
+	/**
+	 * Sai do modo de manutenção
+	 */
 	public void exit() {
 		clearScreen();
-		System.out.println("Exit!");
+		db.save();
+		showMessage("Exit!");
 
 	}
-
+	/**
+	 * Menu Principal
+	 */
 	public void mainMenu() {
 		clearScreen();
 		/*
@@ -368,11 +419,11 @@ public class MaintenanceMode {
 //				mainMenu();
 //		}
 		Scanner newOption = new Scanner(System.in);
-		System.out.println("Main Menu");
-		System.out.println("[1] - Change Password (Disabled)");
-		System.out.println("[2] - Maintenace Mode");
-		System.out.println("[3] - Exit");
-		System.out.println("Option: ");
+		showMessage("Main Menu");
+		showMessage("[1] - Change Password (Disabled)");
+		showMessage("[2] - Maintenace Mode");
+		showMessage("[3] - Exit");
+		showMessage("Option: ");
 		int option = newOption.nextInt();
 
 		switch (option) {

@@ -8,7 +8,9 @@
 public class Keyboard {
 	private static char keyPressed = 0;
 	private static int time = 1;
-
+	/**
+	 * Limpa o Fifo
+	 */
 	public static void resetFifo() {
 		while (Kit.readBit((LicConstants.KEY_VAL_MASK))) {
 			ACK();
@@ -26,7 +28,7 @@ public class Keyboard {
 		Kit.sleep(1);
 		if (Kit.readBit((LicConstants.KEY_VAL_MASK))) {
 			char key = LicConstants.KEYS[Kit.getBits(LicConstants.KEY_DAT_MASK)];
-			ACK();
+			unsetACK();
 			return key;
 		}
 
@@ -43,8 +45,8 @@ public class Keyboard {
 	 */
 	public static char getKey() {
 		char key;
-		if ((key = pressedKey()) != 0 ){//&& key != keyPressed) {
-			//keyPressed = key;
+		if (((key = pressedKey()) != 0 )&&( key != keyPressed)) {
+			keyPressed = key;
 			return key;
 		}
 		return 0;
@@ -70,11 +72,15 @@ public class Keyboard {
 		}
 		return k;
 	}
-
+	/**
+	 * Retorna acknowledge ao Fifo
+	 */
 	public static void setACK() {
 		Kit.setBits(LicConstants.ACK_MASK);
 	}
-
+	/**
+	 * Retorna que não tem acknowledge ao Fifo
+	 */
 	public static void unsetACK() {
 		Kit.resetBits(LicConstants.ACK_MASK);
 	}
