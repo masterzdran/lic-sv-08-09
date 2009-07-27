@@ -1,6 +1,3 @@
-import isel.leic.utils.Time;
-
-
 /*
  * 
  * 31401 - Nuno Cancelo 
@@ -8,6 +5,10 @@ import isel.leic.utils.Time;
  * 33595 - Nuno Sousa
  * 
  */
+
+import isel.leic.utils.Time;
+
+
 public class LcdAccess {
 	/*
 	 * Os pinos do LCD devem ficar ligados da seguinte forma: Pinos 1, 3 e 5 –
@@ -67,22 +68,30 @@ public class LcdAccess {
 	private static int cursorPosition = 0;
 
 	/* ********************************************** */
-
+	/**
+	 * Activa o modo de entrada de dados
+	 */
 	public static void entryModeSet() {
 		needRS = false;
 		procValue(LicConstants.ENTRY_SET_MASK);
 	}
-
+	/**
+	 * Activa o mostrador
+	 */
 	public static void displayControlOn() {
 		needRS = false;
 		procValue(LicConstants.DISPLAY_ON_MASK | LicConstants.CURSOR_ON_MASK);
 	}
-
+	/**
+	 * Desactiva o mostrador
+	 */
 	public static void displayControlOff() {
 		needRS = false;
 		procValue(LicConstants.DISPLAY_OFF_MASK);
 	}
-
+	/**
+	 * Desactiva o Blik
+	 */
 	public static void blinkOff() {
 		needRS = false;
 		procValue(LicConstants.DISPLAY_ON_MASK | LicConstants.BLINK_OFF_MASK);
@@ -125,7 +134,6 @@ public class LcdAccess {
 	public static void clear() {
 		needRS = false;
 		procValue(LicConstants.CLEAR_MASK);
-
 	}
 
 	/**

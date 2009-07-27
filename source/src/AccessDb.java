@@ -1,3 +1,10 @@
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,33 +20,49 @@ import java.util.Scanner;
 public class AccessDb{
 	private static final int DEFAULT_SIZE = 1000;
 	private static int maxsize;
-
 	private int nbrUsers;
 	private LinkedList<User> users;
 
+	/**
+	 * Construtor
+	 */
 	public AccessDb() {
 		this(DEFAULT_SIZE);
 	}
-
+	/**
+	 * Construtor
+	 * @param maxSize
+	 */
 	public AccessDb(int maxSize) {
 		nbrUsers = 0;
 		maxsize = maxSize;
 		users = new LinkedList<User>();
 		open();
 	}
-
+	/**
+	 * Retorna o Tamanho da Base de Dados
+	 * @return
+	 */
 	public int getDbSize() {
 		return nbrUsers;
 	}
-
+	/**
+	 * Verifica se está cheio
+	 * @return
+	 */
 	public boolean isFull() {
 		return (nbrUsers == maxsize);
 	}
-
+	/**
+	 * Verifica se está vazio
+	 * @return
+	 */
 	public boolean isEmpty() {
 		return (nbrUsers == 0);
 	}
-
+	/**
+	 * Abre a Ligação.
+	 */
 	private void open() {
 		try {
 			File file = new File(LicConstants.FILEPATH);
@@ -73,7 +96,9 @@ public class AccessDb{
 
 		}
 	}
-
+	/**
+	 * Salva a Base de dados.
+	 */
 	public void save() {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(

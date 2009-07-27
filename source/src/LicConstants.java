@@ -1,4 +1,3 @@
-
 /*
  * 
  * 31401 - Nuno Cancelo 
@@ -85,6 +84,7 @@ public final class LicConstants {
 	public static final int EIGHTBITS			=0xFF;
 	/*Maintenance*/
 	public static final String configFile		="user.netrc";
+
 	
 	/*Main*/
 	public static final int MAINSLEEP			= 100;

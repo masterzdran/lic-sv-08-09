@@ -1,5 +1,12 @@
+/*
+ * 
+ * 31401 - Nuno Cancelo 
+ * 31900 - José Guilherme
+ * 33595 - Nuno Sousa
+ * 
+ */
 
-public class LcdProtocol{
+public class LcdProtocol {
 	private static final int bits2Shift = 4;
 
 	// private static Kit ourKit;
@@ -33,8 +40,8 @@ public class LcdProtocol{
 	 * Faz reset à sequencia de dados.
 	 */
 	private static void resetProtocol() {
-		Kit.resetBits(LicConstants.RxC_MASK|LicConstants.RxD_MASK);
-		initProtocol();
+		Kit.resetBits(LicConstants.RxC_MASK | LicConstants.RxD_MASK);
+		// initProtocol();
 	}
 
 	/**
@@ -68,9 +75,9 @@ public class LcdProtocol{
 				value = value >> LicConstants.SHIFT_BITS_MASK;
 			}
 
-		}else{
-		 resetProtocol();
-		 sendBits(rs, value);
+		} else {
+			resetProtocol();
+			sendBits(rs, value);
 		}
 	}
 
@@ -82,7 +89,6 @@ public class LcdProtocol{
 	private static void sendBit(int value) {
 		Kit.invertBits(LicConstants.RxC_MASK);
 
-		// Kit.write(value,RxD_MASK);
 		if ((value & LicConstants.RxD_MASK) == 1)
 			Kit.setBits(LicConstants.RxD_MASK);
 		else

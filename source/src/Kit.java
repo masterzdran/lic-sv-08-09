@@ -1,7 +1,3 @@
-import isel.leic.utils.Time;
-import isel.leic.usbio.InputPort;
-import isel.leic.usbio.UsbPort;
-
 /*
  * 
  * 31401 - Nuno Cancelo 
@@ -9,6 +5,11 @@ import isel.leic.usbio.UsbPort;
  * 33595 - Nuno Sousa
  * 
  */
+
+import isel.leic.utils.Time;
+import isel.leic.usbio.InputPort;
+import isel.leic.usbio.UsbPort;
+
 public class Kit{
 	private static int readInput = 0;
 	private static int writeOutput = 0;
@@ -104,7 +105,10 @@ public class Kit{
 		writeOutput = (values & mask) | (0xf0 & writeOutput);
 		UsbPort.out(~writeOutput);
 	}
-
+	/**
+	 * Para o sistemA
+	 * @param mili
+	 */
 	public static void sleep(long mili) {
 		Time.sleep(mili);
 	}
