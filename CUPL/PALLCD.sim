@@ -28,13 +28,13 @@ FIELD StartDetect = P0,P1
 
 %EQUATION
 A0 =>
-    P0 & !P1 & R0
+    Q0 & !Q1 & R0
 
 A1 =>
-    P0 & !P1 & R1
+    Q0 & !Q1 & R1
 
 A2 =>
-    P0 & !P1 & R2
+    Q0 & !Q1 & R2
 
 B0 =>
     1 
@@ -49,13 +49,13 @@ C0 =>
     0 
 
 C1 =>
-    P0 & !P1 & R0
+    Q0 & !Q1 & R0
 
 C2 =>
-    P0 & !P1 & R0 & R1
+    Q0 & !Q1 & R0 & R1
 
 C3 =>
-    P0 & !P1 & R0 & R1 & R2
+    Q0 & !Q1 & R0 & R1 & R2
 
 D0.d  =>
     D1
@@ -103,68 +103,68 @@ D3.ck  =>
 D3.sp  =>
     
 E =>
-    P0 & P1
+    Q0 & Q1
 
 ES =>
-    P0 & !P1
+    Q0 & !Q1
 
 P0.d  =>
-    !P0 & !P1 & Q0 & Q1
-  # P0 & !P1 & R1
-  # P0 & !P1 & R0 & !R1 & R2
-  # P0 & !P1 & !R0
-  # P0 & !P1 & !R2
+    !P0 & !P1 & RxC & RxD
+  # P0 & !P1 & RxC & !RxD
+  # P0 & !P1 & RxD
 
 P0.ar  =>
     0 
 
-P0.ck  =>
-    !CLK
+P0.ckmux  =>
+    CLK
 
 P0.sp  =>
     
 P1.d  =>
-    P0 & !P1 & R0 & !R1 & R2
+    P0 & !P1 & RxC & !RxD
 
 P1.ar  =>
     0 
 
-P1.ck  =>
-    !CLK
+P1.ckmux  =>
+    CLK
 
 P1.sp  =>
     
 Q0.d  =>
-    !Q0 & !Q1 & RxC & RxD
-  # Q0 & !Q1 & RxC & !RxD
-  # Q0 & !Q1 & RxD
+    P0 & P1 & !Q0 & !Q1
+  # Q0 & !Q1 & R1
+  # Q0 & !Q1 & R0 & !R1 & R2
+  # Q0 & !Q1 & !R0
+  # Q0 & !Q1 & !R2
 
 Q0.ar  =>
     0 
 
-Q0.ckmux  =>
-    CLK
+Q0.ck  =>
+    !CLK
 
 Q0.sp  =>
     
 Q1.d  =>
-    Q0 & !Q1 & RxC & !RxD
+    Q0 & !Q1 & R0 & !R1 & R2
 
 Q1.ar  =>
     0 
 
-Q1.ckmux  =>
-    CLK
+Q1.ck  =>
+    !CLK
 
 Q1.sp  =>
     
 R0.d  =>
     !R0
-  # !P0
-  # P1
+  # !Q0
+  # Q1
 
 R0.ar  =>
-    RxRdy
+    P0 & P1
 
 R0.ck  =>
     RxC
@@ -172,11 +172,11 @@ R0.ck  =>
 R0.sp  =>
     
 R1.d  =>
-    P0 & !P1 & !R0 & R1
-  # P0 & !P1 & R0 & !R1
+    Q0 & !Q1 & !R0 & R1
+  # Q0 & !Q1 & R0 & !R1
 
 R1.ar  =>
-    RxRdy
+    P0 & P1
 
 R1.ck  =>
     RxC
@@ -184,12 +184,12 @@ R1.ck  =>
 R1.sp  =>
     
 R2.d  =>
-    P0 & !P1 & !R0 & R2
-  # P0 & !P1 & !R1 & R2
-  # P0 & !P1 & R0 & R1 & !R2
+    Q0 & !Q1 & !R0 & R2
+  # Q0 & !Q1 & !R1 & R2
+  # Q0 & !Q1 & R0 & R1 & !R2
 
 R2.ar  =>
-    RxRdy
+    P0 & P1
 
 R2.ck  =>
     RxC
@@ -208,25 +208,25 @@ RS.ck  =>
 RS.sp  =>
     
 RxRdy =>
-    !P0 & !P1
-  # P0 & P1
+    !Q0 & !Q1
+  # Q0 & Q1
 
 S0 =>
     !R0
-  # !P0
-  # P1
+  # !Q0
+  # Q1
 
 S1 =>
-    P0 & !P1 & !R0 & R1
-  # P0 & !P1 & R0 & !R1
+    Q0 & !Q1 & !R0 & R1
+  # Q0 & !Q1 & R0 & !R1
 
 S2 =>
-    P0 & !P1 & !R0 & R2
-  # P0 & !P1 & !R1 & R2
-  # P0 & !P1 & R0 & R1 & !R2
+    Q0 & !Q1 & !R0 & R2
+  # Q0 & !Q1 & !R1 & R2
+  # Q0 & !Q1 & R0 & R1 & !R2
 
 Start =>
-    Q0 & Q1
+    P0 & P1
 
 Z =>
     R0 & !R1 & R2

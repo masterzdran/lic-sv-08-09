@@ -1,11 +1,11 @@
-{COMPONENT E:\ISEL\PROJECTOS\LICFILES\CUPL\PALLCD.SYM
+{COMPONENT D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\DESCODIFICADOR.TECLADO.SYM
 
  {ENVIRONMENT
   {PDIFvrev 3.00}
   {Program "CUPL(WM) Version 5.0a"}
   {DBtype "Schematic"}
   {DBvrev 1.01}
-  {DBtime "Fri Jul 24 19:49:55 2009 "}
+  {DBtime "Mon May 04 10:08:17 2009 "}
   {DBunit "MIL"}
   {DBgrid 10}
   {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
@@ -33,27 +33,34 @@
  {SYMBOL
   {PIN_DEF
    [Ly "PINCON"]
-   {P CLK {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
-   {P RXC {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
-   {P RXD {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
-   {P RXRDY {Pt "I/O"}{Lq 0}{Ploc 280 20}}
-   {P E {Pt "I/O"}{Lq 0}{Ploc 280 40}}
-   {P D3 {Pt "OUTPUT"}{Lq 0}{Ploc 280 60}}
-   {P D2 {Pt "OUTPUT"}{Lq 0}{Ploc 280 80}}
-   {P D1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 100}}
-   {P D0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
-   {P RS {Pt "OUTPUT"}{Lq 0}{Ploc 280 140}}
+   {P CLK {Pt "INPUT"}{Lq 0}{Ploc 100 140}}
+   {P KL0 {Pt "INPUT"}{Lq 0}{Ploc 100 100}}
+   {P KL1 {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
+   {P KL2 {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
+   {P KL3 {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
+   {P DC0 {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
+   {P K0 {Pt "I/O"}{Lq 0}{Ploc 280 20}}
+   {P K1 {Pt "I/O"}{Lq 0}{Ploc 280 40}}
+   {P K2 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
+   {P K3 {Pt "I/O"}{Lq 0}{Ploc 280 80}}
+   {P DC1 {Pt "I/O"}{Lq 0}{Ploc 280 100}}
+   {P DC2 {Pt "I/O"}{Lq 0}{Ploc 280 120}}
+   {P DC3 {Pt "I/O"}{Lq 0}{Ploc 280 140}}
+   {P KVAL {Pt "I/O"}{Lq 0}{Ploc 280 160}}
   }
 
   {PKG
    [Ly "REFDES"]
    [Ts 25][Tj "CB"][Tr 0][Tm "N"]
-   {Rdl 190 170}
+   {Rdl 190 190}
 
    [Ly "PINNUM"]
    [Ts 15][Tj "RC"]
-   {Pnl 120 90}
+   {Pnl 120 150}
    [Ts 15][Tj "RC"]
+   {Pnl 120 110}
+   {Pnl 120 90}
+   {Pnl 120 70}
    {Pnl 120 50}
    {Pnl 120 30}
    [Ts 15][Tj "LC"]
@@ -64,16 +71,20 @@
    {Pnl 260 110}
    {Pnl 260 130}
    {Pnl 260 150}
+   {Pnl 260 170}
 
-   {Sd A 1 2 3 22 23 14 15 16 17 18}
+   {Sd A 1 2 3 4 5 19 14 15 16 17 20 21 22 23}
   }
 
   {PIC
    [Ly "GATE"]
    [Ts 15][Tj "LC"][Tr 0][Tm "N"]
-   {R 130 160 250 0}
+   {R 130 180 250 0}
+   {L 130 140 100 140}
+   {L 130 150 140 140 130 130}
+   {L 130 100 100 100}
    {L 130 80 100 80}
-   {L 130 90 140 80 130 70}
+   {L 130 60 100 60}
    {L 130 40 100 40}
    {L 130 20 100 20}
    {L 250 20 280 20}
@@ -83,19 +94,24 @@
    {L 250 100 280 100}
    {L 250 120 280 120}
    {L 250 140 280 140}
+   {L 250 160 280 160}
    [Ly "PINNAM"]
    [Tj "LC"]
-   {T "CLK" 140 80}
-   {T "RXC" 140 40}
-   {T "RXD" 140 20}
+   {T "CLK" 140 140}
+   {T "KL0" 140 100}
+   {T "KL1" 140 80}
+   {T "KL2" 140 60}
+   {T "KL3" 140 40}
+   {T "DC0" 140 20}
    [Tj "RC"]
-   {T "RXRDY" 240 20}
-   {T "E" 240 40}
-   {T "D3" 240 60}
-   {T "D2" 240 80}
-   {T "D1" 240 100}
-   {T "D0" 240 120}
-   {T "RS" 240 140}
+   {T "K0" 240 20}
+   {T "K1" 240 40}
+   {T "K2" 240 60}
+   {T "K3" 240 80}
+   {T "DC1" 240 100}
+   {T "DC2" 240 120}
+   {T "DC3" 240 140}
+   {T "KVAL" 240 160}
    [Ly "DEVICE"]
    [Tj "CT"]
    {T "V750C" 190 -10}
@@ -109,7 +125,7 @@
    {EX
     [Ly "ATTR2"]
     [Ts 12][Tj "CT"][Tr 0][Tm "N"]
-    {At PLD E:\ISEL\PROJECTOS\LICFILES\CUPL\PALLCD 190 160}
+    {At PLD D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CANCELO\DESCODIFICADOR DE TECLADO\DESCODIFICADOR.TECLADO 190 180}
    }
   }
  }
@@ -121,23 +137,31 @@
   {NET_DEF
    {N CLK
    }
-   {N RXC
+   {N KL0
    }
-   {N RXD
+   {N KL1
    }
-   {N RXRDY
+   {N KL2
    }
-   {N E
+   {N KL3
    }
-   {N D3
+   {N DC0
    }
-   {N D2
+   {N K0
    }
-   {N D1
+   {N K1
    }
-   {N D0
+   {N K2
    }
-   {N RS
+   {N K3
+   }
+   {N DC1
+   }
+   {N DC2
+   }
+   {N DC3
+   }
+   {N KVAL
    }
   }
 

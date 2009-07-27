@@ -1,0 +1,80 @@
+Name     Teclado.V2 ;
+PartNo   00 ;
+Date     16-04-2009 ;
+Revision 01 ;
+Designer Engineer ;
+Company  ccisel ;
+Assembly None ;
+Location  ;
+Device   v750c;
+
+/*
+// PIN - Entradas
+*/
+PIN 1       = CLK;
+PIN 2       = KL0;
+PIN 3       = KL1;
+PIN 4       = KL2;
+PIN 5       = KL3;
+
+/*
+// PIN - Saidas
+*/
+PIN 14      = A0;			/*Bit 2 da Tecla Carregada*/
+PIN 15      = A1;			/*Bit 3 da Tecla Carregada*/
+PIN 16      = B0;			/*Bit 0 da Tecla Carregada*/
+PIN 17      = B1;			/*Bit 1 da Tecla Carregada*/
+PIN 23      = KVAL;
+PIN 19      = DC0;			/*Saida do Descodificador 0*/
+PIN 20      = DC1;			/*Saida do Descodificador 1*/
+PIN 21      = DC2;			/*Saida do Descodificador 2*/
+PIN 22      = DC3;			/*Saida do Descodificador 3*/
+
+/*
+ PIN - Internos
+*/
+
+
+/*
+//Constantes
+*/
+ZERO        = 'b'0;
+
+/*
+//Contador de Colunas - C1
+*/
+[A0..1].AR 		= ZERO		;
+[A0..1].SP 		= ZERO		;
+[A0..1].CKMUX 	= CLK		;
+A0.T			= C1CE	;
+A1.T			= A0&!C1CE	;
+/* Entradas no Descodificador */
+/* A0; */
+/* A1; */ 
+/*
+//Descodificador - Colunas na matrix do teclado
+*/
+DCO        = !A1 & !A0;
+DC1        = !A1 &  A0;
+DC2        =  A1 & !A0;
+DC3        =  A1 &  A0;
+/*
+//Contador de Linhas - C2
+*/
+[B0..1].AR 		= ZERO		;
+[B0..1].SP 		= ZERO		;
+[B0..1].CKMUX 	= CLK		;
+B0.T			= C2CE	;
+B1.T			= B0&!C2CE	;
+/* Saidas do Descodificador */
+/* K2         = B0; */
+/* K3         = B1; */
+/*
+//Mux 4-1 & Counter Enable 2
+*/
+KVAL = (KL0 & !B1& !B0) # (KL1 & !B1 & B0) # (KL2 & B1& !B0) # (KL3 & B1& B0);
+!C2CE = KVAL;
+/*
+//Counter Enable 1 - 4 and
+*/
+!C1CE		= KL0 & KL1 & KL2 & KL3;
