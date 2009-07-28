@@ -1,11 +1,11 @@
-{COMPONENT E:\ISEL\PROJECTOS\LICFILES\CUPL\MODULOTECLADO.SYM
+{COMPONENT D:\ISEL\PROJECTOS\LIC0809SV-FINAL\CUPL\MODULOTECLADO.SYM
 
  {ENVIRONMENT
   {PDIFvrev 3.00}
   {Program "CUPL(WM) Version 5.0a"}
   {DBtype "Schematic"}
   {DBvrev 1.01}
-  {DBtime "Wed Jul 22 19:49:23 2009 "}
+  {DBtime "Tue Jul 28 10:45:57 2009 "}
   {DBunit "MIL"}
   {DBgrid 10}
   {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
@@ -34,16 +34,16 @@
   {PIN_DEF
    [Ly "PINCON"]
    {P CLK {Pt "INPUT"}{Lq 0}{Ploc 100 120}}
-   {P E {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
-   {P F {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
-   {P G {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
-   {P H {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
+   {P KL0 {Pt "INPUT"}{Lq 0}{Ploc 100 80}}
+   {P KL1 {Pt "INPUT"}{Lq 0}{Ploc 100 60}}
+   {P KL2 {Pt "INPUT"}{Lq 0}{Ploc 100 40}}
+   {P KL3 {Pt "INPUT"}{Lq 0}{Ploc 100 20}}
    {P K_VAL {Pt "I/O"}{Lq 0}{Ploc 280 20}}
-   {P A {Pt "I/O"}{Lq 0}{Ploc 280 40}}
-   {P B {Pt "I/O"}{Lq 0}{Ploc 280 60}}
-   {P C {Pt "I/O"}{Lq 0}{Ploc 280 80}}
-   {P D {Pt "I/O"}{Lq 0}{Ploc 280 100}}
-   {P A1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
+   {P KC0 {Pt "I/O"}{Lq 0}{Ploc 280 40}}
+   {P KC1 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
+   {P KC2 {Pt "I/O"}{Lq 0}{Ploc 280 80}}
+   {P KC3 {Pt "I/O"}{Lq 0}{Ploc 280 100}}
+   {P CM1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
    {P K0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 140}}
    {P K1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 160}}
    {P K2 {Pt "OUTPUT"}{Lq 0}{Ploc 280 180}}
@@ -101,17 +101,17 @@
    [Ly "PINNAM"]
    [Tj "LC"]
    {T "CLK" 140 120}
-   {T "E" 140 80}
-   {T "F" 140 60}
-   {T "G" 140 40}
-   {T "H" 140 20}
+   {T "KL0" 140 80}
+   {T "KL1" 140 60}
+   {T "KL2" 140 40}
+   {T "KL3" 140 20}
    [Tj "RC"]
    {T "K_VAL" 240 20}
-   {T "A" 240 40}
-   {T "B" 240 60}
-   {T "C" 240 80}
-   {T "D" 240 100}
-   {T "A1" 240 120}
+   {T "KC0" 240 40}
+   {T "KC1" 240 60}
+   {T "KC2" 240 80}
+   {T "KC3" 240 100}
+   {T "CM1" 240 120}
    {T "K0" 240 140}
    {T "K1" 240 160}
    {T "K2" 240 180}
@@ -129,7 +129,7 @@
    {EX
     [Ly "ATTR2"]
     [Ts 12][Tj "CT"][Tr 0][Tm "N"]
-    {At PLD E:\ISEL\PROJECTOS\LICFILES\CUPL\MODULOTECLADO 190 220}
+    {At PLD D:\ISEL\PROJECTOS\LIC0809SV-FINAL\CUPL\MODULOTECLADO 190 220}
    }
   }
  }
@@ -141,25 +141,25 @@
   {NET_DEF
    {N CLK
    }
-   {N E
+   {N KL0
    }
-   {N F
+   {N KL1
    }
-   {N G
+   {N KL2
    }
-   {N H
+   {N KL3
    }
    {N K_VAL
    }
-   {N A
+   {N KC0
    }
-   {N B
+   {N KC1
    }
-   {N C
+   {N KC2
    }
-   {N D
+   {N KC3
    }
-   {N A1
+   {N CM1
    }
    {N K0
    }

@@ -8,12 +8,14 @@ Assembly None ;
 Location  ;
 Device   v750c ;
 /* ************************************************************************** */
-field KeyLines     = [KL0..KL3];
-field KeyColums    = [KC0..KC3];
-field Key          = [K0..3];
-field LineCounter  = [P0..P1];
-field ColumCounter = [Q0..Q1];
-ZERO               = 'b'0;
+field KeyLines       = [KL0..3];
+field KeyColums      = [KC0..3];
+field Key            = [K0..3];
+field LineCounter    = [P0..1];
+field ColumCounter   = [Q0..1];
+field controlMachine = [CM0..1];
+
+ZERO                 = 'b'0;
 /* ************************ INPUT PINS *************************** */
 PIN 1 = CLK;
 PIN [2..5] = KeyLines;
@@ -21,14 +23,13 @@ PIN [2..5] = KeyLines;
 /* ************************ OUTPUT PINS ************************** */
 PIN 14 = K_VAL; /* Saida do Mux */
 
-PIN [15..18] = KeyColums;
-PIN [20..23] = Key;
-
+PIN [15..18]     = KeyColums;
+PIN [20..23]     = Key;
+PIN 19           = CM1;
 pinnode [32..33] = ColumCounter;
-pinnode [25..26] = LineCounter;
-
+pinnode [26..25] = LineCounter;
+PIN 34           = CM0;
 /* **************************** BODY ****************************** */
-Key = [Q0,Q1,P0,P1];
 
 /* ************************* CONTADOR 1 *************************** */
 CE1 = KL0&KL1&KL2&KL3;
@@ -40,7 +41,7 @@ Q0.ck = CLK;
 Q1.ck = !Q0;
 
 /* ************************* CONTADOR 2 ************************** */
-CE2 = !K_VAL;
+CE2 = KeyNotPressed;
 P0.d = CE2$P0;
 P1.d = !P1;
 LineCounter.ar = ZERO;
@@ -48,15 +49,35 @@ LineCounter.sp = ZERO;
 P0.ck = CLK;
 P1.ck = !P0;
 /* ****************************  MUX ******************************/
-K_VAL = !(!K3&((!K2&KL0)#(K2&KL1))#K3&((!K2&KL2)#(K2&KL3)));
+KeyNotPressed = !P1 &((!P0 & KL0) # (P0 & KL1)) # P1 &((!P0 & KL2) # (P0 & KL3));
 /* ************************* DECODER ******************************/
 
-KC0	=	K0 # K1;
-KC1	=	!K0 # K1;
-KC2	=	K0 # !K1;
-KC3	=	!K0 # !K1;
+KC0	=	 Q0 #  Q1;
+KC1	=	!Q0 #  Q1;
+KC2	=	 Q0 # !Q1;
+KC3	=	!Q0 # !Q1;
 
 
+Key.d=[Q0,Q1,P0,P1];
+Key.ar=ZERO;
+Key.sp=ZERO;
+Key.ck=REG;
+
+controlMachine.ar=ZERO;
+controlMachine.sp=ZERO;
+controlMachine.CKMUX=CLK;
+
+SEQUENCED controlMachine{
+PRESENT 0
+    if KeyNotPressed next 1;
+    default next 0;
+PRESENT 1
+	if !KeyNotPressed next 2;
+	default next 1;
+PRESENT 2
+	out K_VAL, REG;
+	default next 0;
+}
 
 
 

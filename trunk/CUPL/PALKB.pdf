@@ -1,11 +1,11 @@
-{COMPONENT D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CUPL\PALKB.SYM
+{COMPONENT D:\ISEL\PROJECTOS\LIC0809SV-FINAL\CUPL\PALKB.SYM
 
  {ENVIRONMENT
   {PDIFvrev 3.00}
   {Program "CUPL(WM) Version 5.0a"}
   {DBtype "Schematic"}
   {DBvrev 1.01}
-  {DBtime "Tue Jul 21 10:18:54 2009 "}
+  {DBtime "Tue Jul 28 10:48:52 2009 "}
   {DBunit "MIL"}
   {DBgrid 10}
   {Lyrstr "WIRES" 1 "BUS" 1 "GATE" 2 "IEEE" 2 "PINFUN" 3 "PINNUM" 1 
@@ -43,16 +43,17 @@
    {P KC1 {Pt "I/O"}{Lq 0}{Ploc 280 60}}
    {P KC2 {Pt "I/O"}{Lq 0}{Ploc 280 80}}
    {P KC3 {Pt "I/O"}{Lq 0}{Ploc 280 100}}
-   {P K0 {Pt "I/O"}{Lq 0}{Ploc 280 120}}
-   {P K1 {Pt "I/O"}{Lq 0}{Ploc 280 140}}
-   {P K2 {Pt "I/O"}{Lq 0}{Ploc 280 160}}
-   {P K3 {Pt "I/O"}{Lq 0}{Ploc 280 180}}
+   {P CM1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 120}}
+   {P K0 {Pt "OUTPUT"}{Lq 0}{Ploc 280 140}}
+   {P K1 {Pt "OUTPUT"}{Lq 0}{Ploc 280 160}}
+   {P K2 {Pt "OUTPUT"}{Lq 0}{Ploc 280 180}}
+   {P K3 {Pt "OUTPUT"}{Lq 0}{Ploc 280 200}}
   }
 
   {PKG
    [Ly "REFDES"]
    [Ts 25][Tj "CB"][Tr 0][Tm "N"]
-   {Rdl 190 210}
+   {Rdl 190 250}
 
    [Ly "PINNUM"]
    [Ts 15][Tj "RC"]
@@ -72,14 +73,15 @@
    {Pnl 260 150}
    {Pnl 260 170}
    {Pnl 260 190}
+   {Pnl 260 210}
 
-   {Sd A 1 2 3 4 5 14 15 16 17 18 20 21 22 23}
+   {Sd A 1 2 3 4 5 14 15 16 17 18 19 20 21 22 23}
   }
 
   {PIC
    [Ly "GATE"]
    [Ts 15][Tj "LC"][Tr 0][Tm "N"]
-   {R 130 200 250 0}
+   {R 130 240 250 0}
    {L 130 120 100 120}
    {L 130 130 140 120 130 110}
    {L 130 80 100 80}
@@ -95,6 +97,7 @@
    {L 250 140 280 140}
    {L 250 160 280 160}
    {L 250 180 280 180}
+   {L 250 200 280 200}
    [Ly "PINNAM"]
    [Tj "LC"]
    {T "CLK" 140 120}
@@ -108,10 +111,11 @@
    {T "KC1" 240 60}
    {T "KC2" 240 80}
    {T "KC3" 240 100}
-   {T "K0" 240 120}
-   {T "K1" 240 140}
-   {T "K2" 240 160}
-   {T "K3" 240 180}
+   {T "CM1" 240 120}
+   {T "K0" 240 140}
+   {T "K1" 240 160}
+   {T "K2" 240 180}
+   {T "K3" 240 200}
    [Ly "DEVICE"]
    [Tj "CT"]
    {T "V750C" 190 -10}
@@ -125,7 +129,7 @@
    {EX
     [Ly "ATTR2"]
     [Ts 12][Tj "CT"][Tr 0][Tm "N"]
-    {At PLD D:\ISEL\PROJECTOS\LIC\LIC-SV-08-09\CUPL\PALKB 190 200}
+    {At PLD D:\ISEL\PROJECTOS\LIC0809SV-FINAL\CUPL\PALKB 190 240}
    }
   }
  }
@@ -154,6 +158,8 @@
    {N KC2
    }
    {N KC3
+   }
+   {N CM1
    }
    {N K0
    }

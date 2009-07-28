@@ -5,7 +5,7 @@
 
 CUPL(WM)        5.0a Serial# 60008009
 Device          v750c  Library DLIB-h-40-2
-Created         Wed Jul 22 19:49:23 2009
+Created         Tue Jul 28 10:45:57 2009
 Name            ModuloTeclado 
 Partno          00 
 Revision        01 
@@ -19,39 +19,52 @@ Location
                             Expanded Product Terms
 ===============================================================================
 
-A =>
-    Q0
-  # Q1
-
-B =>
-    !Q0
-  # Q1
-
-C =>
-    !Q1
-  # Q0
-
 CE1 =>
-    E & F & G & H
+    KL0 & KL1 & KL2 & KL3
 
 CE2 =>
-    F & P0 & !P1
-  # E & !P0 & !P1
-  # H & P0 & P1
-  # G & !P0 & P1
+    KL1 & P0 & !P1
+  # KL0 & !P0 & !P1
+  # KL3 & P0 & P1
+  # KL2 & !P0 & P1
 
-D =>
-    !Q0
-  # !Q1
+CM0.d  =>
+    !CM1 & KL2 & !P0 & P1
+  # !CM1 & KL3 & P0 & P1
+  # !CM1 & KL1 & P0 & !P1
+  # !CM1 & KL0 & !P0 & !P1
 
-I =>
-    P1
+CM0.ar  =>
+    0 
 
-J =>
-    P0
+CM0.ckmux  =>
+    CLK
 
-K =>
-    Q0
+CM0.sp  =>
+    0 
+
+CM1.d  =>
+    CM0 & !CM1 & !KL1 & !KL3 & P0
+  # CM0 & !CM1 & !KL0 & !P0 & !P1
+  # CM0 & !CM1 & !KL0 & !KL1 & !P1
+  # CM0 & !CM1 & !KL1 & P0 & !P1
+  # CM0 & !CM1 & !KL2 & !P0 & P1
+  # CM0 & !CM1 & !KL0 & !KL2 & !P0
+  # CM0 & !CM1 & !KL2 & !KL3 & P1
+  # CM0 & !CM1 & !KL0 & !KL1 & !KL2 & !KL3
+  # CM0 & !CM1 & !KL3 & P0 & P1
+
+CM1.ar  =>
+    0 
+
+CM1.ckmux  =>
+    CLK
+
+CM1.sp  =>
+    0 
+
+ColumCounter =>
+    Q0 , Q1
 
 K0.d  =>
     Q0
@@ -60,7 +73,7 @@ K0.ar  =>
     0 
 
 K0.ck  =>
-    !a0 & a1
+    !CM0 & CM1
 
 K0.sp  =>
     0 
@@ -72,7 +85,7 @@ K1.ar  =>
     0 
 
 K1.ck  =>
-    !a0 & a1
+    !CM0 & CM1
 
 K1.sp  =>
     0 
@@ -84,7 +97,7 @@ K2.ar  =>
     0 
 
 K2.ck  =>
-    !a0 & a1
+    !CM0 & CM1
 
 K2.sp  =>
     0 
@@ -96,26 +109,54 @@ K3.ar  =>
     0 
 
 K3.ck  =>
-    !a0 & a1
+    !CM0 & CM1
 
 K3.sp  =>
     0 
 
+KC0 =>
+    Q0
+  # Q1
+
+KC1 =>
+    !Q0
+  # Q1
+
+KC2 =>
+    Q0
+  # !Q1
+
+KC3 =>
+    !Q0
+  # !Q1
+
 K_VAL =>
-    !a0 & a1
+    !CM0 & CM1
 
-L =>
-    Q1
+Key =>
+    K0 , K1 , K2 , K3
 
-M =>
-    E & F & G & H
+KeyColums =>
+    KC0 , KC1 , KC2 , KC3
+
+KeyLines =>
+    KL0 , KL1 , KL2 , KL3
+
+KeyNotPressed =>
+    KL1 & P0 & !P1
+  # KL0 & !P0 & !P1
+  # KL3 & P0 & P1
+  # KL2 & !P0 & P1
+
+LineCounter =>
+    P0 , P1
 
 P0.d  =>
-    G & !P0 & P1
-  # E & !P0 & !P1
-  # !F & P0 & !P1
-  # !F & !H & P0
-  # !H & P0 & P1
+    KL2 & !P0 & P1
+  # KL0 & !P0 & !P1
+  # !KL1 & P0 & !P1
+  # !KL1 & !KL3 & P0
+  # !KL3 & P0 & P1
 
 P0.ar  =>
     0 
@@ -139,11 +180,11 @@ P1.sp  =>
     0 
 
 Q0.d  =>
-    E & F & G & H & !Q0
-  # !E & Q0
-  # !F & Q0
-  # !G & Q0
-  # !H & Q0
+    KL0 & KL1 & KL2 & KL3 & !Q0
+  # !KL0 & Q0
+  # !KL1 & Q0
+  # !KL2 & Q0
+  # !KL3 & Q0
 
 Q0.ar  =>
     0 
@@ -167,68 +208,15 @@ Q1.sp  =>
     0 
 
 REG =>
-    !a0 & a1
-
-Y =>
-    F & P0 & !P1
-  # E & !P0 & !P1
-  # H & P0 & P1
-  # G & !P0 & P1
+    !CM0 & CM1
 
 ZERO =>
     0 
 
-a0.d  =>
-    G & !P0 & P1 & !a1
-  # H & P0 & P1 & !a1
-  # F & P0 & !P1 & !a1
-  # E & !P0 & !P1 & !a1
-
-a0.ar  =>
-    0 
-
-a0.ckmux  =>
-    CLK
-
-a0.sp  =>
-    0 
-
-a1.d  =>
-    !F & !H & P0 & a0 & !a1
-  # !E & !P0 & !P1 & a0 & !a1
-  # !E & !F & !P1 & a0 & !a1
-  # !F & P0 & !P1 & a0 & !a1
-  # !G & !P0 & P1 & a0 & !a1
-  # !E & !G & !P0 & a0 & !a1
-  # !G & !H & P1 & a0 & !a1
-  # !E & !F & !G & !H & a0 & !a1
-  # !H & P0 & P1 & a0 & !a1
-
-a1.ar  =>
-    0 
-
-a1.ckmux  =>
-    CLK
-
-a1.sp  =>
-    0 
-
 controlMachine =>
-    a0 , a1
+    CM0 , CM1
 
-registo =>
-    K0 , K1 , K2 , K3
-
-A.oe  =>
-    1 
-
-B.oe  =>
-    1 
-
-C.oe  =>
-    1 
-
-D.oe  =>
+CM1.oe  =>
     1 
 
 K0.oe  =>
@@ -243,10 +231,19 @@ K2.oe  =>
 K3.oe  =>
     1 
 
-K_VAL.oe  =>
+KC0.oe  =>
     1 
 
-a1.oe  =>
+KC1.oe  =>
+    1 
+
+KC2.oe  =>
+    1 
+
+KC3.oe  =>
+    1 
+
+K_VAL.oe  =>
     1 
 
 
@@ -258,20 +255,20 @@ Pin Variable                                    Pterms   Max     Min
 Pol   Name              Ext     Pin     Type     Used   Pterms  Level   
 --- --------            ---     ---     ----    ------  ------  -----   
 
-    A                           15       V        2       10      1     
-    B                           16       V        2       12      1     
-    C                           17       V        2       14      1     
     CE1                         0        I        1       -       -     
     CE2                         0        I        4       -       -     
     CLK                         1        V        -       -       -     
-    D                           18       V        2       16      1     
-    E                           2        V        -       -       -     
-    F                           3        V        -       -       -     
-    G                           4        V        -       -       -     
-    H                           5        V        -       -       -     
-    I                           0        I        1       -       -     
-    J                           0        I        1       -       -     
-    K                           0        I        1       -       -     
+    CM0                         34       N        -       -       -     
+    CM0                 d       34       M        4       4       1     
+    CM0                 ar      34       M        1       1       1     
+    CM0                 ckmux   34       M        1       1       1     
+    CM0                 sp      34       M        1       1       1     
+    CM1                         19       V        -       -       -     
+    CM1                 d       19       X        9       16      1     
+    CM1                 ar      19       X        1       1       1     
+    CM1                 ckmux   19       X        1       1       1     
+    CM1                 sp      19       X        1       1       1     
+    ColumCounter                0        F        -       -       -     
     K0                          20       V        -       -       -     
     K0                  d       20       X        1       14      1     
     K0                  ar      20       X        1       1       1     
@@ -292,9 +289,20 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     K3                  ar      23       X        1       1       1     
     K3                  ck      23       X        1       1       1     
     K3                  sp      23       X        1       1       1     
+    KC0                         15       V        2       10      1     
+    KC1                         16       V        2       12      1     
+    KC2                         17       V        2       14      1     
+    KC3                         18       V        2       16      1     
+    KL0                         2        V        -       -       -     
+    KL1                         3        V        -       -       -     
+    KL2                         4        V        -       -       -     
+    KL3                         5        V        -       -       -     
     K_VAL                       14       V        1       8       1     
-    L                           0        I        1       -       -     
-    M                           0        I        1       -       -     
+    Key                         0        F        -       -       -     
+    KeyColums                   0        F        -       -       -     
+    KeyLines                    0        F        -       -       -     
+    KeyNotPressed               0        I        4       -       -     
+    LineCounter                 0        F        -       -       -     
     P0                          26       N        -       -       -     
     P0                  d       26       M        5       5       1     
     P0                  ar      26       M        1       1       1     
@@ -316,34 +324,18 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     Q1                  ck      33       M        1       1       1     
     Q1                  sp      33       M        1       1       1     
     REG                         0        I        1       -       -     
-    Y                           0        I        4       -       -     
     ZERO                        0        I        1       -       -     
-    a0                          34       N        -       -       -     
-    a0                  d       34       M        4       4       1     
-    a0                  ar      34       M        1       1       1     
-    a0                  ckmux   34       M        1       1       1     
-    a0                  sp      34       M        1       1       1     
-    a1                          19       V        -       -       -     
-    a1                  d       19       X        9       16      1     
-    a1                  ar      19       X        1       1       1     
-    a1                  ckmux   19       X        1       1       1     
-    a1                  sp      19       X        1       1       1     
     controlMachine              0        F        -       -       -     
-    registo                     0        F        -       -       -     
-    x0                          27       N        -       -       -     
-    x1                          28       N        -       -       -     
-    x2                          29       N        -       -       -     
-    x3                          30       N        -       -       -     
-    A                   oe      15       D        1       1       0     
-    B                   oe      16       D        1       1       0     
-    C                   oe      17       D        1       1       0     
-    D                   oe      18       D        1       1       0     
+    CM1                 oe      19       D        1       1       0     
     K0                  oe      20       D        1       1       0     
     K1                  oe      21       D        1       1       0     
     K2                  oe      22       D        1       1       0     
     K3                  oe      23       D        1       1       0     
+    KC0                 oe      15       D        1       1       0     
+    KC1                 oe      16       D        1       1       0     
+    KC2                 oe      17       D        1       1       0     
+    KC3                 oe      18       D        1       1       0     
     K_VAL               oe      14       D        1       1       0     
-    a1                  oe      19       D        1       1       0     
 
 
 LEGEND    D : default variable         F : field      G : group
@@ -472,8 +464,8 @@ Pin #18 Node 29 ,39  14379 Mode  -x-  14415 xxxx
  08736 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  08820 ------------------------------------------------------------------------------------ 
 Pin #17 Node 28 ,38  14382 Mode  -x-  14419 xxxx 
- 08904 ---------------------------------------------------------------------x-------------- 
- 08988 ------------------------------------------------------------x----------------------- 
+ 08904 ------------------------------------------------------------x----------------------- 
+ 08988 ---------------------------------------------------------------------x-------------- 
  09072 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  09156 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  09240 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -551,15 +543,15 @@ LEGEND    X : fuse not blown
                                ______________
                               |ModuloTeclado |
                       CLK x---|1           24|---x Vcc                      
-                        E x---|2           23|---x K3                       
-                        F x---|3           22|---x K2                       
-                        G x---|4           21|---x K1                       
-                        H x---|5           20|---x K0                       
-                          x---|6           19|---x a1                       
-                          x---|7           18|---x D                        
-                          x---|8           17|---x C                        
-                          x---|9           16|---x B                        
-                          x---|10          15|---x A                        
+                      KL0 x---|2           23|---x K3                       
+                      KL1 x---|3           22|---x K2                       
+                      KL2 x---|4           21|---x K1                       
+                      KL3 x---|5           20|---x K0                       
+                          x---|6           19|---x CM1                      
+                          x---|7           18|---x KC3                      
+                          x---|8           17|---x KC2                      
+                          x---|9           16|---x KC1                      
+                          x---|10          15|---x KC0                      
                           x---|11          14|---x K_VAL                    
                       GND x---|12          13|---x                          
                               |______________|

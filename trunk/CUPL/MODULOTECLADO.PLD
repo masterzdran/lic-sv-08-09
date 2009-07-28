@@ -7,90 +7,67 @@ Company  ccisel ;
 Assembly None ;
 Location  ;
 Device   v750c ;
+/* ************************************************************************** */
+field KeyLines       = [KL0..3];
+field KeyColums      = [KC0..3];
+field Key            = [K0..3];
+field LineCounter    = [P0..1];
+field ColumCounter   = [Q0..1];
+field controlMachine = [CM0..1];
 
-field registo = [K0..3];
-field controlMachine= [a0..1];
-ZERO = 'b'0;
+ZERO                 = 'b'0;
 /* ************************ INPUT PINS *************************** */
 PIN 1 = CLK;
-
-PIN 2 = E;/* Entrada E do Mux */
-PIN 3 = F;/* Entrada F do Mux */
-PIN 4 = G;/* Entrada G do Mux */
-PIN 5 = H;/* Entrada H do Mux */
+PIN [2..5] = KeyLines;
 
 /* ************************ OUTPUT PINS ************************** */
 PIN 14 = K_VAL; /* Saida do Mux */
 
-PIN 15 = A; /* Saida A do Decoder */
-PIN 16 = B; /* Saida B do Decoder */
-PIN 17 = C; /* Saida C do Decoder */
-PIN 18 = D; /* Saida D do Decoder */
-
-PIN 23 = K3; /* Saida do Valor K3 (Bit 4) */
-PIN 22 = K2; /* Saida do Valor K2 (Bit 3) */
-PIN 21 = K1; /* Saida do Valor K1 (Bit 2) */
-PIN 20 = K0; /* Saida do Valor K0 (Bit 1) */
-PIN 19 = a1;
-
-pinnode [32..33] = [Q0..Q1];
-pinnode [26..25] = [P0..P1];
-pinnode [27..30] = [x0..x3];
-pinnode [34]  = [a0];
-
+PIN [15..18]     = KeyColums;
+PIN [20..23]     = Key;
+PIN 19           = CM1;
+pinnode [32..33] = ColumCounter;
+pinnode [26..25] = LineCounter;
+PIN 34           = CM0;
+/* **************************** BODY ****************************** 
 /* **************************** BODY ****************************** */
 
 
 /* ************************* CONTADOR 1 *************************** */
-M = E&F&G&H;
-CE1 = M;
-
-Q0.d = (CE1$Q0);
-Q0.ar = 'b'0;
-Q0.sp = 'b'0;
+CE1 = KL0&KL1&KL2&KL3;
+Q0.d = CE1$Q0;
+Q1.d = !Q1;
+ColumCounter.ar = ZERO;
+ColumCounter.sp = ZERO;
 Q0.ck = CLK;
-
-Q1.d = ('b'1$Q1);
-Q1.ar = 'b'0;
-Q1.sp = 'b'0;
 Q1.ck = !Q0;
 
-K = Q0;
-L = Q1;
 
 /* ************************* CONTADOR 2 ************************** */
-CE2 = Y;
+CE2 = KeyNotPressed;
 
-P0.d = (CE2$P0);
-P0.ar = 'b'0;
-P0.sp = 'b'0;
+P0.d = CE2$P0;
+P1.d = !P1;
+LineCounter.ar = ZERO;
+LineCounter.sp = ZERO;
 P0.ck = CLK;
-
-P1.d = ('b'1$P1);
-P1.ar = 'b'0;
-P1.sp = 'b'0;
 P1.ck = !P0;
-
-J = P0;
-I = P1;
-
 
 
 
 /* ****************************  MUX ******************************/
-Y = !I&((!J&E)#(J&F))#I&((!J&G)#(J&H));
-
+KeyNotPressed = !P1 &((!P0 & KL0) # (P0 & KL1)) # P1 &((!P0 & KL2) # (P0 & KL3));
 
 /* ************************* DECODER ******************************/
-A = K # L;
-B = !K # L;
-C = !L # K;
-D = !K # !L;
+KC0	=	 Q0 #  Q1;
+KC1	=	!Q0 #  Q1;
+KC2	=	 Q0 # !Q1;
+KC3	=	!Q0 # !Q1;
 
-registo.d=[Q0,Q1,P0,P1];
-registo.ar='b'0;
-registo.sp='b'0;
-registo.ck=REG;
+Key.d=[Q0,Q1,P0,P1];
+Key.ar=ZERO;
+Key.sp=ZERO;
+Key.ck=REG;
 
 controlMachine.ar=ZERO;
 controlMachine.sp=ZERO;
@@ -98,10 +75,10 @@ controlMachine.CKMUX=CLK;
 
 SEQUENCED controlMachine{
 PRESENT 0
-    if Y next 1;
+    if KeyNotPressed next 1;
     default next 0;
 PRESENT 1
-	if !Y next 2;
+	if !KeyNotPressed next 2;
 	default next 1;
 PRESENT 2
 	out K_VAL, REG;
