@@ -1,5 +1,7 @@
 %SIGNAL
 PIN   1 =  CLK 
+PIN  34 =  CM0 
+PIN  19 =  CM1 
 PIN  20 =  K0 
 PIN  21 =  K1 
 PIN  22 =  K2 
@@ -13,8 +15,8 @@ PIN   3 =  KL1
 PIN   4 =  KL2 
 PIN   5 =  KL3 
 PIN  14 =  K_VAL 
-PIN  25 =  P0 
-PIN  26 =  P1 
+PIN  26 =  P0 
+PIN  25 =  P1 
 PIN  32 =  Q0 
 PIN  33 =  Q1 
 %END
@@ -25,6 +27,7 @@ FIELD Key = K0,K1,K2,K3
 FIELD KeyColums = KC0,KC1,KC2,KC3
 FIELD KeyLines = KL0,KL1,KL2,KL3
 FIELD LineCounter = P0,P1
+FIELD controlMachine = CM0,CM1
 %END
 
 %EQUATION
@@ -32,45 +35,120 @@ CE1 =>
     KL0 & KL1 & KL2 & KL3
 
 CE2 =>
-    !K_VAL
+    KL1 & P0 & !P1
+  # KL0 & !P0 & !P1
+  # KL3 & P0 & P1
+  # KL2 & !P0 & P1
 
-K0 =>
+CM0.d  =>
+    !CM1 & KL2 & !P0 & P1
+  # !CM1 & KL3 & P0 & P1
+  # !CM1 & KL1 & P0 & !P1
+  # !CM1 & KL0 & !P0 & !P1
+
+CM0.ar  =>
+    0 
+
+CM0.ckmux  =>
+    CLK
+
+CM0.sp CM1.sp K0.sp K1.sp K2.sp K3.sp P0.sp P1.sp Q0.sp Q1.sp  =>
+    0 
+
+CM1.d  =>
+    CM0 & !CM1 & !KL1 & !KL3 & P0
+  # CM0 & !CM1 & !KL0 & !P0 & !P1
+  # CM0 & !CM1 & !KL0 & !KL1 & !P1
+  # CM0 & !CM1 & !KL1 & P0 & !P1
+  # CM0 & !CM1 & !KL2 & !P0 & P1
+  # CM0 & !CM1 & !KL0 & !KL2 & !P0
+  # CM0 & !CM1 & !KL2 & !KL3 & P1
+  # CM0 & !CM1 & !KL0 & !KL1 & !KL2 & !KL3
+  # CM0 & !CM1 & !KL3 & P0 & P1
+
+CM1.ar  =>
+    0 
+
+CM1.ckmux  =>
+    CLK
+
+CM1.sp  =>
+    
+K0.d  =>
     Q0
 
-K1 =>
+K0.ar  =>
+    0 
+
+K0.ck  =>
+    !CM0 & CM1
+
+K0.sp  =>
+    
+K1.d  =>
     Q1
 
-K2 =>
+K1.ar  =>
+    0 
+
+K1.ck  =>
+    !CM0 & CM1
+
+K1.sp  =>
+    
+K2.d  =>
     P0
 
-K3 =>
+K2.ar  =>
+    0 
+
+K2.ck  =>
+    !CM0 & CM1
+
+K2.sp  =>
+    
+K3.d  =>
     P1
 
+K3.ar  =>
+    0 
+
+K3.ck  =>
+    !CM0 & CM1
+
+K3.sp  =>
+    
 KC0 =>
-    K0
-  # K1
+    Q0
+  # Q1
 
 KC1 =>
-    !K0
-  # K1
+    !Q0
+  # Q1
 
 KC2 =>
-    K0
-  # !K1
+    Q0
+  # !Q1
 
 KC3 =>
-    !K0
-  # !K1
+    !Q0
+  # !Q1
 
 K_VAL =>
-    K2 & !K3 & KL1
-  # !K2 & !K3 & KL0
-  # K2 & K3 & KL3
-  # !K2 & K3 & KL2
+    !CM0 & CM1
+
+KeyNotPressed =>
+    KL1 & P0 & !P1
+  # KL0 & !P0 & !P1
+  # KL3 & P0 & P1
+  # KL2 & !P0 & P1
 
 P0.d  =>
-    !K_VAL & !P0
-  # K_VAL & P0
+    KL2 & !P0 & P1
+  # KL0 & !P0 & !P1
+  # !KL1 & P0 & !P1
+  # !KL1 & !KL3 & P0
+  # !KL3 & P0 & P1
 
 P0.ar  =>
     0 
@@ -78,9 +156,8 @@ P0.ar  =>
 P0.ck  =>
     CLK
 
-P0.sp P1.sp Q0.sp Q1.sp  =>
-    0 
-
+P0.sp  =>
+    
 P1.d  =>
     !P1
 
@@ -118,6 +195,15 @@ Q1.ck  =>
 
 Q1.sp  =>
     
+REG =>
+    !CM0 & CM1
+
+ZERO =>
+    0 
+
+CM1.oe  =>
+    1 
+
 K0.oe  =>
     1 
 
