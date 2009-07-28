@@ -28,7 +28,7 @@ public class Keyboard {
 		Kit.sleep(1);
 		if (Kit.readBit((LicConstants.KEY_VAL_MASK))) {
 			char key = LicConstants.KEYS[Kit.getBits(LicConstants.KEY_DAT_MASK)];
-			unsetACK();
+			ACK();
 			return key;
 		}
 
@@ -45,7 +45,7 @@ public class Keyboard {
 	 */
 	public static char getKey() {
 		char key;
-		if (((key = pressedKey()) != 0 )&&( key != keyPressed)) {
+		if (((key = pressedKey()) != 0 )){//&&( key != keyPressed)) {
 			keyPressed = key;
 			return key;
 		}
